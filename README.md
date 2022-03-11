@@ -13,13 +13,9 @@ Each SDK project use milvus-proto as a git submodule. The milvus-proto only shar
 
 ## First time to add milvus-proto as a submodule
 
-- For git version ```<``` 2.13
-  
-    ```git clone --recursive git@github.com:milvus-io/milvus-proto.git```
+```git submodule add git@github.com:milvus-io/milvus-proto.git [target path]```
 
-- For git version ```>=``` 2.13
-  
-    ```git clone --recurse-submodules git@github.com:milvus-io/milvus-proto.git```
+"target path" is the folder to add the submodule 
 
 ## Update exist submodule
 
