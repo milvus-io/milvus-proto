@@ -13,7 +13,7 @@ Each SDK project use milvus-proto as a git submodule. The milvus-proto only shar
 
 ## First time to add milvus-proto as a submodule
 
-```git submodule add git@github.com:milvus-io/milvus-proto.git [target path]```
+```git submodule add https://github.com/milvus-io/milvus-proto.git [target path]```
 
 "target path" is the folder to add the submodule 
 
