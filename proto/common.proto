@@ -35,6 +35,8 @@ enum ErrorCode {
     OutOfMemory = 24;
     IndexNotExist = 25;
     EmptyCollection = 26;
+    UpdateImportTaskFailure = 27;
+    CollectionNameNotFound = 28;
 
     // internal error code.
     DDRequestRace = 1000;
@@ -114,6 +116,7 @@ enum MsgType {
     ReleaseSegments = 253;
     HandoffSegments = 254;
     LoadBalanceSegments = 255;
+    DescribeSegments = 256;
 
     /* DEFINITION REQUESTS: INDEX */
     CreateIndex = 300;
@@ -200,8 +203,9 @@ enum ConsistencyLevel {
 enum ImportState {
     ImportPending = 0;
     ImportFailed = 1;
-    ImportDownloaded = 2;
-    ImportParsed = 3;
-    ImportPersisted = 4;
-    ImportCompleted = 5;
+    ImportStarted = 2;
+    ImportDownloaded = 3;
+    ImportParsed = 4;
+    ImportPersisted = 5;
+    ImportCompleted = 6;
 }
