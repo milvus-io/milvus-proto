@@ -49,6 +49,7 @@ service MilvusService {
   rpc GetFlushState(GetFlushStateRequest) returns (GetFlushStateResponse) {}
   rpc GetPersistentSegmentInfo(GetPersistentSegmentInfoRequest) returns (GetPersistentSegmentInfoResponse) {}
   rpc GetQuerySegmentInfo(GetQuerySegmentInfoRequest) returns (GetQuerySegmentInfoResponse) {}
+  rpc GetReplicas(GetReplicasRequest) returns (GetReplicasResponse) {}
 
   rpc Dummy(DummyRequest) returns (DummyResponse) {}
 
@@ -65,6 +66,12 @@ service MilvusService {
   // https://wiki.lfaidata.foundation/display/MIL/MEP+24+--+Support+bulk+load
   rpc Import(ImportRequest) returns (ImportResponse) {}
   rpc GetImportState(GetImportStateRequest) returns (GetImportStateResponse) {}
+
+  // https://wiki.lfaidata.foundation/display/MIL/MEP+27+--+Support+Basic+Authentication
+  rpc CreateCredential(CreateCredentialRequest) returns (common.Status) {}
+  rpc UpdateCredential(CreateCredentialRequest) returns (common.Status) {}
+  rpc DeleteCredential(DeleteCredentialRequest) returns (common.Status) {}
+  rpc ListCredUsers(ListCredUsersRequest) returns (ListCredUsersResponse) {}
 }
 
 message CreateAliasRequest {
@@ -797,11 +804,12 @@ message GetFlushStateResponse {
 }
 
 message ImportRequest {
-  string collection_name = 1;  // target collection
-  string partition_name = 2;  // target partition
-  bool row_based = 3;  // the file is row-based or column-based
-  repeated string files = 4;  // file paths to be imported
-  repeated common.KeyValuePair options = 5;  // import options, bucket, etc.
+  string collection_name = 1;                // target collection
+  string partition_name = 2;                 // target partition
+  repeated string channel_names = 3;         // channel names for the collection
+  bool row_based = 4;                        // the file is row-based or column-based
+  repeated string files = 5;                 // file paths to be imported
+  repeated common.KeyValuePair options = 6;  // import options, bucket, etc.
 }
  
 message ImportResponse {
@@ -821,6 +829,70 @@ message GetImportStateResponse {
   repeated common.KeyValuePair infos = 5;  // more informations about the task, progress percent, file path, failed reason, etc.
 }
 
+message GetReplicasRequest {
+  common.MsgBase base = 1;
+  int64 collectionID = 2;
+  bool with_shard_nodes = 3;
+}
+
+message GetReplicasResponse {
+  common.Status status = 1;
+  repeated ReplicaInfo replicas = 2;
+}
+
+message ReplicaInfo {    // ReplicaGroup
+  int64 replicaID = 1;
+  int64 collectionID = 2;
+  repeated int64 partition_ids = 3;    // empty indicates to load collection
+  repeated ShardReplica shard_replicas = 4;
+  repeated int64 node_ids = 5; // include leaders
+}
+
+message ShardReplica {
+    int64 leaderID = 1;
+    string leader_addr = 2; // IP:port
+    string dm_channel_name = 3;
+    // optional, DO NOT save it in meta, set it only for GetReplicas()
+    // if with_shard_nodes is true
+    repeated int64 node_ids = 4;
+}
+
+
+
 service ProxyService {
   rpc RegisterLink(RegisterLinkRequest) returns (RegisterLinkResponse) {}
+}
+
+// https://wiki.lfaidata.foundation/display/MIL/MEP+27+--+Support+Basic+Authentication
+
+message CreateCredentialRequest {
+  // Not useful for now
+  common.MsgBase base = 1;
+  // username
+  string username = 2;
+  // ciphertext password
+  string password = 3;
+  // create time
+  uint64 created_utc_timestamps = 4;
+  // modify time
+  uint64 modified_utc_timestamps = 5;
+}
+
+message DeleteCredentialRequest {
+  // Not useful for now
+  common.MsgBase base = 1;
+  // Not useful for now
+  string username = 2;
+}
+
+message ListCredUsersResponse {
+  // Contain error_code and reason
+  common.Status status = 1;
+  // username array
+  repeated string usernames = 2;
+}
+
+message ListCredUsersRequest {
+  // Not useful for now
+  common.MsgBase base = 1;
 }
