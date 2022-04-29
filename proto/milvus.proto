@@ -66,10 +66,11 @@ service MilvusService {
   // https://wiki.lfaidata.foundation/display/MIL/MEP+24+--+Support+bulk+load
   rpc Import(ImportRequest) returns (ImportResponse) {}
   rpc GetImportState(GetImportStateRequest) returns (GetImportStateResponse) {}
+  rpc ListImportTasks(ListImportTasksRequest) returns (ListImportTasksResponse) {}
 
   // https://wiki.lfaidata.foundation/display/MIL/MEP+27+--+Support+Basic+Authentication
   rpc CreateCredential(CreateCredentialRequest) returns (common.Status) {}
-  rpc UpdateCredential(CreateCredentialRequest) returns (common.Status) {}
+  rpc UpdateCredential(UpdateCredentialRequest) returns (common.Status) {}
   rpc DeleteCredential(DeleteCredentialRequest) returns (common.Status) {}
   rpc ListCredUsers(ListCredUsersRequest) returns (ListCredUsersResponse) {}
 }
@@ -343,6 +344,8 @@ message LoadPartitionsRequest {
   string collection_name = 3;
   // The partition names you want to load
   repeated string partition_names = 4;
+  // The replicas number you would load, 1 by default
+  int32 replica_number = 5;
 }
 
 /*
@@ -755,6 +758,7 @@ message LoadBalanceRequest {
   int64 src_nodeID = 2;
   repeated int64 dst_nodeIDs = 3;
   repeated int64 sealed_segmentIDs = 4;
+  string collectionName = 5;
 }
 
 message ManualCompactionRequest {
@@ -827,6 +831,15 @@ message GetImportStateResponse {
   int64 row_count = 3;                     // if the task is finished, this value is how many rows are imported. if the task is not finished, this value is how many rows are parsed. return 0 if failed.
   repeated int64 id_list = 4;              // auto generated ids if the primary key is autoid
   repeated common.KeyValuePair infos = 5;  // more informations about the task, progress percent, file path, failed reason, etc.
+  int64 id = 6;                          // id of an import task
+}
+
+message ListImportTasksRequest {
+}
+
+message ListImportTasksResponse {
+  common.Status status = 1;
+  repeated GetImportStateResponse tasks = 2;  // list of all import tasks
 }
 
 message GetReplicasRequest {
@@ -857,8 +870,6 @@ message ShardReplica {
     repeated int64 node_ids = 4;
 }
 
-
-
 service ProxyService {
   rpc RegisterLink(RegisterLinkRequest) returns (RegisterLinkResponse) {}
 }
@@ -876,6 +887,21 @@ message CreateCredentialRequest {
   uint64 created_utc_timestamps = 4;
   // modify time
   uint64 modified_utc_timestamps = 5;
+}
+
+message UpdateCredentialRequest {
+  // Not useful for now
+  common.MsgBase base = 1;
+  // username
+  string username = 2;
+  // old password
+  string oldPassword = 3;
+  // new password
+  string newPassword = 4;
+  // create time
+  uint64 created_utc_timestamps = 5;
+  // modify time
+  uint64 modified_utc_timestamps = 6;
 }
 
 message DeleteCredentialRequest {
@@ -896,3 +922,4 @@ message ListCredUsersRequest {
   // Not useful for now
   common.MsgBase base = 1;
 }
+
