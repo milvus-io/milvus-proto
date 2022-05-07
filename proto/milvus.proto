@@ -104,9 +104,9 @@ message CreateCollectionRequest {
   // Not useful for now
   string db_name = 2;
   // The unique collection name in milvus.(Required)
-  string collection_name = 3; 
+  string collection_name = 3;
   // The serialized `schema.CollectionSchema`(Required)
-  bytes schema = 4; 
+  bytes schema = 4;
   // Once set, no modification is allowed (Optional)
   // https://github.com/milvus-io/milvus/issues/6690
   int32 shards_num = 5;
@@ -115,11 +115,11 @@ message CreateCollectionRequest {
 }
 
 /**
-* Drop collection in milvus, also will drop data in collection. 
+* Drop collection in milvus, also will drop data in collection.
 */
 message DropCollectionRequest {
   // Not useful for now
-  common.MsgBase base = 1; 
+  common.MsgBase base = 1;
   // Not useful for now
   string db_name = 2;
   // The unique collection name in milvus.(Required)
@@ -135,7 +135,7 @@ message HasCollectionRequest {
   // Not useful for now
   string db_name = 2;
   // The collection name you want to check.
-  string collection_name = 3; 
+  string collection_name = 3;
   // If time_stamp is not zero, will return true when time_stamp >= created collection timestamp, otherwise will return false.
   uint64 time_stamp = 4;
 }
@@ -249,14 +249,14 @@ message GetCollectionStatisticsResponse {
 * This is for ShowCollectionsRequest type field.
 */
 enum ShowType {
-  // Will return all colloections 
+  // Will return all colloections
   All = 0;
   // Will return loaded collections with their inMemory_percentages
   InMemory = 1;
 }
 
 /*
-* List collections 
+* List collections
 */
 message ShowCollectionsRequest {
   // Not useful for now
@@ -268,7 +268,7 @@ message ShowCollectionsRequest {
   // Decide return Loaded collections or All collections(Optional)
   ShowType type = 4;
   // When type is InMemory, will return these collection's inMemory_percentages.(Optional)
-  repeated string collection_names = 5; 
+  repeated string collection_names = 5;
 }
 
 /*
@@ -286,7 +286,7 @@ message ShowCollectionsResponse {
   // The utc timestamp calculated by created_timestamp
   repeated uint64 created_utc_timestamps = 5;
   // Load percentage on querynode when type is InMemory
-  repeated int64 inMemory_percentages = 6; 
+  repeated int64 inMemory_percentages = 6;
 }
 
 /*
@@ -314,7 +314,7 @@ message DropPartitionRequest {
   // The collection name in milvus
   string collection_name = 3;
   // The partition name you want to drop
-  string partition_name = 4; 
+  string partition_name = 4;
 }
 
 /*
@@ -374,7 +374,7 @@ message GetPartitionStatisticsRequest {
   // The collection name in milvus
   string collection_name = 3;
   // The partition name you want to collect statistics
-  string partition_name = 4; 
+  string partition_name = 4;
 }
 
 message GetPartitionStatisticsResponse {
@@ -449,7 +449,7 @@ message ShowSegmentsResponse {
 */
 message CreateIndexRequest {
   // Not useful for now
-  common.MsgBase base = 1; 
+  common.MsgBase base = 1;
   // Not useful for now
   string db_name = 2;
   // The particular collection name you want to create index.
@@ -463,7 +463,7 @@ message CreateIndexRequest {
 }
 
 /*
-* Get created index information. 
+* Get created index information.
 * Current release of Milvus only supports showing latest built index.
 */
 message DescribeIndexRequest {
@@ -473,10 +473,10 @@ message DescribeIndexRequest {
   string db_name = 2;
   // The particular collection name in Milvus
   string collection_name = 3;
-   // The vector field name in this particular collection
+  // The vector field name in this particular collection
   string field_name = 4;
   // No need to set up for now @2021.06.30
-  string index_name = 5; 
+  string index_name = 5;
 }
 
 /*
@@ -504,7 +504,7 @@ message DescribeIndexResponse {
 }
 
 /*
-*  Get index building progress 
+*  Get index building progress
 */
 message GetIndexBuildProgressRequest {
   // Not useful for now
@@ -662,7 +662,7 @@ message VectorsArray {
   oneof array {
     VectorIDs id_array = 1; // vector ids
     schema.VectorField data_array = 2; // vectors data
-  } 
+  }
 }
 
 message CalcDistanceRequest {
@@ -676,8 +676,8 @@ message CalcDistanceResults {
   common.Status status = 1;
   // num(op_left)*num(op_right) distance values, "HAMMIN" return integer distance
   oneof array {
-    	schema.IntArray int_dist = 2;
-	schema.FloatArray float_dist = 3;
+    schema.IntArray int_dist = 2;
+    schema.FloatArray float_dist = 3;
   }
 }
 
@@ -815,16 +815,16 @@ message ImportRequest {
   repeated string files = 5;                 // file paths to be imported
   repeated common.KeyValuePair options = 6;  // import options, bucket, etc.
 }
- 
+
 message ImportResponse {
   common.Status status = 1;
   repeated int64 tasks = 2;  // id array of import tasks
 }
- 
+
 message GetImportStateRequest {
   int64 task = 1;  // id of an import task
 }
- 
+
 message GetImportStateResponse {
   common.Status status = 1;
   common.ImportState state = 2;            // is this import task finished or not
@@ -862,12 +862,12 @@ message ReplicaInfo {    // ReplicaGroup
 }
 
 message ShardReplica {
-    int64 leaderID = 1;
-    string leader_addr = 2; // IP:port
-    string dm_channel_name = 3;
-    // optional, DO NOT save it in meta, set it only for GetReplicas()
-    // if with_shard_nodes is true
-    repeated int64 node_ids = 4;
+  int64 leaderID = 1;
+  string leader_addr = 2; // IP:port
+  string dm_channel_name = 3;
+  // optional, DO NOT save it in meta, set it only for GetReplicas()
+  // if with_shard_nodes is true
+  repeated int64 node_ids = 4;
 }
 
 service ProxyService {
@@ -922,4 +922,3 @@ message ListCredUsersRequest {
   // Not useful for now
   common.MsgBase base = 1;
 }
-
