@@ -42,6 +42,7 @@ enum ErrorCode {
     DeleteCredentialFailure = 31;
     GetCredentialFailure = 32;
     ListCredUsersFailure = 33;
+    NotShardLeader = 34;
 
     // internal error code.
     DDRequestRace = 1000;
@@ -86,8 +87,8 @@ message Blob {
 }
 
 message Address {
-    string ip = 1;
-    int64 port = 2;
+  string ip = 1;
+  int64 port = 2;
 }
 
 enum MsgType {
@@ -202,9 +203,9 @@ message DMLMsgHeader {
 }
 
 enum CompactionState {
-    UndefiedState = 0;
-    Executing = 1;
-    Completed = 2;
+  UndefiedState = 0;
+  Executing = 1;
+  Completed = 2;
 }
 
 enum ConsistencyLevel {
@@ -222,7 +223,5 @@ enum ImportState {
     ImportDownloaded = 3;
     ImportParsed = 4;
     ImportPersisted = 5;
-    DataQueryable = 6;
-    DataIndexed = 7;
-    ImportCompleted = 8;
+    ImportCompleted = 6;
 }
