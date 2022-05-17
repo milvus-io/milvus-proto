@@ -1,0 +1,15 @@
+filters:
+  ".*":
+    reviewers:
+      - yhmo
+      - XuanYang-cn
+      - congqixia
+      - czs007
+      - nameczz
+
+    approvers:
+      - yhmo
+      - XuanYang-cn
+      - congqixia
+      - czs007
+      - nameczz
