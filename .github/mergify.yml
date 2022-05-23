@@ -57,3 +57,22 @@ pull_request_rules:
       label:
         remove:
           - do-not-merge/missing-related-issue
+
+        
+  - name: Test passed for code changed
+    conditions:
+      - base=master
+      - "status-success=Run Check Proto (3.8)"
+    actions:
+      label:
+        add:
+          - ci-passed
+
+  - name: Remove ci-passed label when test is not passed
+    conditions:
+      - base=master
+      - "status-success!=Run Check Proto (3.8)"    
+    actions:
+      label:
+        remove:
+          - ci-passed
