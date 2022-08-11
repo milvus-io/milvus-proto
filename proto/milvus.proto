@@ -680,6 +680,8 @@ message SearchRequest {
   uint64 travel_timestamp = 10;
   uint64 guarantee_timestamp = 11; // guarantee_timestamp
   int64  nq = 12;
+  common.ConsistencyLevel consistency_level = 13;
+  bool use_default_consistency = 14;
 }
 
 message Hits {
@@ -725,6 +727,8 @@ message QueryRequest {
   repeated string partition_names = 6;
   uint64 travel_timestamp = 7;
   uint64 guarantee_timestamp = 8; // guarantee_timestamp
+  common.ConsistencyLevel consistency_level = 9;
+  bool use_default_consistency = 10;
 }
 
 message QueryResults {
