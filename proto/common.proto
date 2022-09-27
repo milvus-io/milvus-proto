@@ -314,6 +314,7 @@ enum ObjectPrivilege {
     PrivilegeSelectOwnership = 22;
     PrivilegeManageOwnership = 23;
     PrivilegeSelectUser = 24;
+    PrivilegeDescribePartition = 25;
 }
 
 message PrivilegeExt {
