@@ -1,7 +1,7 @@
 syntax = "proto3";
 package milvus.proto.common;
 
-option go_package="github.com/milvus-io/milvus/internal/proto/commonpb";
+option go_package="github.com/milvus-io/milvus/api/commonpb";
 
 option java_multiple_files = true;
 option java_package = "io.milvus.grpc";
@@ -61,6 +61,10 @@ enum ErrorCode {
     ForceDeny = 48;
     RateLimit = 49;
 
+    // Service availability.
+    // NA: Not Available.
+    DataCoordNA = 100;
+
     // internal error code.
     DDRequestRace = 1000;
 }
@@ -71,6 +75,7 @@ enum IndexState {
     InProgress = 2;
     Finished = 3;
     Failed = 4;
+    Retry = 5;
 }
 
 enum SegmentState {
@@ -188,6 +193,9 @@ enum MsgType {
     WatchDeltaChannels = 513;
     GetShardLeaders = 514;
     GetReplicas = 515;
+    UnsubDmChannel = 516;
+    GetDistribution = 517;
+    SyncDistribution = 518;
 
     /* DATA SERVICE */
     SegmentInfo = 600;
@@ -265,14 +273,12 @@ enum ConsistencyLevel {
 }
 
 enum ImportState {
-    ImportPending = 0;
-    ImportFailed = 1;
-    ImportStarted = 2;
-    ImportDownloaded = 3;
-    ImportParsed = 4;
-    ImportPersisted = 5;
-    ImportCompleted = 6;
-    ImportAllocSegment = 10;
+    ImportPending = 0;              // the task in in pending list of rootCoord, waiting to be executed
+    ImportFailed = 1;               // the task failed for some reason, get detail reason from GetImportStateResponse.infos
+    ImportStarted = 2;              // the task has been sent to datanode to execute
+    ImportPersisted = 5;            // all data files have been parsed and data already persisted
+    ImportCompleted = 6;            // all indexes are successfully built and segments are able to be compacted as normal.
+    ImportFailedAndCleaned = 7;     // the task failed and all segments it generated are cleaned up.
 }
 
 enum ObjectType {
@@ -308,7 +314,6 @@ enum ObjectPrivilege {
     PrivilegeSelectOwnership = 22;
     PrivilegeManageOwnership = 23;
     PrivilegeSelectUser = 24;
-    PrivilegeDescribePartition = 25;
 }
 
 message PrivilegeExt {
