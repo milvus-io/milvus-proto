@@ -19,6 +19,7 @@ service MilvusService {
   rpc LoadCollection(LoadCollectionRequest) returns (common.Status) {}
   rpc ReleaseCollection(ReleaseCollectionRequest) returns (common.Status) {}
   rpc DescribeCollection(DescribeCollectionRequest) returns (DescribeCollectionResponse) {}
+  rpc DescribePartition(DescribePartitionRequest) returns (DescribePartitionResponse) {}
   rpc GetCollectionStatistics(GetCollectionStatisticsRequest) returns (GetCollectionStatisticsResponse) {}
   rpc ShowCollections(ShowCollectionsRequest) returns (ShowCollectionsResponse) {}
 
@@ -220,6 +221,44 @@ message DescribeCollectionResponse {
   common.ConsistencyLevel consistency_level = 11;
   // The collection name
   string collection_name = 12;
+  // this collection is loaded in memory
+  bool loaded = 13;
+  // in-memory partitions
+  repeated string loaded_partitions = 14;
+}
+
+/**
+* Get Partition meta info like: collectionID, partitionID, if loaded in memory, ...
+*/
+message DescribePartitionRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeDescribePartition
+    object_name_index: 3
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  // Not useful for now
+  string db_name = 2;
+  string collection_name = 3;
+  string partition_name = 4;
+}
+
+/**
+* DescribeCollection Response
+*/
+message DescribePartitionResponse {
+  // Contain error_code and reason
+  common.Status status = 1;
+  string collection_name = 2;
+  string partition_name = 3;
+  int64 collectionID = 4;
+  int64 partitionID = 5;
+  // Hybrid timestamp in milvus
+  uint64 created_timestamp = 6;
+  // The utc timestamp calculated by created_timestamp
+  uint64 created_utc_timestamp = 7;
+  bool loaded = 8;
 }
 
 /**
