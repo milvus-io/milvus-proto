@@ -31,13 +31,17 @@ service MilvusService {
   rpc GetPartitionStatistics(GetPartitionStatisticsRequest) returns (GetPartitionStatisticsResponse) {}
   rpc ShowPartitions(ShowPartitionsRequest) returns (ShowPartitionsResponse) {}
 
+  rpc GetLoadingProgress(GetLoadingProgressRequest) returns (GetLoadingProgressResponse) {}
+
   rpc CreateAlias(CreateAliasRequest) returns (common.Status) {}
   rpc DropAlias(DropAliasRequest) returns (common.Status) {}
   rpc AlterAlias(AlterAliasRequest) returns (common.Status) {}
 
   rpc CreateIndex(CreateIndexRequest) returns (common.Status) {}
   rpc DescribeIndex(DescribeIndexRequest) returns (DescribeIndexResponse) {}
+  // Deprecated: use DescribeIndex instead
   rpc GetIndexState(GetIndexStateRequest) returns (GetIndexStateResponse) {}
+  // Deprecated: use DescribeIndex instead
   rpc GetIndexBuildProgress(GetIndexBuildProgressRequest) returns (GetIndexBuildProgressResponse) {}
   rpc DropIndex(DropIndexRequest) returns (common.Status) {}
 
@@ -360,6 +364,7 @@ message GetCollectionStatisticsResponse {
 /*
 * This is for ShowCollectionsRequest type field.
 */
+// Deprecated: use GetLoadingProgress rpc instead
 enum ShowType {
   // Will return all collections
   All = 0;
@@ -385,6 +390,7 @@ message ShowCollectionsRequest {
   // Decide return Loaded collections or All collections(Optional)
   ShowType type = 4;
   // When type is InMemory, will return these collection's inMemory_percentages.(Optional)
+  // Deprecated: use GetLoadingProgress rpc instead
   repeated string collection_names = 5;
 }
 
@@ -403,6 +409,7 @@ message ShowCollectionsResponse {
   // The utc timestamp calculated by created_timestamp
   repeated uint64 created_utc_timestamps = 5;
   // Load percentage on querynode when type is InMemory
+  // Deprecated: use GetLoadingProgress rpc instead
   repeated int64 inMemory_percentages = 6;
   // Indicate whether query service is available
   repeated bool query_service_available = 7;
@@ -516,6 +523,7 @@ message ShowPartitionsRequest {
   // When type is InMemory, will return these patitions's inMemory_percentages.(Optional)
   repeated string partition_names = 5;
   // Decide return Loaded partitions or All partitions(Optional)
+  // Deprecated: use GetLoadingProgress rpc instead
   ShowType type = 6;
 }
 
@@ -535,6 +543,7 @@ message ShowPartitionsResponse {
   // All utc timestamps calculated by created_timestamps
   repeated uint64 created_utc_timestamps = 5;
   // Load percentage on querynode
+  // Deprecated: use GetLoadingProgress rpc instead
   repeated int64 inMemory_percentages = 6;
 }
 
@@ -602,7 +611,7 @@ message DescribeIndexRequest {
   string db_name = 2;
   // The particular collection name in Milvus
   string collection_name = 3;
-   // The vector field name in this particular collection
+  // The vector field name in this particular collection
   string field_name = 4;
   // No need to set up for now @2021.06.30
   string index_name = 5;
@@ -620,6 +629,12 @@ message IndexDescription {
   repeated common.KeyValuePair params = 3;
   // The vector field name
   string field_name = 4;
+  // index build progress
+  int64 indexed_rows = 5;
+  int64 total_rows = 6;
+  // index state
+  common.IndexState state = 7;
+  string index_state_fail_reason = 8;
 }
 
 /*
@@ -839,8 +854,8 @@ message CalcDistanceResults {
   common.Status status = 1;
   // num(op_left)*num(op_right) distance values, "HAMMIN" return integer distance
   oneof array {
-    	schema.IntArray int_dist = 2;
-	schema.FloatArray float_dist = 3;
+    schema.IntArray int_dist = 2;
+    schema.FloatArray float_dist = 3;
   }
 }
 
@@ -1048,12 +1063,12 @@ message ReplicaInfo {    // ReplicaGroup
 }
 
 message ShardReplica {
-    int64 leaderID = 1;
-    string leader_addr = 2; // IP:port
-    string dm_channel_name = 3;
-    // optional, DO NOT save it in meta, set it only for GetReplicas()
-    // if with_shard_nodes is true
-    repeated int64 node_ids = 4;
+  int64 leaderID = 1;
+  string leader_addr = 2; // IP:port
+  string dm_channel_name = 3;
+  // optional, DO NOT save it in meta, set it only for GetReplicas()
+  // if with_shard_nodes is true
+  repeated int64 node_ids = 4;
 }
 
 service ProxyService {
@@ -1299,6 +1314,19 @@ message OperatePrivilegeRequest {
   GrantEntity entity = 2;
   // operation type
   OperatePrivilegeType type = 3;
+}
+
+message GetLoadingProgressRequest {
+  // Not useful for now
+  common.MsgBase base = 1;
+  string collectionName = 2;
+  repeated string partitionNames = 3;
+}
+
+message GetLoadingProgressResponse {
+  // Not useful for now
+  common.Status status = 1;
+  int64 progress = 2;
 }
 
 message MilvusExt {
