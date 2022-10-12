@@ -1,7 +1,7 @@
 syntax = "proto3";
 package milvus.proto.common;
 
-option go_package="github.com/milvus-io/milvus/api/commonpb";
+option go_package="github.com/milvus-io/milvus-proto/go-api/commonpb";
 
 option java_multiple_files = true;
 option java_package = "io.milvus.grpc";
@@ -60,6 +60,7 @@ enum ErrorCode {
     SegmentNotFound = 47;
     ForceDeny = 48;
     RateLimit = 49;
+    NodeIDNotMatch = 50;
 
     // Service availability.
     // NA: Not Available.
@@ -109,26 +110,26 @@ message Blob {
 }
 
 enum PlaceholderType {
-  None = 0;
-  BinaryVector = 100;
-  FloatVector = 101;
+    None = 0;
+    BinaryVector = 100;
+    FloatVector = 101;
 }
 
 message PlaceholderValue {
-  string tag = 1;
-  PlaceholderType type = 2;
-  // values is a 2d-array, every array contains a vector
-  repeated bytes values = 3;
+    string tag = 1;
+    PlaceholderType type = 2;
+    // values is a 2d-array, every array contains a vector
+    repeated bytes values = 3;
 }
 
 message PlaceholderGroup {
-  repeated PlaceholderValue placeholders = 1;
+    repeated PlaceholderValue placeholders = 1;
 }
 
 
 message Address {
-  string ip = 1;
-  int64 port = 2;
+    string ip = 1;
+    int64 port = 2;
 }
 
 enum MsgType {
@@ -145,6 +146,7 @@ enum MsgType {
     CreateAlias = 108;
     DropAlias = 109;
     AlterAlias = 110;
+    AlterCollection = 111;
 
 
     /* DEFINITION REQUESTS: PARTITION */
@@ -240,6 +242,7 @@ message MsgBase {
     int64  msgID = 2;
     uint64 timestamp = 3;
     int64 sourceID = 4;
+    int64 targetID = 5;
 }
 
 enum DslType {
@@ -259,9 +262,9 @@ message DMLMsgHeader {
 }
 
 enum CompactionState {
-  UndefiedState = 0;
-  Executing = 1;
-  Completed = 2;
+    UndefiedState = 0;
+    Executing = 1;
+    Completed = 2;
 }
 
 enum ConsistencyLevel {
@@ -269,7 +272,7 @@ enum ConsistencyLevel {
     Session = 1; // default in PyMilvus
     Bounded = 2;
     Eventually = 3;
-    Customized = 4; // Users pass their own `guarantee_timestamp`. Deprecated
+    Customized = 4; // Users pass their own `guarantee_timestamp`.
 }
 
 enum ImportState {
@@ -314,7 +317,6 @@ enum ObjectPrivilege {
     PrivilegeSelectOwnership = 22;
     PrivilegeManageOwnership = 23;
     PrivilegeSelectUser = 24;
-    PrivilegeDescribePartition = 25;
 }
 
 message PrivilegeExt {
