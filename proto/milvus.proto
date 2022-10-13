@@ -1,7 +1,7 @@
 syntax = "proto3";
 package milvus.proto.milvus;
 
-option go_package = "github.com/milvus-io/milvus/api/milvuspb";
+option go_package = "github.com/milvus-io/milvus-proto/go-api/milvuspb";
 
 option java_multiple_files = true;
 option java_package = "io.milvus.grpc";
@@ -19,9 +19,9 @@ service MilvusService {
   rpc LoadCollection(LoadCollectionRequest) returns (common.Status) {}
   rpc ReleaseCollection(ReleaseCollectionRequest) returns (common.Status) {}
   rpc DescribeCollection(DescribeCollectionRequest) returns (DescribeCollectionResponse) {}
-  rpc DescribePartition(DescribePartitionRequest) returns (DescribePartitionResponse) {}
   rpc GetCollectionStatistics(GetCollectionStatisticsRequest) returns (GetCollectionStatisticsResponse) {}
   rpc ShowCollections(ShowCollectionsRequest) returns (ShowCollectionsResponse) {}
+  rpc AlterCollection(AlterCollectionRequest) returns (common.Status) {}
 
   rpc CreatePartition(CreatePartitionRequest) returns (common.Status) {}
   rpc DropPartition(DropPartitionRequest) returns (common.Status) {}
@@ -134,6 +134,7 @@ message CreateCollectionRequest {
   int32 shards_num = 5;
   // The consistency level that the collection used, modification is not supported now.
   common.ConsistencyLevel consistency_level = 6;
+  repeated common.KeyValuePair properties = 7;
 }
 
 /**
@@ -151,6 +152,25 @@ message DropCollectionRequest {
   string db_name = 2;
   // The unique collection name in milvus.(Required)
   string collection_name = 3;
+}
+
+/**
+* Alter collection in milvus
+*/
+message AlterCollectionRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCreateCollection
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  // Not useful for now
+  string db_name = 2;
+  // The unique collection name in milvus.(Required)
+  string collection_name = 3;
+  int64  collectionID = 4;
+  repeated common.KeyValuePair properties = 5;
 }
 
 /**
@@ -227,44 +247,7 @@ message DescribeCollectionResponse {
   common.ConsistencyLevel consistency_level = 11;
   // The collection name
   string collection_name = 12;
-  // this collection is loaded in memory
-  bool loaded = 13;
-  // in-memory partitions
-  repeated string loaded_partitions = 14;
-}
-
-/**
-* Get Partition meta info like: collectionID, partitionID, if loaded in memory, ...
-*/
-message DescribePartitionRequest {
-  option (common.privilege_ext_obj) = {
-    object_type: Collection
-    object_privilege: PrivilegeDescribePartition
-    object_name_index: 3
-  };
-  // Not useful for now
-  common.MsgBase base = 1;
-  // Not useful for now
-  string db_name = 2;
-  string collection_name = 3;
-  string partition_name = 4;
-}
-
-/**
-* DescribeCollection Response
-*/
-message DescribePartitionResponse {
-  // Contain error_code and reason
-  common.Status status = 1;
-  string collection_name = 2;
-  string partition_name = 3;
-  int64 collectionID = 4;
-  int64 partitionID = 5;
-  // Hybrid timestamp in milvus
-  uint64 created_timestamp = 6;
-  // The utc timestamp calculated by created_timestamp
-  uint64 created_utc_timestamp = 7;
-  bool loaded = 8;
+  repeated common.KeyValuePair properties = 13;
 }
 
 /**
@@ -769,9 +752,6 @@ message SearchRequest {
   uint64 travel_timestamp = 10;
   uint64 guarantee_timestamp = 11; // guarantee_timestamp
   int64  nq = 12;
-  common.ConsistencyLevel consistency_level = 13;
-  bool use_default_consistency = 14;
-
 }
 
 message Hits {
@@ -820,9 +800,6 @@ message QueryRequest {
   uint64 travel_timestamp = 7;
   uint64 guarantee_timestamp = 8; // guarantee_timestamp
   repeated common.KeyValuePair query_params = 9; // optional
-  common.ConsistencyLevel consistency_level = 10;
-  bool use_default_consistency = 11;
-
 }
 
 message QueryResults {
