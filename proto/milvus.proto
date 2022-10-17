@@ -92,6 +92,15 @@ service MilvusService {
   rpc SelectGrant(SelectGrantRequest) returns (SelectGrantResponse) {}
 
   rpc GetVersion(GetVersionRequest) returns (GetVersionResponse) {}
+  rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse) {}
+}
+
+message CheckHealthRequest {
+}
+
+message CheckHealthResponse {
+  bool isHealthy = 1;
+  repeated string reasons = 2;
 }
 
 message CreateAliasRequest {
