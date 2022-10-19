@@ -95,14 +95,6 @@ service MilvusService {
   rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse) {}
 }
 
-message CheckHealthRequest {
-}
-
-message CheckHealthResponse {
-  bool isHealthy = 1;
-  repeated string reasons = 2;
-}
-
 message CreateAliasRequest {
   common.MsgBase base = 1;
   string db_name = 2;
@@ -1346,5 +1338,15 @@ message GetVersionRequest {
 }
 
 message GetVersionResponse {
-  string version =1;
+  common.Status status = 1;
+  string version =2;
+}
+
+message CheckHealthRequest {
+}
+
+message CheckHealthResponse {
+  common.Status status = 1;
+  bool isHealthy = 2;
+  repeated string reasons = 3;
 }
