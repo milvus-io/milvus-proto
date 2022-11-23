@@ -335,4 +335,5 @@ enum StateCode {
     Healthy = 1;
     Abnormal = 2;
     StandBy = 3;
+    Stopping = 4;
 }
