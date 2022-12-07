@@ -959,6 +959,7 @@ message ManualCompactionRequest {
 message ManualCompactionResponse {
   common.Status status = 1;
   int64 compactionID = 2;
+  int32 compactionPlanCount = 3;
 }
 
 message GetCompactionStateRequest {
