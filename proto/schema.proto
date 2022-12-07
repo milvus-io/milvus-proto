@@ -8,6 +8,8 @@ option java_package = "io.milvus.grpc";
 option java_outer_classname = "SchemaProto";
 option java_generate_equals_and_hash = true;
 
+option csharp_namespace = "IO.Milvus.Grpc";
+
 import "common.proto";
 
 /**
