@@ -3823,6 +3823,7 @@ func (m *VectorIDs) GetPartitionNames() []string {
 
 type VectorsArray struct {
 	// Types that are valid to be assigned to Array:
+	//
 	//	*VectorsArray_IdArray
 	//	*VectorsArray_DataArray
 	Array                isVectorsArray_Array `protobuf_oneof:"array"`
@@ -3969,6 +3970,7 @@ type CalcDistanceResults struct {
 	// num(op_left)*num(op_right) distance values, "HAMMIN" return integer distance
 	//
 	// Types that are valid to be assigned to Array:
+	//
 	//	*CalcDistanceResults_IntDist
 	//	*CalcDistanceResults_FloatDist
 	Array                isCalcDistanceResults_Array `protobuf_oneof:"array"`
