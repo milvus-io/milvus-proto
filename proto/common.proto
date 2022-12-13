@@ -339,3 +339,10 @@ enum StateCode {
     StandBy = 3;
     Stopping = 4;
 }
+
+enum LoadState {
+    LoadStateNotExist = 0;
+    LoadStateNotLoad = 1;
+    LoadStateLoading = 2;
+    LoadStateLoaded = 3;
+}
