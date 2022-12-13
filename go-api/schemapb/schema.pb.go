@@ -555,7 +555,6 @@ func (m *StringArray) GetData() []string {
 
 type ScalarField struct {
 	// Types that are valid to be assigned to Data:
-	//
 	//	*ScalarField_BoolData
 	//	*ScalarField_IntData
 	//	*ScalarField_LongData
@@ -712,7 +711,6 @@ func (*ScalarField) XXX_OneofWrappers() []interface{} {
 type VectorField struct {
 	Dim int64 `protobuf:"varint,1,opt,name=dim,proto3" json:"dim,omitempty"`
 	// Types that are valid to be assigned to Data:
-	//
 	//	*VectorField_FloatVector
 	//	*VectorField_BinaryVector
 	Data                 isVectorField_Data `protobuf_oneof:"data"`
@@ -802,7 +800,6 @@ type FieldData struct {
 	Type      DataType `protobuf:"varint,1,opt,name=type,proto3,enum=milvus.proto.schema.DataType" json:"type,omitempty"`
 	FieldName string   `protobuf:"bytes,2,opt,name=field_name,json=fieldName,proto3" json:"field_name,omitempty"`
 	// Types that are valid to be assigned to Field:
-	//
 	//	*FieldData_Scalars
 	//	*FieldData_Vectors
 	Field                isFieldData_Field `protobuf_oneof:"field"`
@@ -905,7 +902,6 @@ func (*FieldData) XXX_OneofWrappers() []interface{} {
 
 type IDs struct {
 	// Types that are valid to be assigned to IdField:
-	//
 	//	*IDs_IntId
 	//	*IDs_StrId
 	IdField              isIDs_IdField `protobuf_oneof:"id_field"`
