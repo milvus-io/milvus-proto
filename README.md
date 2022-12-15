@@ -6,6 +6,7 @@ SDK list for Milvus:
 - [C++ SDK](https://github.com/milvus-io/milvus-sdk-cpp)
 - [Go SDK](https://github.com/milvus-io/milvus-sdk-go)
 - [Node SDK](https://github.com/milvus-io/milvus-sdk-node)
+- [C# SDK](https://github.com/milvus-io/milvus-sdk-csharp)
 
 
 # Usage
