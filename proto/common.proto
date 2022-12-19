@@ -63,6 +63,7 @@ enum ErrorCode {
     ForceDeny = 48;
     RateLimit = 49;
     NodeIDNotMatch = 50;
+    UpsertAutoIDTrue = 51;
 
     // Service availability.
     // NA: Not Available.
@@ -179,6 +180,7 @@ enum MsgType {
     Delete = 401;
     Flush = 402;
     ResendSegmentStats = 403;
+    Upsert = 404;
 
     /* QUERY */
     Search = 500;
@@ -320,6 +322,7 @@ enum ObjectPrivilege {
     PrivilegeSelectOwnership = 22;
     PrivilegeManageOwnership = 23;
     PrivilegeSelectUser = 24;
+    PrivilegeUpsert = 25;
 }
 
 message PrivilegeExt {
