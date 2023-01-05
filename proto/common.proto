@@ -64,6 +64,10 @@ enum ErrorCode {
     RateLimit = 49;
     NodeIDNotMatch = 50;
     UpsertAutoIDTrue = 51;
+    InsufficientMemoryToLoad = 52;
+    MemoryQuotaExhausted = 53;
+    DiskQuotaExhausted = 54;
+    TimeTickLongDelay = 55;
 
     // Service availability.
     // NA: Not Available.
