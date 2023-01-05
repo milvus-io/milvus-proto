@@ -1355,6 +1355,14 @@ message GetVersionResponse {
   string version =2;
 }
 
+enum QuotaState {
+  Unknown = 0;
+  ReadLimited = 2;
+  WriteLimited = 3;
+  DenyToRead = 4;
+  DenyToWrite = 5;
+}
+
 message CheckHealthRequest {
 }
 
@@ -1362,4 +1370,5 @@ message CheckHealthResponse {
   common.Status status = 1;
   bool isHealthy = 2;
   repeated string reasons = 3;
+  repeated QuotaState quota_states = 4;
 }
