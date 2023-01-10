@@ -36,6 +36,9 @@ service MilvusService {
   rpc GetLoadingProgress(GetLoadingProgressRequest) returns (GetLoadingProgressResponse) {}
   rpc GetLoadState(GetLoadStateRequest) returns (GetLoadStateResponse) {}
 
+  rpc RefreshCollection(RefreshCollectionRequest) returns (common.Status) {}
+  rpc RefreshPartitions(RefreshPartitionsRequest) returns (common.Status) {}
+
   rpc CreateAlias(CreateAliasRequest) returns (common.Status) {}
   rpc DropAlias(DropAliasRequest) returns (common.Status) {}
   rpc AlterAlias(AlterAliasRequest) returns (common.Status) {}
@@ -1348,6 +1351,17 @@ message GetLoadingProgressResponse {
 
 message GetLoadStateRequest {
   // Not useful for now
+  common.MsgBase base = 1;
+  string collection_name = 2;
+  repeated string partition_names = 3;
+}
+
+message RefreshCollectionRequest {
+  common.MsgBase base = 1;
+  string collection_name = 2;
+}
+
+message RefreshPartitionsRequest {
   common.MsgBase base = 1;
   string collection_name = 2;
   repeated string partition_names = 3;
