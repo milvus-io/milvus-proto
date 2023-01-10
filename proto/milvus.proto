@@ -99,10 +99,10 @@ service MilvusService {
   rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse) {}
 
   rpc CreateResourceGroup(CreateResourceGroupRequest) returns (common.Status) {}
-	rpc DropResourceGroup(DropResourceGroupRequest) returns (common.Status) {}
-	rpc TransferNode(TransferNodeRequest) returns (common.Status) {}
+  rpc DropResourceGroup(DropResourceGroupRequest) returns (common.Status) {}
+  rpc TransferNode(TransferNodeRequest) returns (common.Status) {}
   rpc TransferReplica(TransferReplicaRequest) returns (common.Status) {}
-	rpc ListResourceGroup(ListResourceGroupRequest) returns (ListResourceGroupResponse) {}
+  rpc ListResourceGroup(ListResourceGroupRequest) returns (ListResourceGroupResponse) {}
   rpc DescribeResourceGroup(DescribeResourceGroupRequest) returns (DescribeResourceGroupResponse) {}
 }
 
@@ -1091,7 +1091,7 @@ message ReplicaInfo {    // ReplicaGroup
   repeated ShardReplica shard_replicas = 4;
   repeated int64 node_ids = 5; // include leaders
   string resource_group_name = 6;
-  // outbound asscess rg -> node num
+  // outbound access rg -> node num
   map<string, int32> num_outbound_node = 7;
 }
 
@@ -1440,7 +1440,7 @@ message ListResourceGroupRequest {
 
 message ListResourceGroupResponse {
   common.Status status = 1;
-  repeated string  resourse_groups = 2;
+  repeated string  resource_groups = 2;
 }
 
 message DescribeResourceGroupRequest {
@@ -1450,7 +1450,7 @@ message DescribeResourceGroupRequest {
 
 message DescribeResourceGroupResponse {
   common.Status status = 1;
-  ResourceGroup  resourse_group = 2;
+  ResourceGroup  resource_group = 2;
 }
 
 message ResourceGroup {
@@ -1459,8 +1459,8 @@ message ResourceGroup {
   int32 num_available_node = 3;
   // collection name -> loaded replica num
   map<string, int32> num_loaded_replica = 4;
-  // collection name -> accessed outbound node num 
-  map<string, int32> num_accessed_outbound_node = 5;
-   // collection name -> be accessed outbound node num
-  map<string, int32> num_be_accessed_outbound_node = 6;
+  // collection name -> accessed other rg's node num 
+  map<string, int32> num_outgoing_node = 5;
+   // collection name -> be accessed node num by other rg
+  map<string, int32> num_incoming_node = 6;
 }
