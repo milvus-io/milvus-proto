@@ -97,6 +97,13 @@ service MilvusService {
 
   rpc GetVersion(GetVersionRequest) returns (GetVersionResponse) {}
   rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse) {}
+
+  rpc CreateResourceGroup(CreateResourceGroupRequest) returns (common.Status) {}
+  rpc DropResourceGroup(DropResourceGroupRequest) returns (common.Status) {}
+  rpc TransferNode(TransferNodeRequest) returns (common.Status) {}
+  rpc TransferReplica(TransferReplicaRequest) returns (common.Status) {}
+  rpc ListResourceGroup(ListResourceGroupRequest) returns (ListResourceGroupResponse) {}
+  rpc DescribeResourceGroup(DescribeResourceGroupRequest) returns (DescribeResourceGroupResponse) {}
 }
 
 message CreateAliasRequest {
@@ -274,6 +281,8 @@ message LoadCollectionRequest {
   string collection_name = 3;
   // The replica number to load, default by 1
   int32 replica_number = 4;
+  // create replica used resource group 
+  repeated string resource_groups = 5;
 }
 
 /**
@@ -464,6 +473,8 @@ message LoadPartitionsRequest {
   repeated string partition_names = 4;
   // The replicas number you would load, 1 by default
   int32 replica_number = 5;
+  // create replica used resource group 
+  repeated string resource_groups = 6;
 }
 
 /*
@@ -1065,6 +1076,7 @@ message GetReplicasRequest {
   common.MsgBase base = 1;
   int64 collectionID = 2;
   bool with_shard_nodes = 3;
+  int64 collection_name = 4;
 }
 
 message GetReplicasResponse {
@@ -1078,6 +1090,9 @@ message ReplicaInfo {    // ReplicaGroup
   repeated int64 partition_ids = 3;    // empty indicates to load collection
   repeated ShardReplica shard_replicas = 4;
   repeated int64 node_ids = 5; // include leaders
+  string resource_group_name = 6;
+  // outbound access rg -> node num
+  map<string, int32> num_outbound_node = 7;
 }
 
 message ShardReplica {
@@ -1390,4 +1405,62 @@ message CheckHealthResponse {
   bool isHealthy = 2;
   repeated string reasons = 3;
   repeated QuotaState quota_states = 4;
+}
+
+message CreateResourceGroupRequest {
+  common.MsgBase base = 1;
+  string resource_group = 2;
+}
+
+message DropResourceGroupRequest {
+  common.MsgBase base = 1;
+  string resource_group = 2;
+}
+
+// transfer `nodeNum` nodes from `source_resource_group` to `target_resource_group` 
+message TransferNodeRequest {
+  common.MsgBase base = 1;
+  string source_resource_group = 2;
+  string target_resource_group = 3;
+  int32  num_node = 4;
+}
+
+// transfer `replicaNum` replicas in `collectionID` from `source_resource_group` to `target_resource_groups`
+message TransferReplicaRequest {
+  common.MsgBase base = 1;
+  string source_resource_group = 2;
+  repeated string target_resource_groups = 3;
+  string  collection_name = 4;
+  int64  num_replica = 5;
+}
+
+message ListResourceGroupRequest {
+  common.MsgBase base = 1;
+}
+
+message ListResourceGroupResponse {
+  common.Status status = 1;
+  repeated string  resource_groups = 2;
+}
+
+message DescribeResourceGroupRequest {
+  common.MsgBase base = 1;
+  string resource_group = 2;
+}
+
+message DescribeResourceGroupResponse {
+  common.Status status = 1;
+  ResourceGroup  resource_group = 2;
+}
+
+message ResourceGroup {
+  string name = 1;
+  int32 capacity = 2;
+  int32 num_available_node = 3;
+  // collection name -> loaded replica num
+  map<string, int32> num_loaded_replica = 4;
+  // collection name -> accessed other rg's node num 
+  map<string, int32> num_outgoing_node = 5;
+   // collection name -> be accessed node num by other rg
+  map<string, int32> num_incoming_node = 6;
 }
