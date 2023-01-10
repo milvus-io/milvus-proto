@@ -97,14 +97,6 @@ service MilvusService {
 
   rpc GetVersion(GetVersionRequest) returns (GetVersionResponse) {}
   rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse) {}
-
-  rpc CreateResourceGroup(CreateResourceGroupRequest) returns (common.Status) {}
-	rpc DropResourceGroup(DropResourceGroupRequest) returns (common.Status) {}
-	rpc TransferNode(TransferNodeRequest) returns (common.Status) {}
-  rpc TransferReplica(TransferReplicaRequest) returns (common.Status) {}
-  rpc TransferCollection(TransferCollectionRequest) returns (common.Status) {}
-	rpc ListResourceGroup(ListResourceGroupRequest) returns (ListResourceGroupResponse) {}
-  rpc DescribeResourceGroup(DescribeResourceGroupRequest) returns (DescribeResourceGroupResponse) {}
 }
 
 message CreateAliasRequest {
@@ -282,8 +274,6 @@ message LoadCollectionRequest {
   string collection_name = 3;
   // The replica number to load, default by 1
   int32 replica_number = 4;
-  // create replica used resource group 
-  repeated string resource_groups = 5;
 }
 
 /**
@@ -474,8 +464,6 @@ message LoadPartitionsRequest {
   repeated string partition_names = 4;
   // The replicas number you would load, 1 by default
   int32 replica_number = 5;
-  // create replica used resource group 
-  repeated string resource_groups = 6;
 }
 
 /*
@@ -1090,7 +1078,6 @@ message ReplicaInfo {    // ReplicaGroup
   repeated int64 partition_ids = 3;    // empty indicates to load collection
   repeated ShardReplica shard_replicas = 4;
   repeated int64 node_ids = 5; // include leaders
-  repeated int64 outbound_node_ids = 6;
 }
 
 message ShardReplica {
@@ -1403,63 +1390,4 @@ message CheckHealthResponse {
   bool isHealthy = 2;
   repeated string reasons = 3;
   repeated QuotaState quota_states = 4;
-}
-
-message ReplicaInCollection {
-  int64 collectionID = 1;
-  repeated int64 replicaIDs = 2;
-}
-
-message ResourceGroup {
-  string name = 1;
-  int32 capacity = 2;
-  repeated int64 nodes = 3;
-  repeated ReplicaInCollection replica_in_collection = 4;
-}
-
-message CreateResourceGroupRequest {
-  common.MsgBase base = 1;
-  string resource_group = 2;
-}
-
-message DropResourceGroupRequest {
-  common.MsgBase base = 1;
-  string resource_group = 2;
-}
-
-message TransferNodeRequest {
-  common.MsgBase base = 1;
-  string target_resource_group = 2;
-  int64  node = 3;
-}
-
-message TransferCollectionRequest {
-  common.MsgBase base = 1;
-  string target_resource_group = 2;
-  int64  collectionID = 3;
-}
-
-message TransferReplicaRequest {
-  common.MsgBase base = 1;
-  string target_resource_group = 2;
-  int64  replicaID = 3;
-}
-
-message ListResourceGroupRequest {
-  common.MsgBase base = 1;
-}
-
-message ListResourceGroupResponse {
-  common.Status status = 1;
-  repeated string  resouse_groups = 2;
-}
-
-message DescribeResourceGroupRequest {
-  common.MsgBase base = 1;
-  string resource_group = 2;
-}
-
-message DescribeResourceGroupResponse {
-  common.Status status = 1;
-  ResourceGroup  resouse_group = 2;
 }
