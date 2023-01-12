@@ -1076,7 +1076,7 @@ message GetReplicasRequest {
   common.MsgBase base = 1;
   int64 collectionID = 2;
   bool with_shard_nodes = 3;
-  int64 collection_name = 4;
+  string collection_name = 4;
 }
 
 message GetReplicasResponse {
