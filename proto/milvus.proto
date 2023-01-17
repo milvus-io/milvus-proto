@@ -283,8 +283,10 @@ message LoadCollectionRequest {
   string collection_name = 3;
   // The replica number to load, default by 1
   int32 replica_number = 4;
-  // create replica used resource group 
+  // create replica used resource group
   repeated string resource_groups = 5;
+  // Whether to enable refresh mode.
+  bool refresh = 6;
 }
 
 /**
@@ -475,8 +477,10 @@ message LoadPartitionsRequest {
   repeated string partition_names = 4;
   // The replicas number you would load, 1 by default
   int32 replica_number = 5;
-  // create replica used resource group 
+  // create replica used resource group
   repeated string resource_groups = 6;
+  // Whether to enable refresh mode.
+  bool refresh = 7;
 }
 
 /*
@@ -1419,7 +1423,7 @@ message DropResourceGroupRequest {
   string resource_group = 2;
 }
 
-// transfer `nodeNum` nodes from `source_resource_group` to `target_resource_group` 
+// transfer `nodeNum` nodes from `source_resource_group` to `target_resource_group`
 message TransferNodeRequest {
   common.MsgBase base = 1;
   string source_resource_group = 2;
@@ -1461,7 +1465,7 @@ message ResourceGroup {
   int32 num_available_node = 3;
   // collection name -> loaded replica num
   map<string, int32> num_loaded_replica = 4;
-  // collection name -> accessed other rg's node num 
+  // collection name -> accessed other rg's node num
   map<string, int32> num_outgoing_node = 5;
    // collection name -> be accessed node num by other rg
   map<string, int32> num_incoming_node = 6;
