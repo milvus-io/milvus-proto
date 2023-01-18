@@ -271,6 +271,8 @@ message LoadCollectionRequest {
   string collection_name = 3;
   // The replica number to load, default by 1
   int32 replica_number = 4;
+  // Whether to enable refresh mode.
+  bool refresh = 6;
 }
 
 /**
@@ -461,6 +463,8 @@ message LoadPartitionsRequest {
   repeated string partition_names = 4;
   // The replicas number you would load, 1 by default
   int32 replica_number = 5;
+  // Whether to enable refresh mode.
+  bool refresh = 7;
 }
 
 /*
