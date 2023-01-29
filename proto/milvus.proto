@@ -102,7 +102,7 @@ service MilvusService {
   rpc DropResourceGroup(DropResourceGroupRequest) returns (common.Status) {}
   rpc TransferNode(TransferNodeRequest) returns (common.Status) {}
   rpc TransferReplica(TransferReplicaRequest) returns (common.Status) {}
-  rpc ListResourceGroup(ListResourceGroupRequest) returns (ListResourceGroupResponse) {}
+  rpc ListResourceGroups(ListResourceGroupsRequest) returns (ListResourceGroupsResponse) {}
   rpc DescribeResourceGroup(DescribeResourceGroupRequest) returns (DescribeResourceGroupResponse) {}
 
   rpc RenameCollection(RenameCollectionRequest) returns (common.Status) {}
@@ -1431,20 +1431,20 @@ message TransferNodeRequest {
   int32  num_node = 4;
 }
 
-// transfer `replicaNum` replicas in `collectionID` from `source_resource_group` to `target_resource_groups`
+// transfer `replicaNum` replicas in `collectionID` from `source_resource_group` to `target_resource_group`
 message TransferReplicaRequest {
   common.MsgBase base = 1;
   string source_resource_group = 2;
-  repeated string target_resource_groups = 3;
+  string target_resource_group = 3;
   string  collection_name = 4;
   int64  num_replica = 5;
 }
 
-message ListResourceGroupRequest {
+message ListResourceGroupsRequest {
   common.MsgBase base = 1;
 }
 
-message ListResourceGroupResponse {
+message ListResourceGroupsResponse {
   common.Status status = 1;
   repeated string  resource_groups = 2;
 }
