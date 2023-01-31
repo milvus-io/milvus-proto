@@ -1,7 +1,7 @@
 pull_request_rules:
   - name: Add needs-dco label when DCO check failed
     conditions:
-      - base=master
+      - base=2.2
       - -status-success=DCO
     actions:
       label:
@@ -12,7 +12,7 @@ pull_request_rules:
 
   - name: Add dco-passed label when DCO check passed
     conditions:
-      - base=master
+      - base=2.2
       - status-success=DCO
     actions:
       label:
@@ -23,7 +23,7 @@ pull_request_rules:
 
   - name: Blocking PR if missing a related issue or PR doesn't have kind/improvement label
     conditions:
-      - base=master
+      - base=2.2
       - -body~=\#[0-9]{1,6}(\s+|$)
       - -label=kind/improvement
       - -title~=\[automated\]
@@ -39,10 +39,10 @@ pull_request_rules:
     conditions:
       - or:
         - and:
-          - base=master
+          - base=2.2
           - body~=\#[0-9]{1,6}(\s+|$)
         - and:
-          - base=master
+          - base=2.2
           - label=kind/improvement
     actions:
       label:
@@ -51,7 +51,7 @@ pull_request_rules:
 
   - name: Dismiss block label if automated create PR
     conditions:
-      - base=master
+      - base=2.2
       - title~=\[automated\]
     actions:
       label:
@@ -61,7 +61,7 @@ pull_request_rules:
         
   - name: Test passed for code changed
     conditions:
-      - base=master
+      - base=2.2
       - "status-success=Run Check Proto (3.8)"
     actions:
       label:
@@ -70,7 +70,7 @@ pull_request_rules:
 
   - name: Remove ci-passed label when test is not passed
     conditions:
-      - base=master
+      - base=2.2
       - "status-success!=Run Check Proto (3.8)"    
     actions:
       label:
