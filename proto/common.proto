@@ -335,6 +335,12 @@ enum ObjectPrivilege {
     PrivilegeManageOwnership = 23;
     PrivilegeSelectUser = 24;
     PrivilegeUpsert = 25;
+    PrivilegeCreateResourceGroup = 26;
+    PrivilegeDropResourceGroup = 27;
+    PrivilegeDescribeResourceGroup = 28;
+    PrivilegeListResourceGroups = 29;
+    PrivilegeTransferNode = 30;
+    PrivilegeTransferReplica = 31;
 }
 
 message PrivilegeExt {
