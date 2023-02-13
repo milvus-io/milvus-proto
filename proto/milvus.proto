@@ -101,6 +101,8 @@ service MilvusService {
   rpc TransferReplica(TransferReplicaRequest) returns (common.Status) {}
   rpc ListResourceGroups(ListResourceGroupsRequest) returns (ListResourceGroupsResponse) {}
   rpc DescribeResourceGroup(DescribeResourceGroupRequest) returns (DescribeResourceGroupResponse) {}
+
+  rpc RenameCollection(RenameCollectionRequest) returns (common.Status) {}
 }
 
 message CreateAliasRequest {
@@ -1448,4 +1450,11 @@ message ResourceGroup {
   map<string, int32> num_outgoing_node = 5;
    // collection name -> be accessed node num by other rg
   map<string, int32> num_incoming_node = 6;
+}
+
+message RenameCollectionRequest {
+  common.MsgBase base = 1;
+  string db = 2;
+  string oldName = 3;
+  string newName = 4;
 }
