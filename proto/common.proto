@@ -68,6 +68,7 @@ enum ErrorCode {
     MemoryQuotaExhausted = 53;
     DiskQuotaExhausted = 54;
     TimeTickLongDelay = 55;
+    NotReadyServe = 56;
 
     // Service availability.
     // NA: Not Available.
