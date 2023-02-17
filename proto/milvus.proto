@@ -1405,17 +1405,32 @@ message CheckHealthResponse {
 }
 
 message CreateResourceGroupRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCreateResourceGroup
+    object_name_index: -1
+  };
   common.MsgBase base = 1;
   string resource_group = 2;
 }
 
 message DropResourceGroupRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDropResourceGroup
+    object_name_index: -1
+  };
   common.MsgBase base = 1;
   string resource_group = 2;
 }
 
 // transfer `nodeNum` nodes from `source_resource_group` to `target_resource_group` 
 message TransferNodeRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeTransferNode
+    object_name_index: -1
+  };
   common.MsgBase base = 1;
   string source_resource_group = 2;
   string target_resource_group = 3;
@@ -1424,6 +1439,11 @@ message TransferNodeRequest {
 
 // transfer `replicaNum` replicas in `collectionID` from `source_resource_group` to `target_resource_group`
 message TransferReplicaRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeTransferReplica
+    object_name_index: -1
+  };
   common.MsgBase base = 1;
   string source_resource_group = 2;
   string target_resource_group = 3;
@@ -1432,6 +1452,11 @@ message TransferReplicaRequest {
 }
 
 message ListResourceGroupsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeListResourceGroups
+    object_name_index: -1
+  };
   common.MsgBase base = 1;
 }
 
@@ -1441,6 +1466,11 @@ message ListResourceGroupsResponse {
 }
 
 message DescribeResourceGroupRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDescribeResourceGroup
+    object_name_index: -1
+  };
   common.MsgBase base = 1;
   string resource_group = 2;
 }
