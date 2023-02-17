@@ -1356,6 +1356,11 @@ message OperatePrivilegeRequest {
 }
 
 message GetLoadingProgressRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeGetLoadingProgress
+    object_name_index: 2
+  };
   // Not useful for now
   common.MsgBase base = 1;
   string collection_name = 2;
@@ -1368,6 +1373,11 @@ message GetLoadingProgressResponse {
 }
 
 message GetLoadStateRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeGetLoadState
+    object_name_index: 2
+  };
   // Not useful for now
   common.MsgBase base = 1;
   string collection_name = 2;
