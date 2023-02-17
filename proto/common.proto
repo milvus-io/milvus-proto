@@ -330,6 +330,9 @@ enum ObjectPrivilege {
     PrivilegeSelectOwnership = 22;
     PrivilegeManageOwnership = 23;
     PrivilegeSelectUser = 24;
+
+    PrivilegeGetLoadingProgress = 32;
+    PrivilegeGetLoadState = 33;
 }
 
 message PrivilegeExt {
