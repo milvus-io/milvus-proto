@@ -67,7 +67,8 @@ enum ErrorCode {
     DiskQuotaExhausted = 54;
     TimeTickLongDelay = 55;
     NotReadyServe = 56;
-
+    // Coord is switching from standby mode to active mode 
+    NotReadyCoordActivating = 57;
     // Service availability.
     // NA: Not Available.
     DataCoordNA = 100;
