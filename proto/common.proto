@@ -73,6 +73,8 @@ enum ErrorCode {
     // Coord is switching from standby mode to active mode 
     NotReadyCoordActivating = 57;
 
+    NotFoundTSafer = 58;
+
     // Service availability.
     // NA: Not Available.
     DataCoordNA = 100;
@@ -162,7 +164,7 @@ enum MsgType {
     RenameCollection = 112;
     DescribeAlias = 113;
     ListAliases = 114;
-    
+
     /* DEFINITION REQUESTS: PARTITION */
     CreatePartition = 200;
     DropPartition = 201;
