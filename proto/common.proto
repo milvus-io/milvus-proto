@@ -372,3 +372,8 @@ enum LoadState {
     LoadStateLoading = 2;
     LoadStateLoaded = 3;
 }
+
+message SegmentStats {
+    int64 SegmentID = 1;
+    int64 NumRows = 2;
+}
