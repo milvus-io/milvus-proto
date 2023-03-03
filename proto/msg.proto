@@ -97,3 +97,11 @@ message DropPartitionRequest {
 message TimeTickMsg {
   common.MsgBase base = 1;
 }
+
+message DataNodeTtMsg {
+  common.MsgBase base =1;
+  string channel_name = 2;
+  uint64 timestamp = 3;
+  repeated common.SegmentStats segments_stats = 4;
+}
+
