@@ -12,6 +12,7 @@ option csharp_namespace = "IO.Milvus.Grpc";
 
 import "google/protobuf/descriptor.proto";
 
+// Deprecated
 enum ErrorCode {
     Success = 0;
     UnexpectedError = 1;
@@ -102,6 +103,7 @@ enum SegmentState {
 message Status {
     ErrorCode error_code = 1;
     string reason = 2;
+    int32 code = 3;
 }
 
 message KeyValuePair {
