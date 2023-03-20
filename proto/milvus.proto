@@ -39,6 +39,8 @@ service MilvusService {
   rpc CreateAlias(CreateAliasRequest) returns (common.Status) {}
   rpc DropAlias(DropAliasRequest) returns (common.Status) {}
   rpc AlterAlias(AlterAliasRequest) returns (common.Status) {}
+  rpc DescribeAlias(DescribeAliasRequest) returns (DescribeAliasResponse) {}
+  rpc ListAliases(ListAliasRequest) returns (ListAliasesResponse) {}
 
   rpc CreateIndex(CreateIndexRequest) returns (common.Status) {}
   rpc DescribeIndex(DescribeIndexRequest) returns (DescribeIndexResponse) {}
@@ -126,6 +128,38 @@ message AlterAliasRequest{
   string db_name = 2;
   string collection_name = 3;
   string alias = 4;
+}
+
+message DescribeAliasRequest{
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string alias = 3;
+}
+
+/*
+* Describe alias response
+*/
+message DescribeAliasResponse {
+  // Response status
+  common.Status status = 1;
+  string db_name = 2;
+  string alias = 3;
+  string collection = 4;
+}
+
+message ListAliasRequest{
+  common.MsgBase base = 1;
+  string db_name = 2;
+}
+
+/*
+* List aliases response
+*/
+message ListAliasesResponse {
+  // Response status
+  common.Status status = 1;
+  string db_name = 2;
+  repeated string aliases = 3;
 }
 
 /**
