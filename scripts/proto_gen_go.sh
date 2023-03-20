@@ -39,6 +39,7 @@ mkdir -p ../go-api/commonpb
 mkdir -p ../go-api/schemapb
 mkdir -p ../go-api/milvuspb
 mkdir -p ../go-api/msgpb
+mkdir -p ../go-api/federpb
 
 $protoc --version
 
@@ -65,5 +66,11 @@ $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
     --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/commonpb \
     --go_opt="Mmessage.proto=github.com/milvus-io/milvus-proto/go-api/msgapb;msgpb" \
     --go_out=plugins=grpc,paths=source_relative:./../go-api/msgpb msg.proto
+
+$protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
+    --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/schemapb \
+    --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/commonpb \
+    --go_opt="Mmessage.proto=github.com/milvus-io/milvus-proto/go-api/federpb;federpb" \
+    --go_out=plugins=grpc,paths=source_relative:./../go-api/federpb feder.proto
 
 popd

@@ -179,6 +179,8 @@ enum MsgType {
     HandoffSegments = 254;
     LoadBalanceSegments = 255;
     DescribeSegments = 256;
+    FederListIndexedSegment = 257;
+    FederDescribeSegmentIndexData = 258;
 
     /* DEFINITION REQUESTS: INDEX */
     CreateIndex = 300;
