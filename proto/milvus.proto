@@ -58,8 +58,10 @@ service MilvusService {
   rpc Flush(FlushRequest) returns (FlushResponse) {}
   rpc Query(QueryRequest) returns (QueryResults) {}
   rpc CalcDistance(CalcDistanceRequest) returns (CalcDistanceResults) {}
+  rpc FlushAll(FlushAllRequest) returns (FlushAllResponse) {}
 
   rpc GetFlushState(GetFlushStateRequest) returns (GetFlushStateResponse) {}
+  rpc GetFlushAllState(GetFlushAllStateRequest) returns (GetFlushAllStateResponse) {}
   rpc GetPersistentSegmentInfo(GetPersistentSegmentInfoRequest) returns (GetPersistentSegmentInfoResponse) {}
   rpc GetQuerySegmentInfo(GetQuerySegmentInfoRequest) returns (GetQuerySegmentInfoResponse) {}
   rpc GetReplicas(GetReplicasRequest) returns (GetReplicasResponse) {}
@@ -917,6 +919,14 @@ message CalcDistanceResults {
   }
 }
 
+message FlushAllRequest {
+}
+
+message FlushAllResponse {
+  common.Status status = 1;
+  uint64 flush_all_ts = 2;
+}
+
 message PersistentSegmentInfo {
   int64 segmentID = 1;
   int64 collectionID = 2;
@@ -1069,6 +1079,16 @@ message GetFlushStateRequest {
 }
 
 message GetFlushStateResponse {
+  common.Status status = 1;
+  bool flushed = 2;
+}
+
+message GetFlushAllStateRequest {
+  common.MsgBase base = 1;
+  uint64 flush_all_ts = 2;
+}
+
+message GetFlushAllStateResponse {
   common.Status status = 1;
   bool flushed = 2;
 }
