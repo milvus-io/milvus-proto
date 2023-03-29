@@ -308,6 +308,15 @@ message DescribeCollectionResponse {
   repeated common.KeyValuePair properties = 13;
 }
 
+enum RefreshOption {
+  // Refresh the collection
+  block = 0;
+  // Async refresh the collection
+  async = 1;
+  // Wait for the prior async refresh operation
+  await = 2;
+}
+
 /**
 * Load collection data into query nodes, then you can do vector search on this collection.
 */
@@ -325,10 +334,11 @@ message LoadCollectionRequest {
   string collection_name = 3;
   // The replica number to load, default by 1
   int32 replica_number = 4;
-  // create replica used resource group
+  // Create replica used resource group
   repeated string resource_groups = 5;
   // Whether to enable refresh mode.
   bool refresh = 6;
+  RefreshOption refresh_option = 7;
 }
 
 /**
