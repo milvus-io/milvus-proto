@@ -1430,6 +1430,7 @@ message GetLoadingProgressRequest {
 message GetLoadingProgressResponse {
   common.Status status = 1;
   int64 progress = 2;
+  int64 refresh_progress = 3;
 }
 
 message GetLoadStateRequest {
