@@ -84,7 +84,10 @@ message BytesArray { repeated bytes data = 1; }
 
 message StringArray { repeated string data = 1; }
 
-message ArrayArray { repeated ScalarField data = 1; }
+message ArrayArray {
+  repeated ScalarField data = 1;
+  DataType element_type = 2;
+}
 
 message JSONArray { repeated bytes data = 1; }
 
