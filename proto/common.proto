@@ -344,6 +344,11 @@ enum ObjectPrivilege {
     PrivilegeTransferReplica = 31;
     PrivilegeGetLoadingProgress = 32;
     PrivilegeGetLoadState = 33;
+
+    PrivilegeRenameCollection = 34;
+    PrivilegeCreateDatabase = 35;
+    PrivilegeDropDatabase = 36;
+    PrivilegeListDatabases = 37;
 }
 
 message PrivilegeExt {
