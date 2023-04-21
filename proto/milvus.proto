@@ -105,6 +105,10 @@ service MilvusService {
   rpc DescribeResourceGroup(DescribeResourceGroupRequest) returns (DescribeResourceGroupResponse) {}
 
   rpc RenameCollection(RenameCollectionRequest) returns (common.Status) {}
+
+  rpc CreateDatabase(CreateDatabaseRequest) returns (common.Status) {}
+  rpc DropDatabase(CreateDatabaseRequest) returns (common.Status) {}
+  rpc ListDatabases(ListDatabasesRequest) returns (ListDatabasesResponse) {}
 }
 
 message CreateAliasRequest {
@@ -1513,8 +1517,52 @@ message ResourceGroup {
 }
 
 message RenameCollectionRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeRenameCollection
+    object_name_index: -1
+  };
   common.MsgBase base = 1;
   string db = 2;
   string oldName = 3;
   string newName = 4;
+}
+
+message CreateDatabaseRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCreateDatabase
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+}
+
+message DropDatabaseRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDropDatabase
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+}
+
+message ListDatabasesRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeListDatabases
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+}
+
+message ListDatabasesResponse {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeShowCollections
+    object_name_index: -1
+  };
+  common.Status status = 1;
+  repeated string db_name = 2;
 }
