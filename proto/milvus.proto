@@ -1320,6 +1320,8 @@ message GrantEntity {
   string object_name = 3;
   // privilege
   GrantorEntity grantor = 4;
+  // db name
+  string db_name = 5;
 }
 
 message SelectGrantRequest {
