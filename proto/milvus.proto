@@ -142,7 +142,6 @@ message CreateCollectionRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The unique collection name in milvus.(Required)
   string collection_name = 3;
@@ -167,7 +166,6 @@ message DropCollectionRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The unique collection name in milvus.(Required)
   string collection_name = 3;
@@ -184,7 +182,6 @@ message AlterCollectionRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The unique collection name in milvus.(Required)
   string collection_name = 3;
@@ -198,7 +195,6 @@ message AlterCollectionRequest {
 message HasCollectionRequest {
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name you want to check.
   string collection_name = 3;
@@ -228,7 +224,6 @@ message DescribeCollectionRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name you want to describe, you can pass collection_name or collectionID
   string collection_name = 3;
@@ -267,6 +262,7 @@ message DescribeCollectionResponse {
   // The collection name
   string collection_name = 12;
   repeated common.KeyValuePair properties = 13;
+  string db_name = 14;
 }
 
 /**
@@ -280,7 +276,6 @@ message LoadCollectionRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name you want to load
   string collection_name = 3;
@@ -303,7 +298,6 @@ message ReleaseCollectionRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name you want to release
   string collection_name = 3;
@@ -321,7 +315,6 @@ message GetStatisticsRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name you want get statistics
   string collection_name = 3;
@@ -353,7 +346,6 @@ message GetCollectionStatisticsRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name you want get statistics
   string collection_name = 3;
@@ -391,7 +383,6 @@ message ShowCollectionsRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // Not useful for now
   uint64 time_stamp = 3;
@@ -429,7 +420,6 @@ message ShowCollectionsResponse {
 message CreatePartitionRequest {
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name in milvus
   string collection_name = 3;
@@ -443,7 +433,6 @@ message CreatePartitionRequest {
 message DropPartitionRequest {
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name in milvus
   string collection_name = 3;
@@ -457,7 +446,6 @@ message DropPartitionRequest {
 message HasPartitionRequest {
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name in milvus
   string collection_name = 3;
@@ -472,7 +460,6 @@ message HasPartitionRequest {
 message LoadPartitionsRequest {
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name in milvus
   string collection_name = 3;
@@ -493,7 +480,6 @@ message LoadPartitionsRequest {
 message ReleasePartitionsRequest {
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name in milvus
   string collection_name = 3;
@@ -507,7 +493,6 @@ message ReleasePartitionsRequest {
 message GetPartitionStatisticsRequest {
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name in milvus
   string collection_name = 3;
@@ -526,7 +511,6 @@ message GetPartitionStatisticsResponse {
 message ShowPartitionsRequest {
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The collection name you want to describe, you can pass collection_name or collectionID
   string collection_name = 3;
@@ -595,7 +579,6 @@ message CreateIndexRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The particular collection name you want to create index.
   string collection_name = 3;
@@ -619,7 +602,6 @@ message DescribeIndexRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2;
   // The particular collection name in Milvus
   string collection_name = 3;
@@ -670,7 +652,6 @@ message GetIndexBuildProgressRequest {
   };
   // Not useful for now
   common.MsgBase base = 1;
-  // Not useful for now
   string db_name = 2 ;
   // The collection name in milvus
   string collection_name = 3;
@@ -974,6 +955,7 @@ message LoadBalanceRequest {
   repeated int64 dst_nodeIDs = 3;
   repeated int64 sealed_segmentIDs = 4;
   string collectionName = 5;
+  string db_name = 6;
 }
 
 message ManualCompactionRequest {
@@ -1050,6 +1032,7 @@ message ImportRequest {
   bool row_based = 4;                        // the file is row-based or column-based
   repeated string files = 5;                 // file paths to be imported
   repeated common.KeyValuePair options = 6;  // import options, bucket, etc.
+  string db_name = 7;
 }
 
 message ImportResponse {
@@ -1076,6 +1059,7 @@ message GetImportStateResponse {
 message ListImportTasksRequest {
   string collection_name = 1; // target collection, list all tasks if the name is empty
   int64 limit = 2;            // maximum number of tasks returned, list all tasks if the value is 0
+  string db_name = 3;
 }
 
 message ListImportTasksResponse {
@@ -1088,6 +1072,7 @@ message GetReplicasRequest {
   int64 collectionID = 2;
   bool with_shard_nodes = 3;
   string collection_name = 4;
+  string db_name = 5;
 }
 
 message GetReplicasResponse {
@@ -1372,6 +1357,7 @@ message GetLoadingProgressRequest {
   common.MsgBase base = 1;
   string collection_name = 2;
   repeated string partition_names = 3;
+  string db_name = 4;
 }
 
 message GetLoadingProgressResponse {
@@ -1389,6 +1375,7 @@ message GetLoadStateRequest {
   common.MsgBase base = 1;
   string collection_name = 2;
   repeated string partition_names = 3;
+  string db_name = 4;
 }
 
 message GetLoadStateResponse {
@@ -1475,6 +1462,7 @@ message TransferReplicaRequest {
   string target_resource_group = 3;
   string  collection_name = 4;
   int64  num_replica = 5;
+  string db_name = 6;
 }
 
 message ListResourceGroupsRequest {
@@ -1525,7 +1513,7 @@ message RenameCollectionRequest {
     object_name_index: -1
   };
   common.MsgBase base = 1;
-  string db = 2;
+  string db_name = 2;
   string oldName = 3;
   string newName = 4;
 }
@@ -1566,5 +1554,5 @@ message ListDatabasesResponse {
     object_name_index: -1
   };
   common.Status status = 1;
-  repeated string db_name = 2;
+  repeated string db_names = 2;
 }
