@@ -107,7 +107,7 @@ service MilvusService {
   rpc RenameCollection(RenameCollectionRequest) returns (common.Status) {}
 
   rpc CreateDatabase(CreateDatabaseRequest) returns (common.Status) {}
-  rpc DropDatabase(CreateDatabaseRequest) returns (common.Status) {}
+  rpc DropDatabase(DropDatabaseRequest) returns (common.Status) {}
   rpc ListDatabases(ListDatabasesRequest) returns (ListDatabasesResponse) {}
 }
 
