@@ -58,6 +58,9 @@ message FieldSchema {
                         // state is `Created`.
   DataType element_type = 10; // For array type, the element type is stored here
   ValueField default_value = 11; // default_value only support scalars except array and json for now
+
+  bool is_partition_key = 12; // enable logic partitions
+  int64 partitions = 13; // num of physical partitions
 }
 
 /**
