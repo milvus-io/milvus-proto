@@ -55,6 +55,7 @@ message FieldSchema {
   FieldState state = 9; // To keep compatible with older version, the default
                         // state is `Created`.
   DataType element_type = 10; // For array type, the element type is stored here
+  ValueField default_value = 11; // default_value only support scalars except array and json for now
 }
 
 /**
@@ -88,6 +89,18 @@ message ArrayArray {
 }
 
 message JSONArray { repeated bytes data = 1; }
+
+message ValueField {
+  oneof data {
+    bool bool_data = 1;
+    int32 int_data = 2;
+    int64 long_data = 3;
+    float float_data = 4;
+    double double_data = 5;
+    string string_data = 6;
+    bytes bytes_data = 7;
+  }
+}
 
 message ScalarField {
   oneof data {
