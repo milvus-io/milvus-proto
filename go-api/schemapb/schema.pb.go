@@ -664,7 +664,6 @@ func (m *JSONArray) GetData() [][]byte {
 
 type ValueField struct {
 	// Types that are valid to be assigned to Data:
-	//
 	//	*ValueField_BoolData
 	//	*ValueField_IntData
 	//	*ValueField_LongData
