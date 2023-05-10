@@ -714,6 +714,7 @@ message InsertRequest {
   repeated schema.FieldData fields_data = 5;
   repeated uint32 hash_keys = 6;
   uint32 num_rows = 7;
+  schema.JSONArray meta_data = 8;
 }
 
 message MutationResult {
@@ -762,6 +763,7 @@ message SearchRequest {
   uint64 travel_timestamp = 10;
   uint64 guarantee_timestamp = 11; // guarantee_timestamp
   int64  nq = 12;
+  bool not_return_all_meta = 13;
 }
 
 message Hits {
@@ -810,6 +812,7 @@ message QueryRequest {
   uint64 travel_timestamp = 7;
   uint64 guarantee_timestamp = 8; // guarantee_timestamp
   repeated common.KeyValuePair query_params = 9; // optional
+  bool not_return_all_meta = 10;
 }
 
 message QueryResults {
