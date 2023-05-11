@@ -59,6 +59,7 @@ message FieldSchema {
   DataType element_type = 10; // For array type, the element type is stored here
   ValueField default_value = 11; // default_value only support scalars except array and json for now
   bool is_dynamic = 12; // mark whether this field is the dynamic field
+  bool is_partition_key = 13; // enable logic partitions
 }
 
 /**
