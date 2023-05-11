@@ -194,6 +194,7 @@ message CreateCollectionRequest {
   // The consistency level that the collection used, modification is not supported now.
   common.ConsistencyLevel consistency_level = 6;
   repeated common.KeyValuePair properties = 7;
+  int64 partitions = 8; // num of default physical partitions, only used in partition key mode and changes are not supported
 }
 
 /**
@@ -307,6 +308,8 @@ message DescribeCollectionResponse {
   // The collection name
   string collection_name = 12;
   repeated common.KeyValuePair properties = 13;
+  string db_name = 14;
+  int64 partitions = 15;
 }
 
 /**
