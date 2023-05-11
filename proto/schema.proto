@@ -58,6 +58,7 @@ message FieldSchema {
                         // state is `Created`.
   DataType element_type = 10; // For array type, the element type is stored here
   ValueField default_value = 11; // default_value only support scalars except array and json for now
+  bool is_dynamic = 12; // mark whether this field is the dynamic field
 }
 
 /**
@@ -68,6 +69,7 @@ message CollectionSchema {
   string description = 2;
   bool autoID = 3; // deprecated later, keep compatible with c++ part now
   repeated FieldSchema fields = 4;
+  bool enable_dynamic_field = 5; // mark whether this table has the dynamic field function enabled.
 }
 
 message BoolArray { repeated bool data = 1; }
