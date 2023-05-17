@@ -1607,3 +1607,14 @@ message GetIndexStatisticsResponse {
   // All index information.
   repeated IndexDescription index_descriptions = 2;
 }
+
+message ConnectRequest {
+  common.MsgBase base = 1;
+  common.ClientInfo client_info = 2;
+}
+
+message ConnectResponse {
+  common.Status status = 1;
+  common.ServerInfo server_info = 2;
+  int64 identifier = 3;
+}
