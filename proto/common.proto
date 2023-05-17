@@ -233,6 +233,8 @@ enum MsgType {
     SegmentFlushDone = 1207;
 
     DataNodeTt = 1208;
+    Connect = 1209;
+    ListClientInfos = 1210;
 
     /* Credential */
     CreateCredential = 1500;
@@ -383,4 +385,26 @@ enum LoadState {
 message SegmentStats {
     int64 SegmentID = 1;
     int64 NumRows = 2;
+}
+
+message ClientInfo {
+    // sdk_type can be `python`, `golang`, `nodejs` and etc. It's not proper to make `sdk_type` an
+    // enumerate type, since we cannot always update the enum value everytime when newly sdk is supported.
+    string sdk_type = 1;
+    string sdk_version = 2;
+    string local_time = 3;
+    string user = 4;
+    string host = 5;
+    // reserved for newly-added feature if necessary.
+    map<string, string> reserved = 6;
+}
+
+message ServerInfo {
+    string build_tags = 1;
+    string build_time = 2;
+    string git_commit = 3;
+    string go_version = 4;
+    string deploy_mode = 5;
+    // reserved for newly-added feature if necessary.
+    map<string, string> reserved = 6;
 }
