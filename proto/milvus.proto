@@ -111,6 +111,8 @@ service MilvusService {
   rpc CreateDatabase(CreateDatabaseRequest) returns (common.Status) {}
   rpc DropDatabase(DropDatabaseRequest) returns (common.Status) {}
   rpc ListDatabases(ListDatabasesRequest) returns (ListDatabasesResponse) {}
+
+  rpc Connect(ConnectRequest) returns (ConnectResponse) {}
 }
 
 message CreateAliasRequest {
