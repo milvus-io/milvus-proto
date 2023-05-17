@@ -115,6 +115,8 @@ service MilvusService {
 
   rpc ListIndexedSegment(feder.ListIndexedSegmentRequest) returns(feder.ListIndexedSegmentResponse) {}
   rpc DescribeSegmentIndexData(feder.DescribeSegmentIndexDataRequest) returns(feder.DescribeSegmentIndexDataResponse) {}
+
+  rpc Connect(ConnectRequest) returns (ConnectResponse) {}
 }
 
 message CreateAliasRequest {
