@@ -137,6 +137,7 @@ message FieldData {
     VectorField vectors = 4;
   }
   int64 field_id = 5;
+  bool is_dynamic = 6; 
 }
 
 message IDs {
