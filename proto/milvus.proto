@@ -895,6 +895,7 @@ message QueryResults {
   common.Status status = 1;
   repeated schema.FieldData fields_data = 2;
   string collection_name = 3;
+  repeated string output_fields = 4;
 }
 
 message VectorIDs {
