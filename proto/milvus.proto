@@ -42,6 +42,7 @@ service MilvusService {
 
   rpc CreateIndex(CreateIndexRequest) returns (common.Status) {}
   rpc DescribeIndex(DescribeIndexRequest) returns (DescribeIndexResponse) {}
+  rpc GetIndexStatistics(GetIndexStatisticsRequest) returns (GetIndexStatisticsResponse) {}
   // Deprecated: use DescribeIndex instead
   rpc GetIndexState(GetIndexStateRequest) returns (GetIndexStateResponse) {}
   // Deprecated: use DescribeIndex instead
@@ -1564,6 +1565,29 @@ message ListDatabasesResponse {
   };
   common.Status status = 1;
   repeated string db_names = 2;
+}
+
+message GetIndexStatisticsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeIndexDetail
+    object_name_index: 3
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  // Not useful for now
+  string db_name = 2;
+  // The particular collection name in Milvus
+  string collection_name = 3;
+  // The index name in this particular collection
+  string index_name = 4;
+}
+
+message GetIndexStatisticsResponse {
+  // Response status
+  common.Status status = 1;
+  // All index information.
+  repeated IndexDescription index_descriptions = 2;
 }
 
 message ConnectRequest {
