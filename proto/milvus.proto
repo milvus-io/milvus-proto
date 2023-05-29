@@ -768,6 +768,8 @@ message SearchRequest {
   uint64 guarantee_timestamp = 11; // guarantee_timestamp
   int64  nq = 12;
   bool not_return_all_meta = 13;
+  common.ConsistencyLevel consistency_level = 14;
+  bool use_default_consistency = 15;
 }
 
 message Hits {
@@ -817,6 +819,8 @@ message QueryRequest {
   uint64 guarantee_timestamp = 8; // guarantee_timestamp
   repeated common.KeyValuePair query_params = 9; // optional
   bool not_return_all_meta = 10;
+  common.ConsistencyLevel consistency_level = 11;
+  bool use_default_consistency = 12;
 }
 
 message QueryResults {
