@@ -636,6 +636,7 @@ message IndexDescription {
   // index state
   common.IndexState state = 7;
   string index_state_fail_reason = 8;
+  int64 pending_index_rows = 9;
 }
 
 /*
