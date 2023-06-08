@@ -862,6 +862,11 @@ message CalcDistanceResults {
 }
 
 message FlushAllRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeFlushAll
+    object_name_index: -1
+  };
 }
 
 message FlushAllResponse {
