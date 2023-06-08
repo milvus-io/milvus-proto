@@ -3,15 +3,12 @@ package milvus.proto.feder;
 option go_package = "github.com/milvus-io/milvus-proto/go-api/federpb";
 
 import "common.proto";
+import "schema.proto";
 
 message SegmentIndexData {
   int64 segmentID = 1;
   string index_data = 2; // data from knownwhere
-}
-
-message FederSegmentSearchResult {
-  int64 segmentID = 1;
-  string visit_info = 2;
+  schema.IDs ids_set = 3;
 }
 
 message ListIndexedSegmentRequest {

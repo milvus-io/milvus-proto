@@ -155,4 +155,11 @@ message SearchResultData {
   IDs ids = 5;
   repeated int64 topks = 6;
   repeated string output_fields = 7;
+  map<int64, FederSegmentSearchResult> visitor_views = 8;
+}
+
+message FederSegmentSearchResult {
+  int64 segmentID = 1;
+  string visit_info = 2;
+  IDs visit_ids = 3;
 }
