@@ -364,6 +364,7 @@ enum ObjectPrivilege {
     PrivilegeCreateDatabase = 35;
     PrivilegeDropDatabase = 36;
     PrivilegeListDatabases = 37;
+    PrivilegeFlushAll = 38;
 }
 
 message PrivilegeExt {
