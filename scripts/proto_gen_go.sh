@@ -44,33 +44,33 @@ mkdir -p ../go-api/federpb
 $protoc --version
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
-    --go_opt="Mmilvus.proto=github.com/milvus-io/milvus-proto/go-api/milvuspb;milvuspb" \
-    --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/commonpb \
-    --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/schemapb \
+    --go_opt="Mmilvus.proto=github.com/milvus-io/milvus-proto/go-api/v2/milvuspb;milvuspb" \
+    --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/v2/commonpb \
+    --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/v2/schemapb \
     --go_out=plugins=grpc,paths=source_relative:./../go-api/milvuspb milvus.proto
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
-    --go_opt=Mmilvus.proto=github.com/milvus-io/milvus-proto/go-api/milvuspb \
-    --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/commonpb \
-    --go_opt="Mschema.proto=github.com/milvus-io/milvus-proto/go-api/schemapb;schemapb" \
+    --go_opt=Mmilvus.proto=github.com/milvus-io/milvus-proto/go-api/v2/milvuspb \
+    --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/v2/commonpb \
+    --go_opt="Mschema.proto=github.com/milvus-io/milvus-proto/go-api/v2/schemapb;schemapb" \
     --go_out=plugins=grpc,paths=source_relative:./../go-api/schemapb schema.proto
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
-    --go_opt=Mmilvus.proto=github.com/milvus-io/milvus-proto/go-api/milvuspb \
-    --go_opt="Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/commonpb;commonpb" \
-    --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/schemapb \
+    --go_opt=Mmilvus.proto=github.com/milvus-io/milvus-proto/go-api/v2/milvuspb \
+    --go_opt="Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/v2/commonpb;commonpb" \
+    --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/v2/schemapb \
     --go_out=plugins=grpc,paths=source_relative:./../go-api/commonpb common.proto
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
-    --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/schemapb \
-    --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/commonpb \
-    --go_opt="Mmessage.proto=github.com/milvus-io/milvus-proto/go-api/msgapb;msgpb" \
+    --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/v2/schemapb \
+    --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/v2/commonpb \
+    --go_opt="Mmessage.proto=github.com/milvus-io/milvus-proto/go-api/v2/msgapb;msgpb" \
     --go_out=plugins=grpc,paths=source_relative:./../go-api/msgpb msg.proto
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
-    --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/schemapb \
-    --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/commonpb \
-    --go_opt="Mmessage.proto=github.com/milvus-io/milvus-proto/go-api/federpb;federpb" \
+    --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/v2/schemapb \
+    --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/v2/commonpb \
+    --go_opt="Mmessage.proto=github.com/milvus-io/milvus-proto/go-api/v2/federpb;federpb" \
     --go_out=plugins=grpc,paths=source_relative:./../go-api/federpb feder.proto
 
 popd

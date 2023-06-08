@@ -1,6 +1,6 @@
 syntax = "proto3";
 package milvus.proto.feder;
-option go_package = "github.com/milvus-io/milvus-proto/go-api/federpb";
+option go_package = "github.com/milvus-io/milvus-proto/go-api/v2/federpb";
 
 import "common.proto";
 
