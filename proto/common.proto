@@ -72,12 +72,16 @@ enum ErrorCode {
     NotReadyServe = 56;
     // Coord is switching from standby mode to active mode 
     NotReadyCoordActivating = 57;
+
     // Service availability.
     // NA: Not Available.
     DataCoordNA = 100;
 
     // internal error code.
     DDRequestRace = 1000;
+
+    // Used by streaming grpc
+    RpcStreamContinue = 2000;
 }
 
 enum IndexState {
