@@ -79,9 +79,6 @@ enum ErrorCode {
 
     // internal error code.
     DDRequestRace = 1000;
-
-    // Used by streaming grpc
-    RpcStreamContinue = 2000;
 }
 
 enum IndexState {
