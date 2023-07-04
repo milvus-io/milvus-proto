@@ -827,6 +827,7 @@ message SearchRequest {
   bool not_return_all_meta = 13;
   common.ConsistencyLevel consistency_level = 14;
   bool use_default_consistency = 15;
+  bool search_by_primary_keys = 16;
 }
 
 message Hits {

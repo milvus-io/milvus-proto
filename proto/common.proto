@@ -124,6 +124,8 @@ enum PlaceholderType {
     None = 0;
     BinaryVector = 100;
     FloatVector = 101;
+    Int64 = 5;
+    VarChar = 21;
 }
 
 message PlaceholderValue {
