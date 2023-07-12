@@ -114,6 +114,8 @@ service MilvusService {
   rpc ListDatabases(ListDatabasesRequest) returns (ListDatabasesResponse) {}
 
   rpc Connect(ConnectRequest) returns (ConnectResponse) {}
+
+  rpc AllocTimestamp(AllocTimestampRequest) returns (AllocTimestampResponse) {}
 }
 
 message CreateAliasRequest {
@@ -616,6 +618,7 @@ message DescribeIndexRequest {
   string field_name = 4;
   // No need to set up for now @2021.06.30
   string index_name = 5;
+  uint64 timestamp = 6;
 }
 
 /*
@@ -1591,6 +1594,7 @@ message GetIndexStatisticsRequest {
   string collection_name = 3;
   // The index name in this particular collection
   string index_name = 4;
+  uint64 timestamp = 5;
 }
 
 message GetIndexStatisticsResponse {
@@ -1609,4 +1613,13 @@ message ConnectResponse {
   common.Status status = 1;
   common.ServerInfo server_info = 2;
   int64 identifier = 3;
+}
+
+message AllocTimestampRequest {
+  common.MsgBase base = 1;
+}
+
+message AllocTimestampResponse {
+  common.Status status = 1;
+  uint64 timestamp = 2;
 }
