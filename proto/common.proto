@@ -231,6 +231,7 @@ enum MsgType {
     DataNodeTt = 1208;
     Connect = 1209;
     ListClientInfos = 1210;
+    AllocTimestamp = 1211;
 
     /* Credential */
     CreateCredential = 1500;
