@@ -1539,6 +1539,7 @@ message RenameCollectionRequest {
   string db_name = 2;
   string oldName = 3;
   string newName = 4;
+  string newDBName =5;
 }
 
 message CreateDatabaseRequest {
