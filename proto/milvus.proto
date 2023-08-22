@@ -1599,6 +1599,7 @@ message RenameCollectionRequest {
   string db_name = 2;
   string oldName = 3;
   string newName = 4;
+  string newDBName =5;
 }
 
 message GetIndexStatisticsRequest {
@@ -1682,4 +1683,5 @@ message ListDatabasesResponse {
   };
   common.Status status = 1;
   repeated string db_names = 2;
+  repeated uint64 created_timestamp = 3;
 }
