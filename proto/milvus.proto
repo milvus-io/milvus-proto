@@ -862,7 +862,8 @@ message FlushResponse{
   string db_name = 2;
   map<string, schema.LongArray> coll_segIDs = 3;
   map<string, schema.LongArray> flush_coll_segIDs = 4;
-  map<string, int64> coll_seal_times = 5;
+  map<string, int64> coll_seal_times = 5; // physical time for backup tool
+  map<string, uint64> coll_flush_ts = 6; // hybrid ts for geting flush tate
 }
 
 message QueryRequest {
@@ -1088,6 +1089,7 @@ message CompactionMergeInfo {
 
 message GetFlushStateRequest {
   repeated int64 segmentIDs = 1;
+  uint64 flush_ts = 2;
 }
 
 message GetFlushStateResponse {
