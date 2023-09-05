@@ -931,7 +931,6 @@ message FlushAllRequest {
   };
   common.MsgBase base = 1;
   string db_name = 2;
-  string collection_name = 3;
 }
 
 message FlushAllResponse {
@@ -1101,7 +1100,6 @@ message GetFlushAllStateRequest {
   common.MsgBase base = 1;
   uint64 flush_all_ts = 2;
   string db_name = 3;
-  string collection_name = 4;
 }
 
 message GetFlushAllStateResponse {
