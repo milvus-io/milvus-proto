@@ -1087,7 +1087,7 @@ message CompactionMergeInfo {
 }
 
 message GetFlushStateRequest {
-  repeated int64 segmentIDs = 1; // deprecated, kept for compatibility
+  repeated int64 segmentIDs = 1;
   uint64 flush_ts = 2;
   string db_name = 3;
   string collection_name = 4;
