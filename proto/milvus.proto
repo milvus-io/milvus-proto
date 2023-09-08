@@ -13,6 +13,7 @@ option csharp_namespace = "Milvus.Client.Grpc";
 import "common.proto";
 import "schema.proto";
 import "feder.proto";
+import "msg.proto";
 import "google/protobuf/descriptor.proto";
 
 service MilvusService {
@@ -123,6 +124,8 @@ service MilvusService {
   rpc CreateDatabase(CreateDatabaseRequest) returns (common.Status) {}
   rpc DropDatabase(DropDatabaseRequest) returns (common.Status) {}
   rpc ListDatabases(ListDatabasesRequest) returns (ListDatabasesResponse) {}
+
+  rpc ReplicateMessage(ReplicateMessageRequest) returns (common.Status) {}
 }
 
 message CreateAliasRequest {
@@ -1691,4 +1694,14 @@ message ListDatabasesResponse {
   common.Status status = 1;
   repeated string db_names = 2;
   repeated uint64 created_timestamp = 3;
+}
+
+message ReplicateMessageRequest {
+  common.MsgBase base = 1;
+  string channel_name = 2;
+  uint64 BeginTs = 3;
+  uint64 EndTs = 4;
+  repeated bytes Msgs = 5;
+  repeated msg.MsgPosition  StartPositions = 6;
+  repeated msg.MsgPosition  EndPositions = 7;
 }
