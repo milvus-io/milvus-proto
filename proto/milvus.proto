@@ -125,7 +125,7 @@ service MilvusService {
   rpc DropDatabase(DropDatabaseRequest) returns (common.Status) {}
   rpc ListDatabases(ListDatabasesRequest) returns (ListDatabasesResponse) {}
 
-  rpc ReplicateMessage(ReplicateMessageRequest) returns (common.Status) {}
+  rpc ReplicateMessage(ReplicateMessageRequest) returns (ReplicateMessageResponse) {}
 }
 
 message CreateAliasRequest {
@@ -1704,4 +1704,9 @@ message ReplicateMessageRequest {
   repeated bytes Msgs = 5;
   repeated msg.MsgPosition  StartPositions = 6;
   repeated msg.MsgPosition  EndPositions = 7;
+}
+
+message ReplicateMessageResponse {
+  common.Status status = 1;
+  string position = 2;
 }
