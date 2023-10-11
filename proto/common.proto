@@ -280,12 +280,13 @@ message MsgBase {
     uint64 timestamp = 3;
     int64 sourceID = 4;
     int64 targetID = 5;
-    ReplicateInfo replicateInfo = 6;
+    map<string, string> properties = 6;
+    ReplicateInfo replicateInfo = 7;
 }
 
 message ReplicateInfo {
     bool isReplicate = 1;
-    uint64 msgTimestamp = 3;
+    uint64 msgTimestamp = 2;
 }
 
 enum DslType {
