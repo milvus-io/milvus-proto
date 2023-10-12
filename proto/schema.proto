@@ -11,6 +11,7 @@ option java_generate_equals_and_hash = true;
 option csharp_namespace = "Milvus.Client.Grpc";
 
 import "common.proto";
+import "google/protobuf/descriptor.proto";
 
 /**
  * @brief Field data type
@@ -69,7 +70,7 @@ message FieldSchema {
 message CollectionSchema {
   string name = 1;
   string description = 2;
-  bool autoID = 3; // deprecated later, keep compatible with c++ part now
+  bool autoID = 3 [deprecated=true]; // deprecated later, keep compatible with c++ part now
   repeated FieldSchema fields = 4;
   bool enable_dynamic_field = 5; // mark whether this table has the dynamic field function enabled.
 }
