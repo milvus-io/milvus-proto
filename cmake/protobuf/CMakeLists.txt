@@ -1,11 +1,11 @@
 set( PROTOBUF_SOURCE_URL
-     "https://github.com/protocolbuffers/protobuf/releases/download/v3.9.0/protobuf-cpp-3.9.0.zip" )
+     "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.21.4.zip" )
 
-message( STATUS "Building protobuf-cpp-3.9.0 from source" )
+message( STATUS "Building protobuf-cpp from source" )
 
 FetchContent_Declare( protobuf
     URL             ${PROTOBUF_SOURCE_URL}
-    URL_MD5         "9562b27cc6ac5ebd087f201f1310c885"
+    URL_MD5         "4f524caf15beb4354d64b63901587932"
     DOWNLOAD_DIR    ${CMAKE_CURRENT_BINARY_DIR}/../3rdparty_download
     SOURCE_DIR      ${CMAKE_CURRENT_BINARY_DIR}/protobuf-src
     BINARY_DIR      ${CMAKE_CURRENT_BINARY_DIR}/protobuf-build

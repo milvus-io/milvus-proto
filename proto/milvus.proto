@@ -48,9 +48,13 @@ service MilvusService {
   rpc DescribeIndex(DescribeIndexRequest) returns (DescribeIndexResponse) {}
   rpc GetIndexStatistics(GetIndexStatisticsRequest) returns (GetIndexStatisticsResponse) {}
   // Deprecated: use DescribeIndex instead
-  rpc GetIndexState(GetIndexStateRequest) returns (GetIndexStateResponse) {}
+  rpc GetIndexState(GetIndexStateRequest) returns (GetIndexStateResponse) {
+      option deprecated = true;
+  }
   // Deprecated: use DescribeIndex instead
-  rpc GetIndexBuildProgress(GetIndexBuildProgressRequest) returns (GetIndexBuildProgressResponse) {}
+  rpc GetIndexBuildProgress(GetIndexBuildProgressRequest) returns (GetIndexBuildProgressResponse) {
+      option deprecated = true;
+  }
   rpc DropIndex(DropIndexRequest) returns (common.Status) {}
 
   rpc Insert(InsertRequest) returns (MutationResult) {}
@@ -419,6 +423,7 @@ message GetCollectionStatisticsResponse {
 */
 // Deprecated: use GetLoadingProgress rpc instead
 enum ShowType {
+  option deprecated = true;
   // Will return all collections
   All = 0;
   // Will return loaded collections with their inMemory_percentages
@@ -443,7 +448,7 @@ message ShowCollectionsRequest {
   ShowType type = 4;
   // When type is InMemory, will return these collection's inMemory_percentages.(Optional)
   // Deprecated: use GetLoadingProgress rpc instead
-  repeated string collection_names = 5;
+  repeated string collection_names = 5 [deprecated=true];
 }
 
 /*
@@ -462,7 +467,7 @@ message ShowCollectionsResponse {
   repeated uint64 created_utc_timestamps = 5;
   // Load percentage on querynode when type is InMemory
   // Deprecated: use GetLoadingProgress rpc instead
-  repeated int64 inMemory_percentages = 6;
+  repeated int64 inMemory_percentages = 6 [deprecated=true];
   // Indicate whether query service is available
   repeated bool query_service_available = 7;
 }
@@ -573,7 +578,7 @@ message ShowPartitionsRequest {
   repeated string partition_names = 5;
   // Decide return Loaded partitions or All partitions(Optional)
   // Deprecated: use GetLoadingProgress rpc instead
-  ShowType type = 6;
+  ShowType type = 6 [deprecated=true];
 }
 
 /*
@@ -593,7 +598,7 @@ message ShowPartitionsResponse {
   repeated uint64 created_utc_timestamps = 5;
   // Load percentage on querynode
   // Deprecated: use GetLoadingProgress rpc instead
-  repeated int64 inMemory_percentages = 6;
+  repeated int64 inMemory_percentages = 6 [deprecated=true];
 }
 
 message DescribeSegmentRequest {
@@ -969,7 +974,7 @@ message QuerySegmentInfo {
   string index_name = 6;
   int64 indexID = 7;
   // deprecated, check node_ids(NodeIds) field
-  int64 nodeID = 8;
+  int64 nodeID = 8 [deprecated=true];
   common.SegmentState state = 9;
   repeated int64 nodeIds = 10;
 }
