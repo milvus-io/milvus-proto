@@ -106,6 +106,8 @@ message Status {
     ErrorCode error_code = 1 [deprecated=true];
     string reason = 2;
     int32 code = 3;
+    bool retriable = 4;
+    string detail = 5;
 }
 
 message KeyValuePair {
