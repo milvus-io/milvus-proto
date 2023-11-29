@@ -802,6 +802,7 @@ message FlushResponse{
   map<string, schema.LongArray> coll_segIDs = 3;
   map<string, schema.LongArray> flush_coll_segIDs = 4;
   map<string, int64> coll_seal_times = 5;
+  map<string, MsgPosition> channel_cps = 6;
 }
 
 message QueryRequest {
@@ -1025,9 +1026,17 @@ message GetFlushStateRequest {
   repeated int64 segmentIDs = 1;
 }
 
+message MsgPosition {
+  string channel_name = 1;
+  bytes msgID = 2;
+  string msgGroup = 3;
+  uint64 timestamp = 4;
+}
+    
 message GetFlushStateResponse {
   common.Status status = 1;
   bool flushed = 2;
+  map<string, MsgPosition> channelCps = 3;
 }
 
 message GetFlushAllStateRequest {
