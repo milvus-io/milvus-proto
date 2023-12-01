@@ -160,4 +160,5 @@ message SearchResultData {
   IDs ids = 5;
   repeated int64 topks = 6;
   repeated string output_fields = 7;
+  FieldData group_by_field_value = 8;
 }
