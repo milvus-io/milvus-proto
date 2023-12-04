@@ -854,6 +854,26 @@ message SearchResults {
   string collection_name = 3;
 }
 
+message SearchRequestV2 {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeSearch
+    object_name_index: 3
+  };
+  common.MsgBase base = 1; // must
+  string db_name = 2;
+  string collection_name = 3; // must
+  repeated string partition_names = 4; // must
+  repeated SearchRequest requests = 5;
+  repeated common.KeyValuePair rank_params = 6; // must
+  uint64 travel_timestamp = 7;
+  uint64 guarantee_timestamp = 8; // guarantee_timestamp
+  bool not_return_all_meta = 9;
+  repeated string output_fields = 10;
+  common.ConsistencyLevel consistency_level = 11;
+  bool use_default_consistency = 12;
+}
+
 message FlushRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
