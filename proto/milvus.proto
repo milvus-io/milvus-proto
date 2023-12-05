@@ -45,6 +45,7 @@ service MilvusService {
   rpc ListAliases(ListAliasesRequest) returns (ListAliasesResponse) {}
 
   rpc CreateIndex(CreateIndexRequest) returns (common.Status) {}
+  rpc AlterIndex(AlterIndexRequest) returns (common.Status) {}
   rpc DescribeIndex(DescribeIndexRequest) returns (DescribeIndexResponse) {}
   rpc GetIndexStatistics(GetIndexStatisticsRequest) returns (GetIndexStatisticsResponse) {}
   // Deprecated: use DescribeIndex instead
@@ -646,6 +647,23 @@ message CreateIndexRequest {
   repeated common.KeyValuePair extra_params = 5;
   // Version before 2.0.2 doesn't contain index_name, we use default index name.
   string index_name = 6;
+}
+
+/*
+* Alter index
+*/
+message AlterIndexRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeCreateIndex
+    object_name_index: 3
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string index_name = 4;
+  repeated common.KeyValuePair extra_params = 5;
 }
 
 /*
