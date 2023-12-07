@@ -62,6 +62,7 @@ service MilvusService {
   rpc Delete(DeleteRequest) returns (MutationResult) {}
   rpc Upsert(UpsertRequest) returns (MutationResult) {}
   rpc Search(SearchRequest) returns (SearchResults) {}
+  rpc SearchV2(SearchRequestV2) returns (SearchResults) {}
   rpc Flush(FlushRequest) returns (FlushResponse) {}
   rpc Query(QueryRequest) returns (QueryResults) {}
   rpc CalcDistance(CalcDistanceRequest) returns (CalcDistanceResults) {}
