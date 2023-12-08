@@ -381,6 +381,12 @@ enum ObjectPrivilege {
     PrivilegeDropDatabase = 36;
     PrivilegeListDatabases = 37;
     PrivilegeFlushAll = 38;
+
+    PrivilegeCreatePartition = 39;
+    PrivilegeDropPartition = 40;
+    PrivilegeShowPartitions = 41;
+    PrivilegeHasPartition = 42;
+    PrivilegeGetFlushState = 43;
 }
 
 message PrivilegeExt {
