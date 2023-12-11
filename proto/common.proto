@@ -195,6 +195,7 @@ enum MsgType {
     DescribeIndex = 301;
     DropIndex = 302;
     GetIndexStatistics = 303;
+    AlterIndex = 304;
 
     /* MANIPULATION REQUESTS */
     Insert = 400;
