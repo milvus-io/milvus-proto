@@ -869,11 +869,20 @@ message FlushAllRequest {
     object_privilege: PrivilegeFlushAll
     object_name_index: -1
   };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  repeated string collection_names = 3;
 }
 
 message FlushAllResponse {
   common.Status status = 1;
   uint64 flush_all_ts = 2;
+  string db_name = 3;
+  map<string, schema.LongArray> coll_segIDs = 4;
+  map<string, schema.LongArray> flush_coll_segIDs = 5;
+  map<string, int64> coll_seal_times = 6; // physical time for backup tool
+  map<string, uint64> coll_flush_ts = 7; // hybrid ts for geting flush tate
+  map<string, MsgPosition> channel_cps = 8;
 }
 
 message PersistentSegmentInfo {
@@ -1049,6 +1058,7 @@ message GetFlushAllStateRequest {
 message GetFlushAllStateResponse {
   common.Status status = 1;
   bool flushed = 2;
+  map<string, MsgPosition> channelCps = 3;
 }
 
 message ImportRequest {
