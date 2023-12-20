@@ -162,3 +162,22 @@ message SearchResultData {
   repeated string output_fields = 7;
   FieldData group_by_field_value = 8;
 }
+
+// vector field clustering info
+message VectorClusteringInfo {
+  // for multi vectors
+  string field = 1; 
+  schema.VectorField centroid = 2;
+}
+
+// Scalar field clustering info
+// todo more definitions: min/max, etc
+message ScalarClusteringInfo {
+  string field = 1;
+}
+
+// clustering distribution info of a certain data unit, it can be segment, partition, etc.  
+message ClusteringInfo {
+  repeated VectorClusteringInfo vector_clustering_infos = 1;
+  repeated ScalarClusteringInfo scalar_clustering_infos = 2;
+}

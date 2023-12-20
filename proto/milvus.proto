@@ -1203,7 +1203,8 @@ message ImportRequest {
   bool row_based = 4;                        // the file is row-based or column-based
   repeated string files = 5;                 // file paths to be imported
   repeated common.KeyValuePair options = 6;  // import options, bucket, etc.
-  string db_name = 7;
+  string db_name = 7;                        // target database
+  bytes clustering_info = 8;                 // serialized `schema.ClusteringInfo`
 }
 
 message ImportResponse {
