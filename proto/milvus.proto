@@ -863,6 +863,7 @@ message DeleteRequest {
   string partition_name = 4;
   string expr = 5;
   repeated uint32 hash_keys = 6;
+  common.ConsistencyLevel consistency_level = 7;
 }
 
 
