@@ -36,6 +36,7 @@ enum DataType {
   FloatVector = 101;
   Float16Vector = 102;
   BFloat16Vector = 103;
+  SparseFloatVector = 104;
 }
 
 enum FieldState {
@@ -125,13 +126,32 @@ message ScalarField {
   }
 }
 
+message SparseFloatRow {
+  // dim is the max dimension of the current vector
+  int32 dim = 1;
+  // len(indices) == len(values), indices must be sorted
+  IntArray indices = 2;
+  FloatArray values = 3;
+}
+
+// beta, api may change
+message SparseFloatArray {
+  // dim is the max dimension of the current batch of vectors
+  int32 dim = 1;
+  // nnz is the number of non-zero values of all vectors in the current batch
+  int32 nnz = 2;
+  repeated SparseFloatRow contents = 3;
+}
+
 message VectorField {
+  // For sparse vector, dim is the max dimension of the current batch of vectors
   int64 dim = 1;
   oneof data {
     FloatArray float_vector = 2;
     bytes binary_vector = 3;
     bytes float16_vector = 4;
     bytes bfloat16_vector = 5;
+    SparseFloatArray sparse_float_vector = 6;
   }
 }
 
@@ -167,7 +187,7 @@ message SearchResultData {
 // vector field clustering info
 message VectorClusteringInfo {
   // for multi vectors
-  string field = 1; 
+  string field = 1;
   schema.VectorField centroid = 2;
 }
 
@@ -177,7 +197,7 @@ message ScalarClusteringInfo {
   string field = 1;
 }
 
-// clustering distribution info of a certain data unit, it can be segment, partition, etc.  
+// clustering distribution info of a certain data unit, it can be segment, partition, etc.
 message ClusteringInfo {
   repeated VectorClusteringInfo vector_clustering_infos = 1;
   repeated ScalarClusteringInfo scalar_clustering_infos = 2;
