@@ -62,7 +62,7 @@ service MilvusService {
   rpc Delete(DeleteRequest) returns (MutationResult) {}
   rpc Upsert(UpsertRequest) returns (MutationResult) {}
   rpc Search(SearchRequest) returns (SearchResults) {}
-  rpc SearchV2(SearchRequestV2) returns (SearchResults) {}
+  rpc HybridSearch(HybridSearchRequest) returns (SearchResults) {}
   rpc Flush(FlushRequest) returns (FlushResponse) {}
   rpc Query(QueryRequest) returns (QueryResults) {}
   rpc CalcDistance(CalcDistanceRequest) returns (CalcDistanceResults) {}
@@ -904,7 +904,7 @@ message SearchResults {
   string collection_name = 3;
 }
 
-message SearchRequestV2 {
+message HybridSearchRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
     object_privilege: PrivilegeSearch
