@@ -127,18 +127,17 @@ message ScalarField {
 }
 
 message SparseFloatRow {
-  // dim is the max dimension of the current vector
-  int32 dim = 1;
-  // len(indices) == len(values), indices must be sorted
-  IntArray indices = 2;
-  FloatArray values = 3;
+  // len(indices) == len(values)
+  // data in indices and values must be sorted by the index
+  IntArray indices = 1;
+  FloatArray values = 2;
 }
 
 // beta, api may change
 message SparseFloatArray {
+  repeated SparseFloatRow contents = 1;
   // dim is the max dimension of the current batch of vectors
-  int32 dim = 1;
-  repeated SparseFloatRow contents = 2;
+  int64 dim = 2;
 }
 
 message VectorField {
