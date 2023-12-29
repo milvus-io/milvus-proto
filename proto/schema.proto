@@ -138,9 +138,7 @@ message SparseFloatRow {
 message SparseFloatArray {
   // dim is the max dimension of the current batch of vectors
   int32 dim = 1;
-  // nnz is the number of non-zero values of all vectors in the current batch
-  int32 nnz = 2;
-  repeated SparseFloatRow contents = 3;
+  repeated SparseFloatRow contents = 2;
 }
 
 message VectorField {
