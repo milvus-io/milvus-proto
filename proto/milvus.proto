@@ -135,6 +135,12 @@ service MilvusService {
 }
 
 message CreateAliasRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCreateAlias
+    object_name_index: -1
+  };
+
   common.MsgBase base = 1;
   string db_name = 2;
   string collection_name = 3;
@@ -142,6 +148,12 @@ message CreateAliasRequest {
 }
 
 message DropAliasRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDropAlias
+    object_name_index: -1
+  };
+
   common.MsgBase base = 1;
   string db_name = 2;
   string alias = 3;
@@ -155,6 +167,12 @@ message AlterAliasRequest{
 }
 
 message DescribeAliasRequest{
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDescribeAlias
+    object_name_index: -1
+  };
+
   common.MsgBase base = 1;
   string db_name = 2;
   string alias = 3;
@@ -172,6 +190,12 @@ message DescribeAliasResponse {
 }
 
 message ListAliasesRequest{
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeListAliases
+    object_name_index: -1
+  };
+
   common.MsgBase base = 1;
   string db_name = 2;
   string collection_name = 3;
