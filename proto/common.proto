@@ -387,6 +387,10 @@ enum ObjectPrivilege {
     PrivilegeShowPartitions = 41;
     PrivilegeHasPartition = 42;
     PrivilegeGetFlushState = 43;
+    PrivilegeCreateAlias = 44;
+    PrivilegeDropAlias = 45;
+    PrivilegeDescribeAlias = 46;
+    PrivilegeListAliases = 47;
 }
 
 message PrivilegeExt {
