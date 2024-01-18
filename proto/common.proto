@@ -80,6 +80,35 @@ enum ErrorCode {
 
     // internal error code.
     DDRequestRace = 1000;
+
+    //segcore error code
+    Unsupported = 2003;
+    IndexBuildError = 2004;
+    IndexAlreadyBuild = 2005;
+    ConfigInvalid = 2006;
+    DataTypeInvalid = 2007;
+    PathInvalid = 2009;
+    PathAlreadyExist = 2010;
+    PathNotExist = 2011;
+    FileOpenFailed = 2012;
+    FileCreateFailed = 2013;
+    FileReadFailed = 2014;
+    FileWriteFailed = 2015;
+    BucketInvalid = 2016;
+    ObjectNotExist = 2017;
+    S3Error = 2018;
+    RetrieveError = 2019;
+    FieldIDInvalid = 2020;
+    FieldAlreadyExist = 2021;
+    OpTypeInvalid = 2022;
+    DataIsEmpty = 2023;
+    DataFormatBroken = 2024;
+    JsonKeyInvalid = 2025;
+    MetricTypeInvalid = 2026;
+    FieldNotLoaded = 2027;
+    ExprInvalid = 2028;
+    UnistdError = 2030;
+    KnowhereError = 2100;
 }
 
 enum IndexState {
