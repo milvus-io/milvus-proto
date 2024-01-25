@@ -37,6 +37,8 @@ enum DataType {
   Float16Vector = 102;
   BFloat16Vector = 103;
   SparseFloatVector = 104;
+
+  Blob = 200;
 }
 
 enum FieldState {
@@ -65,6 +67,8 @@ message FieldSchema {
   bool is_dynamic = 12; // mark whether this field is the dynamic field
   bool is_partition_key = 13; // enable logic partitions
   bool is_clustering_key = 14;
+
+  bool is_blob_saved = 15; // for blob type, mark if the blob is saved
 }
 
 /**
@@ -99,6 +103,12 @@ message ArrayArray {
 }
 
 message JSONArray { repeated bytes data = 1; }
+
+message BlobFile {
+  bytes data = 1 ;
+  string file_name = 2;
+  string stored_path = 3;
+}
 
 message ValueField {
   oneof data {
@@ -152,15 +162,22 @@ message VectorField {
   }
 }
 
+message ExtraField {
+  oneof data {
+    BlobFile blob_file = 1;
+  }
+}
+
 message FieldData {
   DataType type = 1;
   string field_name = 2;
   oneof field {
     ScalarField scalars = 3;
     VectorField vectors = 4;
+    ExtraField extras = 5;
   }
-  int64 field_id = 5;
-  bool is_dynamic = 6;
+  int64 field_id = 6;
+  bool is_dynamic = 7;
 }
 
 message IDs {
