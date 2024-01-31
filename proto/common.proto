@@ -130,6 +130,7 @@ enum PlaceholderType {
     FloatVector = 101;
     Float16Vector = 102;
     BFloat16Vector = 103;
+    SparseFloatVector = 104;
     Int64 = 5;
     VarChar = 21;
 }
@@ -137,7 +138,9 @@ enum PlaceholderType {
 message PlaceholderValue {
     string tag = 1;
     PlaceholderType type = 2;
-    // values is a 2d-array, every array contains a vector
+    // dense vector: values is a 2d-array of nq rows, every row contains a query vector
+    // sparse vector: values contains exactly 1 bytes array, which is the byte
+    // representation of SparseFloatArray in schema.proto
     repeated bytes values = 3;
 }
 
