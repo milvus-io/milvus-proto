@@ -179,6 +179,7 @@ message SearchResultData {
   repeated int64 topks = 6;
   repeated string output_fields = 7;
   FieldData group_by_field_value = 8;
+  int64 all_search_count = 9;
 }
 
 // vector field clustering info
