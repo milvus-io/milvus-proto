@@ -10,3 +10,7 @@ type Hook interface {
 	After(ctx context.Context, result interface{}, err error, fullMethod string) error
 	Release()
 }
+
+type Extension interface {
+	Report(info any)
+}
