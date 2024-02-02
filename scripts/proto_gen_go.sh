@@ -73,4 +73,7 @@ $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
     --go_opt="Mmessage.proto=github.com/milvus-io/milvus-proto/go-api/v2/federpb;federpb" \
     --go_out=plugins=grpc,paths=source_relative:./../go-api/federpb feder.proto
 
+$protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
+    --go_out=plugins=grpc,paths=source_relative:./../go-api/rgpb rg.proto
+
 popd
