@@ -37,6 +37,8 @@ enum DataType {
   Float16Vector = 102;
   BFloat16Vector = 103;
   SparseFloatVector = 104;
+
+  Blob = 200;
 }
 
 enum FieldState {
@@ -100,6 +102,12 @@ message ArrayArray {
 
 message JSONArray { repeated bytes data = 1; }
 
+message BlobFile {
+  bytes data = 1 ; //data field will be set to null after saved
+  string file_name = 2; // s3://<collection's root blob path>/<partition folder>/<file name> locates the blob file
+  string sha256 = 3;
+}
+
 message ValueField {
   oneof data {
     bool bool_data = 1;
@@ -123,6 +131,7 @@ message ScalarField {
     BytesArray bytes_data = 7;
     ArrayArray array_data = 8;
     JSONArray json_data = 9;
+    BlobFile blob_data = 10;
   }
 }
 

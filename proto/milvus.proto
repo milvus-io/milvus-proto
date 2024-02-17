@@ -131,6 +131,11 @@ service MilvusService {
   rpc DropDatabase(DropDatabaseRequest) returns (common.Status) {}
   rpc ListDatabases(ListDatabasesRequest) returns (ListDatabasesResponse) {}
 
+  rpc CreateBlobStorage(CreateBlobStorageRequest) returns (common.Status) {}
+  rpc DropBlobStorage(DropBlobStorageRequest) returns (common.Status) {}
+  rpc InsertBlobData(InsertRequest) returns (InsertBlobDataResponse) {}
+  rpc DeleteBlobData(DeleteRequest) returns (MutationResult) {}
+
   rpc ReplicateMessage(ReplicateMessageRequest) returns (ReplicateMessageResponse) {}
 }
 
@@ -1799,6 +1804,36 @@ message ListDatabasesResponse {
   common.Status status = 1;
   repeated string db_names = 2;
   repeated uint64 created_timestamp = 3;
+}
+
+message CreateBlobStorageRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCreateBlobStorage
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  string storage_path = 2;
+}
+
+message DropBlobStorageRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDropBlobStorage
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  string storage_path = 2;
+}
+
+message InsertBlobDataResponse {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeInsert
+    object_name_index: -1
+  };
+  common.Status status = 1;
+  schema.FieldData saved_blob_path_string = 2;
 }
 
 message ReplicateMessageRequest {

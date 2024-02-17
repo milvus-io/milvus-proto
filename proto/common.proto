@@ -395,6 +395,9 @@ enum ObjectPrivilege {
     PrivilegeDropAlias = 45;
     PrivilegeDescribeAlias = 46;
     PrivilegeListAliases = 47;
+
+    PrivilegeCreateBlobStorage = 48;
+    PrivilegeDropBlobStorage = 49;
 }
 
 message PrivilegeExt {
