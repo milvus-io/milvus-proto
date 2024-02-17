@@ -67,8 +67,6 @@ message FieldSchema {
   bool is_dynamic = 12; // mark whether this field is the dynamic field
   bool is_partition_key = 13; // enable logic partitions
   bool is_clustering_key = 14;
-
-  bool is_blob_saved = 15; // for blob type, mark if the blob is saved
 }
 
 /**
@@ -105,9 +103,9 @@ message ArrayArray {
 message JSONArray { repeated bytes data = 1; }
 
 message BlobFile {
-  bytes data = 1 ;
-  string file_name = 2;
-  string stored_path = 3;
+  bytes data = 1 ; //data field will be set to null after saved
+  string file_name = 2; // s3://<collection's root blob path>/<partition folder>/<file name> locates the blob file
+  string sha256 = 3;
 }
 
 message ValueField {
