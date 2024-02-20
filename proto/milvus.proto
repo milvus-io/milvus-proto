@@ -11,6 +11,7 @@ option java_generate_equals_and_hash = true;
 option csharp_namespace = "Milvus.Client.Grpc";
 
 import "common.proto";
+import "rg.proto";
 import "schema.proto";
 import "feder.proto";
 import "msg.proto";
@@ -113,6 +114,7 @@ service MilvusService {
 
   rpc CreateResourceGroup(CreateResourceGroupRequest) returns (common.Status) {}
   rpc DropResourceGroup(DropResourceGroupRequest) returns (common.Status) {}
+  rpc UpdateResourceGroups(UpdateResourceGroupsRequest) returns (common.Status) {}
   rpc TransferNode(TransferNodeRequest) returns (common.Status) {}
   rpc TransferReplica(TransferReplicaRequest) returns (common.Status) {}
   rpc ListResourceGroups(ListResourceGroupsRequest) returns (ListResourceGroupsResponse) {}
@@ -1623,6 +1625,17 @@ message CreateResourceGroupRequest {
   };
   common.MsgBase base = 1;
   string resource_group = 2;
+  rg.ResourceGroupConfig config = 3;
+}
+
+message UpdateResourceGroupsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeUpdateResourceGroups
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  map<string, rg.ResourceGroupConfig> resource_groups = 2;
 }
 
 message DropResourceGroupRequest {
@@ -1700,8 +1713,12 @@ message ResourceGroup {
   map<string, int32> num_loaded_replica = 4;
   // collection name -> accessed other rg's node num
   map<string, int32> num_outgoing_node = 5;
-   // collection name -> be accessed node num by other rg
+  // collection name -> be accessed node num by other rg
   map<string, int32> num_incoming_node = 6;
+  // resource group configuration.
+  rg.ResourceGroupConfig config = 7;
+  // query node belong to this resource group now.
+  repeated common.NodeInfo nodes = 8;
 }
 
 message RenameCollectionRequest {
