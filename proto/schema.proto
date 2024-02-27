@@ -127,16 +127,9 @@ message ScalarField {
   }
 }
 
-message SparseFloatRow {
-  // len(indices) == len(values)
-  // data in indices and values must be sorted by the index
-  IntArray indices = 1;
-  FloatArray values = 2;
-}
-
 // beta, api may change
 message SparseFloatArray {
-  repeated SparseFloatRow contents = 1;
+  repeated bytes contents = 1;
   // dim is the max dimension of the current batch of vectors
   int64 dim = 2;
 }
