@@ -76,6 +76,7 @@ message CollectionSchema {
   bool autoID = 3 [deprecated=true]; // deprecated later, keep compatible with c++ part now
   repeated FieldSchema fields = 4;
   bool enable_dynamic_field = 5; // mark whether this table has the dynamic field function enabled.
+  repeated common.KeyValuePair properties = 6;
 }
 
 message BoolArray { repeated bool data = 1; }
