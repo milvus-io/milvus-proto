@@ -1154,6 +1154,7 @@ message ManualCompactionRequest {
   };
   int64 collectionID = 1;
   uint64 timetravel = 2;
+  bool majorCompaction = 3;
 }
 
 message ManualCompactionResponse {
