@@ -138,9 +138,9 @@ enum PlaceholderType {
 message PlaceholderValue {
     string tag = 1;
     PlaceholderType type = 2;
-    // dense vector: values is a 2d-array of nq rows, every row contains a query vector
-    // sparse vector: values contains exactly 1 bytes array, which is the byte
-    // representation of SparseFloatArray in schema.proto
+    // values is a 2d-array of nq rows, every row contains a query vector.
+    // for dense vector, all rows are of the same length; for sparse vector,
+    // the length of each row may vary depending on their number of non-zeros.
     repeated bytes values = 3;
 }
 
