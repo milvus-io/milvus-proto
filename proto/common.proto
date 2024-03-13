@@ -108,6 +108,7 @@ message Status {
     int32 code = 3;
     bool retriable = 4;
     string detail = 5;
+    map<string, string> extra_info = 6;
 }
 
 message KeyValuePair {
