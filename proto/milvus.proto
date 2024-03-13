@@ -899,6 +899,16 @@ message DeleteRequest {
 }
 
 
+message SubSearchRequest {
+  string dsl = 1; // must
+  // serialized `PlaceholderGroup`
+  bytes placeholder_group = 2; // must
+  common.DslType dsl_type = 3; // must
+  repeated common.KeyValuePair search_params = 4; // must
+  int64  nq = 5;
+}
+
+
 message SearchRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
@@ -922,6 +932,7 @@ message SearchRequest {
   common.ConsistencyLevel consistency_level = 14;
   bool use_default_consistency = 15;
   bool search_by_primary_keys = 16;
+  repeated SubSearchRequest sub_reqs = 17;
 }
 
 message Hits {
