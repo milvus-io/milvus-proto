@@ -12,5 +12,5 @@ type Hook interface {
 }
 
 type Extension interface {
-	Report(info any)
+	Report(info any) int
 }
