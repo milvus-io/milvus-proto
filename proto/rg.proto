@@ -11,7 +11,7 @@ option java_generate_equals_and_hash = true;
 option csharp_namespace = "Milvus.Client.Grpc";
 
 message ResourceGroupLimit {
-  int32 nodeNum = 1;
+  int32 node_num = 1;
   // preserve for other limit.
 }
   
@@ -23,7 +23,6 @@ message ResourceGroupTransfer {
 message ResourceGroupConfig {
   ResourceGroupLimit requests = 1; // requests node num in resource group, if node num is less than requests.nodeNum, it will be transfer from other resource group.
   ResourceGroupLimit limits = 2; // limited node num in resource group, if node num is more than limits.nodeNum, it will be transfer to other resource group.
-  repeated ResourceGroupTransfer from = 3; // missing node should be transfer from given resource group at high priority in repeated list.
-  repeated ResourceGroupTransfer to = 4; // redundant node should be transfer to given resource group at high priority in repeated list.
+  repeated ResourceGroupTransfer transfer_from = 3; // missing node should be transfer from given resource group at high priority in repeated list.
+  repeated ResourceGroupTransfer transfer_to = 4; // redundant node should be transfer to given resource group at high priority in repeated list.
 }
-  
