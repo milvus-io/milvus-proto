@@ -4,6 +4,7 @@ pull_request_rules:
       - or:
         - base=master
         - base=2.2
+        - base=2.4
       - -status-success=DCO
     actions:
       label:
@@ -17,6 +18,7 @@ pull_request_rules:
       - or:
         - base=master
         - base=2.2
+        - base=2.4
       - status-success=DCO
     actions:
       label:
@@ -30,6 +32,7 @@ pull_request_rules:
       - or:
         - base=master
         - base=2.2
+        - base=2.4
       - -body~=\#[0-9]{1,6}(\s+|$)
       - -body~=https://github.com/milvus-io/milvus/issues/[0-9]{1,6}(\s+|$)
       - -body~=https://github.com/milvus-io/milvus-proto/issues/[0-9]{1,6}(\s+|$)
@@ -50,6 +53,7 @@ pull_request_rules:
           - or:
             - base=master
             - base=2.2
+            - base=2.4
           - or:
             - body~=\#[0-9]{1,6}(\s+|$)
             - body~=https://github.com/milvus-io/milvus/issues/[0-9]{1,6}(\s+|$)
@@ -67,6 +71,7 @@ pull_request_rules:
       - or:
         - base=master
         - base=2.2
+        - base=2.4
       - title~=\[automated\]
     actions:
       label:
@@ -79,6 +84,7 @@ pull_request_rules:
       - or:
         - base=master
         - base=2.2
+        - base=2.4
       - "status-success=Run Check Proto (3.8)"
     actions:
       label:
@@ -90,6 +96,7 @@ pull_request_rules:
       - or:
         - base=master
         - base=2.2
+        - base=2.4
       - "status-success!=Run Check Proto (3.8)"    
     actions:
       label:
