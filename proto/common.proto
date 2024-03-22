@@ -456,7 +456,7 @@ message ServerInfo {
 
 // NodeInfo is used to describe the node information.
 message NodeInfo {
-    int64 nodeID = 1;
+    int64 node_id = 1;
     string address = 2;
     string hostname = 3;
 }
