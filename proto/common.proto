@@ -128,8 +128,6 @@ enum PlaceholderType {
     None = 0;
     BinaryVector = 100;
     FloatVector = 101;
-    Float16Vector = 102;
-    BFloat16Vector = 103;
     Int64 = 5;
     VarChar = 21;
 }

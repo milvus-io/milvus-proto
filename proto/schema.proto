@@ -34,8 +34,6 @@ enum DataType {
 
   BinaryVector = 100;
   FloatVector = 101;
-  Float16Vector = 102;
-  BFloat16Vector = 103;
 }
 
 enum FieldState {
@@ -129,8 +127,6 @@ message VectorField {
   oneof data {
     FloatArray float_vector = 2;
     bytes binary_vector = 3;
-    bytes float16_vector = 4;
-    bytes bfloat16_vector = 5;
   }
 }
 
