@@ -65,6 +65,7 @@ message FieldSchema {
   bool is_dynamic = 12; // mark whether this field is the dynamic field
   bool is_partition_key = 13; // enable logic partitions
   bool is_clustering_key = 14;
+  bool nullable = 15; // enable set null as field value
 }
 
 /**
@@ -155,6 +156,7 @@ message FieldData {
   }
   int64 field_id = 5;
   bool is_dynamic = 6;
+  repeated bool valid_data = 7;
 }
 
 message IDs {
