@@ -934,6 +934,9 @@ message SearchRequest {
   bool use_default_consistency = 15;
   bool search_by_primary_keys = 16;
   repeated SubSearchRequest sub_reqs = 17;
+  bool enable_partial_search = 18;
+  double min_result_threshold = 19;
+  int64 check_time = 20;
 }
 
 message Hits {
