@@ -23,6 +23,10 @@ enum DataType {
   Int16 = 3;
   Int32 = 4;
   Int64 = 5;
+  Uint8 = 6;
+  Uint16 = 7;
+  Uint32 = 8;
+  Uint64 = 9;
 
   Float = 10;
   Double = 11;
