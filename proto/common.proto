@@ -282,6 +282,8 @@ enum MsgType {
     CreateDatabase = 1801;
     DropDatabase = 1802;
     ListDatabases = 1803;
+    AlterDatabase = 1804;
+    DescribeDatabase = 1805;
 }
 
 message MsgBase {
@@ -400,6 +402,7 @@ enum ObjectPrivilege {
 
     PrivilegeUpdateResourceGroups = 48;
     PrivilegeAlterDatabase = 49;
+    PrivilegeDescribeDatabase = 50;
 }
 
 message PrivilegeExt {

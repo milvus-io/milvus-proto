@@ -133,6 +133,7 @@ service MilvusService {
   rpc DropDatabase(DropDatabaseRequest) returns (common.Status) {}
   rpc ListDatabases(ListDatabasesRequest) returns (ListDatabasesResponse) {}
   rpc AlterDatabase(AlterDatabaseRequest) returns (common.Status) {}
+  rpc DescribeDatabase(DescribeDatabaseRequest) returns (DescribeDatabaseResponse) {}
 
   rpc ReplicateMessage(ReplicateMessageRequest) returns (ReplicateMessageResponse) {}
 }
@@ -1834,6 +1835,19 @@ message AlterDatabaseRequest {
   string db_name = 2;
   string db_id = 3;
   repeated common.KeyValuePair properties = 4;
+}
+
+message DescribeDatabaseRequest {
+  common.MsgBase base = 1;
+  string db_name = 2;
+}
+
+message DescribeDatabaseResponse {
+  common.Status status = 1;
+  string db_name = 2;
+  int64 dbID = 3;
+  uint64 created_timestamp = 4;
+  repeated common.KeyValuePair properties = 5;
 }
 
 message ReplicateMessageRequest {
