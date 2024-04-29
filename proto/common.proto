@@ -399,6 +399,7 @@ enum ObjectPrivilege {
     PrivilegeListAliases = 47;
 
     PrivilegeUpdateResourceGroups = 48;
+    PrivilegeAlterDatabase = 49;
 }
 
 message PrivilegeExt {
