@@ -982,6 +982,7 @@ message FlushResponse{
   map<string, schema.LongArray> flush_coll_segIDs = 4;
   map<string, int64> coll_seal_times = 5; // physical time for backup tool
   map<string, uint64> coll_flush_ts = 6; // hybrid ts for geting flush tate
+  map<string, msg.MsgPosition> channel_cps = 7;
 }
 
 message QueryRequest {
