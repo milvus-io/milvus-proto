@@ -173,6 +173,7 @@ enum MsgType {
     RenameCollection = 112;
     DescribeAlias = 113;
     ListAliases = 114;
+    TruncateCollection = 115;
 
     /* DEFINITION REQUESTS: PARTITION */
     CreatePartition = 200;
@@ -403,6 +404,8 @@ enum ObjectPrivilege {
     PrivilegeUpdateResourceGroups = 48;
     PrivilegeAlterDatabase = 49;
     PrivilegeDescribeDatabase = 50;
+
+    PrivilegeTruncateCollection = 51;
 }
 
 message PrivilegeExt {
