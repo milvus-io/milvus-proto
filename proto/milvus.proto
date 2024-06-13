@@ -27,6 +27,7 @@ service MilvusService {
   rpc GetCollectionStatistics(GetCollectionStatisticsRequest) returns (GetCollectionStatisticsResponse) {}
   rpc ShowCollections(ShowCollectionsRequest) returns (ShowCollectionsResponse) {}
   rpc AlterCollection(AlterCollectionRequest) returns (common.Status) {}
+  rpc TruncateCollection(TruncateCollectionRequest) returns (common.Status) {}
 
   rpc CreatePartition(CreatePartitionRequest) returns (common.Status) {}
   rpc DropPartition(DropPartitionRequest) returns (common.Status) {}
@@ -254,6 +255,22 @@ message DropCollectionRequest {
   option (common.privilege_ext_obj) = {
     object_type: Global
     object_privilege: PrivilegeDropCollection
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  string db_name = 2;
+  // The unique collection name in milvus.(Required)
+  string collection_name = 3;
+}
+
+/**
+* Truncate collection in milvus, also will truncate data in collection.
+*/
+message TruncateCollectionRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeTruncateCollection
     object_name_index: -1
   };
   // Not useful for now
