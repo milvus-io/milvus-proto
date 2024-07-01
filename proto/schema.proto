@@ -47,6 +47,14 @@ enum FieldState {
 }
 
 /**
+ * @brief How a VarChar field should be embedded
+ */
+ enum EmbedType {
+  TypeNone = 0;
+  TokenizedSparseU32F32 = 1;
+}
+
+/**
  * @brief Field schema
  */
 message FieldSchema {
@@ -66,6 +74,7 @@ message FieldSchema {
   bool is_partition_key = 13; // enable logic partitions
   bool is_clustering_key = 14;
   bool nullable = 15; // enable set null as field value
+  EmbedType embed_type = 16;  // For VarChar type only. How the VarChar field should be embedded.
 }
 
 /**
