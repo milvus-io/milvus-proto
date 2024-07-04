@@ -1803,6 +1803,7 @@ message CreateDatabaseRequest {
   };
   common.MsgBase base = 1;
   string db_name = 2;
+  repeated common.KeyValuePair properties = 3;
 }
 
 message DropDatabaseRequest {
