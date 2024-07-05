@@ -33,6 +33,8 @@ case ":$PATH:" in
 esac
 
 echo "using protoc-gen-go: $(which protoc-gen-go)"
+echo "using protoc-gen-go-grpc: $(which protoc-gen-go-grpc)"
+
 
 pushd ${PROTO_DIR}
 mkdir -p ../go-api/commonpb
@@ -41,39 +43,46 @@ mkdir -p ../go-api/milvuspb
 mkdir -p ../go-api/msgpb
 mkdir -p ../go-api/federpb
 
+echo "$(pwd)"
+
 $protoc --version
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
     --go_opt="Mmilvus.proto=github.com/milvus-io/milvus-proto/go-api/v2/milvuspb;milvuspb" \
     --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/v2/commonpb \
     --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/v2/schemapb \
-    --go_out=plugins=grpc,paths=source_relative:./../go-api/milvuspb milvus.proto
+    --go_out=paths=source_relative:./../go-api/milvuspb \
+    --go-grpc_out=require_unimplemented_servers=false,paths=source_relative:./../go-api/milvuspb milvus.proto
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
     --go_opt=Mmilvus.proto=github.com/milvus-io/milvus-proto/go-api/v2/milvuspb \
     --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/v2/commonpb \
     --go_opt="Mschema.proto=github.com/milvus-io/milvus-proto/go-api/v2/schemapb;schemapb" \
-    --go_out=plugins=grpc,paths=source_relative:./../go-api/schemapb schema.proto
+    --go_out=paths=source_relative:./../go-api/schemapb \
+    --go-grpc_out=require_unimplemented_servers=false,paths=source_relative:./../go-api/schemapb schema.proto
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
     --go_opt=Mmilvus.proto=github.com/milvus-io/milvus-proto/go-api/v2/milvuspb \
     --go_opt="Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/v2/commonpb;commonpb" \
     --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/v2/schemapb \
-    --go_out=plugins=grpc,paths=source_relative:./../go-api/commonpb common.proto
+    --go_out=paths=source_relative:./../go-api/commonpb \
+    --go-grpc_out=require_unimplemented_servers=false,paths=source_relative:./../go-api/commonpb common.proto
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
     --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/v2/schemapb \
     --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/v2/commonpb \
     --go_opt="Mmessage.proto=github.com/milvus-io/milvus-proto/go-api/v2/msgapb;msgpb" \
-    --go_out=plugins=grpc,paths=source_relative:./../go-api/msgpb msg.proto
+    --go_out=paths=source_relative:./../go-api/msgpb \
+    --go-grpc_out=require_unimplemented_servers=false,paths=source_relative:./../go-api/msgpb msg.proto
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
     --go_opt=Mschema.proto=github.com/milvus-io/milvus-proto/go-api/v2/schemapb \
     --go_opt=Mcommon.proto=github.com/milvus-io/milvus-proto/go-api/v2/commonpb \
     --go_opt="Mmessage.proto=github.com/milvus-io/milvus-proto/go-api/v2/federpb;federpb" \
-    --go_out=plugins=grpc,paths=source_relative:./../go-api/federpb feder.proto
+    --go_out=paths=source_relative:./../go-api/federpb \
+    --go-grpc_out=require_unimplemented_servers=false,paths=source_relative:./../go-api/federpb feder.proto
 
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
-    --go_out=plugins=grpc,paths=source_relative:./../go-api/rgpb rg.proto
+    --go_out=paths=source_relative:./../go-api/rgpb rg.proto
 
 popd
