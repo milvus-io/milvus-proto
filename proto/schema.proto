@@ -78,7 +78,6 @@ message CollectionSchema {
   repeated FieldSchema fields = 4;
   bool enable_dynamic_field = 5; // mark whether this table has the dynamic field function enabled.
   repeated common.KeyValuePair properties = 6;
-  bool partition_key_isolation = 7;
 }
 
 message BoolArray { repeated bool data = 1; }
