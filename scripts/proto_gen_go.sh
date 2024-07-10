@@ -21,6 +21,7 @@ PROTO_DIR=$SCRIPTS_DIR/../proto/
 PROGRAM=$(basename "$0")
 GOPATH=$(go env GOPATH)
 GOOGLE_PROTO_DIR=$SCRIPTS_DIR/../cmake-build/protobuf/protobuf-src/src/
+INSTALL_PATH="$1"
 
 if [ -z $GOPATH ]; then
     printf "Error: the environment variable GOPATH is not set, please set it before running %s\n" $PROGRAM > /dev/stderr
@@ -32,6 +33,8 @@ case ":$PATH:" in
     *) export PATH="$GOPATH/bin:$PATH";;
 esac
 
+# make sure protoc-gen-go and protoc-gen-go-grpc came from $INSTALL_PATH
+export PATH=$INSTALL_PATH:${PATH}
 echo "using protoc-gen-go: $(which protoc-gen-go)"
 echo "using protoc-gen-go-grpc: $(which protoc-gen-go-grpc)"
 
