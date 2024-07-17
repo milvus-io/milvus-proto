@@ -102,6 +102,13 @@ enum SegmentState {
     Importing = 7;
 }
 
+enum SegmentLevel {
+    Legacy = 0; // zero value for legacy logic
+    L0 = 1; // L0 segment, contains delta data for current channel
+    L1 = 2; // L1 segment, normal segment, with no extra compaction attribute
+    L2 = 3; // L2 segment, segment with extra data distribution info
+}
+
 message Status {
     ErrorCode error_code = 1 [deprecated=true];
     string reason = 2;
