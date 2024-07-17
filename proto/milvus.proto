@@ -1064,6 +1064,7 @@ message PersistentSegmentInfo {
   int64 partitionID = 3;
   int64 num_rows = 4;
   common.SegmentState state = 5;
+  common.SegmentLevel level = 6;
 }
 
 message GetPersistentSegmentInfoRequest {
@@ -1089,6 +1090,7 @@ message QuerySegmentInfo {
   int64 nodeID = 8 [deprecated=true];
   common.SegmentState state = 9;
   repeated int64 nodeIds = 10;
+  common.SegmentLevel level = 11;
 }
 
 message GetQuerySegmentInfoRequest {
