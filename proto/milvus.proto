@@ -136,6 +136,8 @@ service MilvusService {
   rpc DescribeDatabase(DescribeDatabaseRequest) returns (DescribeDatabaseResponse) {}
 
   rpc ReplicateMessage(ReplicateMessageRequest) returns (ReplicateMessageResponse) {}
+
+  rpc UpdateBlobBucketInfo(UpdateBlobBucketAkSkRequest) returns (common.Status) {}
 }
 
 message CreateAliasRequest {
@@ -1871,6 +1873,12 @@ message ReplicateMessageRequest {
 message ReplicateMessageResponse {
   common.Status status = 1;
   string position = 2;
+}
+
+message UpdateBlobBucketAkSkRequest {
+  common.MsgBase base = 1;
+  string bucket = 2;
+  string auth_key = 3;
 }
 
 message ImportAuthPlaceholder {
