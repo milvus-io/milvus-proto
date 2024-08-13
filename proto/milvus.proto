@@ -379,6 +379,10 @@ message LoadCollectionRequest {
   repeated string resource_groups = 5;
   // Whether to enable refresh mode.
   bool refresh = 6;
+  // Field Partial Load fields list
+  repeated string load_fields = 7;
+  // Field Partial load skip load dynamic fields 
+  bool skip_load_dynamic_field = 8;
 }
 
 /**
@@ -581,6 +585,10 @@ message LoadPartitionsRequest {
   repeated string resource_groups = 6;
   // Whether to enable refresh mode.
   bool refresh = 7;
+  // Field Partial Load fields list
+  repeated string load_fields = 8;
+  // Field Partial load skip load dynamic fields 
+  bool skip_load_dynamic_field = 9;
 }
 
 /*
