@@ -412,6 +412,10 @@ enum ObjectPrivilege {
     PrivilegeDescribeDatabase = 50;
     PrivilegeBackupRBAC = 51;
     PrivilegeRestoreRBAC = 52;
+
+    PrivilegeGroupReadOnly = 53;
+    PrivilegeGroupReadWrite = 54;
+    PrivilegeGroupAdmin = 55;
 }
 
 message PrivilegeExt {
