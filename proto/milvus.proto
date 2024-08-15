@@ -136,6 +136,9 @@ service MilvusService {
   rpc DescribeDatabase(DescribeDatabaseRequest) returns (DescribeDatabaseResponse) {}
 
   rpc ReplicateMessage(ReplicateMessageRequest) returns (ReplicateMessageResponse) {}
+
+  rpc BackupRBAC(BackupRBACMetaRequest) returns (BackupRBACMetaResponse){}
+  rpc RestoreRBAC(RestoreRBACMetaRequest) returns (common.Status){}
 }
 
 message CreateAliasRequest {
@@ -1571,6 +1574,47 @@ message OperatePrivilegeRequest {
   GrantEntity entity = 2;
   // operation type
   OperatePrivilegeType type = 3;
+}
+
+message UserInfo {
+  string user = 1;
+  string password = 2;
+  repeated RoleEntity roles = 3;
+}
+
+message RBACMeta {
+  // user
+  repeated UserInfo users = 1;
+  // role
+  repeated milvus.RoleEntity roles = 2;
+  // (role, object, previledge)
+  repeated milvus.GrantEntity grants = 3;
+}
+
+message BackupRBACMetaRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeBackupRBAC
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+}
+
+message BackupRBACMetaResponse {
+  common.Status status = 1;
+  RBACMeta RBAC_meta = 2;
+}
+
+message RestoreRBACMetaRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeRestoreRBAC
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  RBACMeta RBAC_meta = 2;
 }
 
 message GetLoadingProgressRequest {
