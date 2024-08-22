@@ -1433,6 +1433,8 @@ message DropRoleRequest {
   common.MsgBase base = 1;
   // role name
   string role_name = 2;
+  // force to drop the role even if there is permission binding
+  bool force_drop = 3;
 }
 
 enum OperateUserRoleType {
