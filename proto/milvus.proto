@@ -974,6 +974,7 @@ message HybridSearchRequest {
   repeated string output_fields = 10;
   common.ConsistencyLevel consistency_level = 11;
   bool use_default_consistency = 12;
+  string group_scorer = 13;
 }
 
 message FlushRequest {
