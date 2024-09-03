@@ -39,6 +39,11 @@ enum DataType {
   SparseFloatVector = 104;
 }
 
+enum FunctionType{
+  Unknown =0;
+  BM25 =1;
+}
+
 enum FieldState {
   FieldCreated = 0;
   FieldCreating = 1;
@@ -68,6 +73,17 @@ message FieldSchema {
   bool nullable = 15; // enable set null as field value
 }
 
+message FunctionSchema {
+  string name = 1;
+  int64 id =2;
+  FunctionType type = 3;
+  repeated string input_field_names = 4;
+  repeated int64 input_field_ids = 5;
+  repeated string output_field_names = 6;
+  repeated int64 output_field_ids = 7;
+  repeated common.KeyValuePair params = 8;
+}
+
 /**
  * @brief Collection schema
  */
@@ -78,6 +94,7 @@ message CollectionSchema {
   repeated FieldSchema fields = 4;
   bool enable_dynamic_field = 5; // mark whether this table has the dynamic field function enabled.
   repeated common.KeyValuePair properties = 6;
+  repeated FunctionSchema functions = 7;
 }
 
 message BoolArray { repeated bool data = 1; }
