@@ -71,17 +71,19 @@ message FieldSchema {
   bool is_partition_key = 13; // enable logic partitions
   bool is_clustering_key = 14;
   bool nullable = 15; // enable set null as field value
+  bool is_function_output =16;
 }
 
 message FunctionSchema {
   string name = 1;
   int64 id =2;
-  FunctionType type = 3;
-  repeated string input_field_names = 4;
-  repeated int64 input_field_ids = 5;
-  repeated string output_field_names = 6;
-  repeated int64 output_field_ids = 7;
-  repeated common.KeyValuePair params = 8;
+  string description = 3;
+  FunctionType type = 4;
+  repeated string input_field_names = 5;
+  repeated int64 input_field_ids = 6;
+  repeated string output_field_names = 7;
+  repeated int64 output_field_ids = 8;
+  repeated common.KeyValuePair params = 9;
 }
 
 /**
