@@ -43,6 +43,7 @@ message DeleteRequest {
   repeated uint64 timestamps = 10;
   int64 num_rows = 11;
   schema.IDs primary_keys = 12;
+  int64 segment_id = 13;
 }
 
 message MsgPosition {
