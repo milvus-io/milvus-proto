@@ -954,6 +954,7 @@ message SearchResults {
   common.Status status = 1;
   schema.SearchResultData results = 2;
   string collection_name = 3;
+  uint64 session_ts = 4; // for session-like operation like iterator
 }
 
 message HybridSearchRequest {
@@ -1022,6 +1023,7 @@ message QueryResults {
   repeated schema.FieldData fields_data = 2;
   string collection_name = 3;
   repeated string output_fields = 4;
+  uint64 session_ts = 5; // for session-like operation like iterator
 }
 
 message VectorIDs {
