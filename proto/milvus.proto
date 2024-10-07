@@ -112,6 +112,9 @@ service MilvusService {
   rpc GetVersion(GetVersionRequest) returns (GetVersionResponse) {}
   rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse) {}
 
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+  rpc Watch(HealthCheckRequest) returns (stream HealthCheckResponse);
+
   rpc CreateResourceGroup(CreateResourceGroupRequest) returns (common.Status) {}
   rpc DropResourceGroup(DropResourceGroupRequest) returns (common.Status) {}
   rpc UpdateResourceGroups(UpdateResourceGroupsRequest) returns (common.Status) {}
@@ -140,6 +143,7 @@ service MilvusService {
   rpc BackupRBAC(BackupRBACMetaRequest) returns (BackupRBACMetaResponse){}
   rpc RestoreRBAC(RestoreRBACMetaRequest) returns (common.Status){}
 }
+
 
 message CreateAliasRequest {
   option (common.privilege_ext_obj) = {
@@ -1692,6 +1696,20 @@ message CheckHealthResponse {
   bool isHealthy = 2;
   repeated string reasons = 3;
   repeated QuotaState quota_states = 4;
+}
+
+message HealthCheckRequest {
+  string service = 1;
+}
+
+message HealthCheckResponse {
+  enum ServingStatus {
+    UNKNOWN = 0;
+    SERVING = 1;
+    NOT_SERVING = 2;
+    SERVICE_UNKNOWN = 3;  // Used only by the Watch method.
+  }
+  ServingStatus status = 1;
 }
 
 message CreateResourceGroupRequest {
