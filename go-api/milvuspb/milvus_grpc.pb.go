@@ -89,6 +89,8 @@ const (
 	MilvusService_SelectGrant_FullMethodName                 = "/milvus.proto.milvus.MilvusService/SelectGrant"
 	MilvusService_GetVersion_FullMethodName                  = "/milvus.proto.milvus.MilvusService/GetVersion"
 	MilvusService_CheckHealth_FullMethodName                 = "/milvus.proto.milvus.MilvusService/CheckHealth"
+	MilvusService_Check_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Check"
+	MilvusService_Watch_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Watch"
 	MilvusService_CreateResourceGroup_FullMethodName         = "/milvus.proto.milvus.MilvusService/CreateResourceGroup"
 	MilvusService_DropResourceGroup_FullMethodName           = "/milvus.proto.milvus.MilvusService/DropResourceGroup"
 	MilvusService_UpdateResourceGroups_FullMethodName        = "/milvus.proto.milvus.MilvusService/UpdateResourceGroups"
@@ -192,6 +194,8 @@ type MilvusServiceClient interface {
 	SelectGrant(ctx context.Context, in *SelectGrantRequest, opts ...grpc.CallOption) (*SelectGrantResponse, error)
 	GetVersion(ctx context.Context, in *GetVersionRequest, opts ...grpc.CallOption) (*GetVersionResponse, error)
 	CheckHealth(ctx context.Context, in *CheckHealthRequest, opts ...grpc.CallOption) (*CheckHealthResponse, error)
+	Check(ctx context.Context, in *HealthCheckRequest, opts ...grpc.CallOption) (*HealthCheckResponse, error)
+	Watch(ctx context.Context, in *HealthCheckRequest, opts ...grpc.CallOption) (MilvusService_WatchClient, error)
 	CreateResourceGroup(ctx context.Context, in *CreateResourceGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DropResourceGroup(ctx context.Context, in *DropResourceGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	UpdateResourceGroups(ctx context.Context, in *UpdateResourceGroupsRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
@@ -836,6 +840,47 @@ func (c *milvusServiceClient) CheckHealth(ctx context.Context, in *CheckHealthRe
 	return out, nil
 }
 
+func (c *milvusServiceClient) Check(ctx context.Context, in *HealthCheckRequest, opts ...grpc.CallOption) (*HealthCheckResponse, error) {
+	out := new(HealthCheckResponse)
+	err := c.cc.Invoke(ctx, MilvusService_Check_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) Watch(ctx context.Context, in *HealthCheckRequest, opts ...grpc.CallOption) (MilvusService_WatchClient, error) {
+	stream, err := c.cc.NewStream(ctx, &MilvusService_ServiceDesc.Streams[0], MilvusService_Watch_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &milvusServiceWatchClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type MilvusService_WatchClient interface {
+	Recv() (*HealthCheckResponse, error)
+	grpc.ClientStream
+}
+
+type milvusServiceWatchClient struct {
+	grpc.ClientStream
+}
+
+func (x *milvusServiceWatchClient) Recv() (*HealthCheckResponse, error) {
+	m := new(HealthCheckResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *milvusServiceClient) CreateResourceGroup(ctx context.Context, in *CreateResourceGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
 	out := new(commonpb.Status)
 	err := c.cc.Invoke(ctx, MilvusService_CreateResourceGroup_FullMethodName, in, out, opts...)
@@ -1097,6 +1142,8 @@ type MilvusServiceServer interface {
 	SelectGrant(context.Context, *SelectGrantRequest) (*SelectGrantResponse, error)
 	GetVersion(context.Context, *GetVersionRequest) (*GetVersionResponse, error)
 	CheckHealth(context.Context, *CheckHealthRequest) (*CheckHealthResponse, error)
+	Check(context.Context, *HealthCheckRequest) (*HealthCheckResponse, error)
+	Watch(*HealthCheckRequest, MilvusService_WatchServer) error
 	CreateResourceGroup(context.Context, *CreateResourceGroupRequest) (*commonpb.Status, error)
 	DropResourceGroup(context.Context, *DropResourceGroupRequest) (*commonpb.Status, error)
 	UpdateResourceGroups(context.Context, *UpdateResourceGroupsRequest) (*commonpb.Status, error)
@@ -1326,6 +1373,12 @@ func (UnimplementedMilvusServiceServer) GetVersion(context.Context, *GetVersionR
 }
 func (UnimplementedMilvusServiceServer) CheckHealth(context.Context, *CheckHealthRequest) (*CheckHealthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckHealth not implemented")
+}
+func (UnimplementedMilvusServiceServer) Check(context.Context, *HealthCheckRequest) (*HealthCheckResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Check not implemented")
+}
+func (UnimplementedMilvusServiceServer) Watch(*HealthCheckRequest, MilvusService_WatchServer) error {
+	return status.Errorf(codes.Unimplemented, "method Watch not implemented")
 }
 func (UnimplementedMilvusServiceServer) CreateResourceGroup(context.Context, *CreateResourceGroupRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateResourceGroup not implemented")
@@ -2623,6 +2676,45 @@ func _MilvusService_CheckHealth_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_Check_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HealthCheckRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).Check(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_Check_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).Check(ctx, req.(*HealthCheckRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_Watch_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(HealthCheckRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MilvusServiceServer).Watch(m, &milvusServiceWatchServer{stream})
+}
+
+type MilvusService_WatchServer interface {
+	Send(*HealthCheckResponse) error
+	grpc.ServerStream
+}
+
+type milvusServiceWatchServer struct {
+	grpc.ServerStream
+}
+
+func (x *milvusServiceWatchServer) Send(m *HealthCheckResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 func _MilvusService_CreateResourceGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateResourceGroupRequest)
 	if err := dec(in); err != nil {
@@ -3263,6 +3355,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MilvusService_CheckHealth_Handler,
 		},
 		{
+			MethodName: "Check",
+			Handler:    _MilvusService_Check_Handler,
+		},
+		{
 			MethodName: "CreateResourceGroup",
 			Handler:    _MilvusService_CreateResourceGroup_Handler,
 		},
@@ -3343,7 +3439,13 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MilvusService_RestoreRBAC_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Watch",
+			Handler:       _MilvusService_Watch_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "milvus.proto",
 }
 
