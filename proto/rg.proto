@@ -10,6 +10,8 @@ option java_generate_equals_and_hash = true;
 
 option csharp_namespace = "Milvus.Client.Grpc";
 
+import "common.proto";
+
 message ResourceGroupLimit {
   int32 node_num = 1;
   // preserve for other limit.
@@ -21,7 +23,7 @@ message ResourceGroupTransfer {
 }
 
 message ResourceGroupNodeFilter {
-  repeated string prefer_node_labels = 1; // node in resource group must match node labels requirements
+  repeated common.KeyValuePair prefer_node_labels = 1; // node in resource group must match node labels requirements
 }
   
 message ResourceGroupConfig {
