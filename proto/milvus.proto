@@ -905,6 +905,7 @@ message DeleteRequest {
   string expr = 5;
   repeated uint32 hash_keys = 6;
   common.ConsistencyLevel consistency_level = 7;
+  map<string, schema.TemplateValue> expr_template_values = 8;
 }
 
 
@@ -914,9 +915,9 @@ message SubSearchRequest {
   bytes placeholder_group = 2; // must
   common.DslType dsl_type = 3; // must
   repeated common.KeyValuePair search_params = 4; // must
-  int64  nq = 5;
+  int64 nq = 5;
+  map<string, schema.TemplateValue> expr_template_values = 6;
 }
-
 
 message SearchRequest {
   option (common.privilege_ext_obj) = {
@@ -942,6 +943,7 @@ message SearchRequest {
   bool use_default_consistency = 15;
   bool search_by_primary_keys = 16;
   repeated SubSearchRequest sub_reqs = 17;
+  map<string, schema.TemplateValue> expr_template_values = 18;
 }
 
 message Hits {
@@ -1015,6 +1017,7 @@ message QueryRequest {
   bool not_return_all_meta = 10;
   common.ConsistencyLevel consistency_level = 11;
   bool use_default_consistency = 12;
+  map<string, schema.TemplateValue> expr_template_values = 13;
 }
 
 message QueryResults {
