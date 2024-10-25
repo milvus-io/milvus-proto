@@ -217,3 +217,20 @@ message ClusteringInfo {
   repeated VectorClusteringInfo vector_clustering_infos = 1;
   repeated ScalarClusteringInfo scalar_clustering_infos = 2;
 }
+
+message TemplateValue {
+  DataType type = 1;
+  oneof val {
+    bool bool_val = 2;
+    int64 int64_val = 3;
+    double float_val = 4;
+    string string_val = 5;
+    TemplateArrayValue array_val = 6;
+  };
+}
+
+message TemplateArrayValue {
+  repeated TemplateValue array = 1;
+  bool same_type = 2;
+  schema.DataType element_type = 3;
+}
