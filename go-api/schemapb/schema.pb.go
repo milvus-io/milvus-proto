@@ -2113,7 +2113,7 @@ type TemplateValue struct {
 func (x *TemplateValue) Reset() {
 	*x = TemplateValue{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[22]
+		mi := &file_schema_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2126,7 +2126,7 @@ func (x *TemplateValue) String() string {
 func (*TemplateValue) ProtoMessage() {}
 
 func (x *TemplateValue) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[22]
+	mi := &file_schema_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2139,7 +2139,7 @@ func (x *TemplateValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TemplateValue.ProtoReflect.Descriptor instead.
 func (*TemplateValue) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{22}
+	return file_schema_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *TemplateValue) GetType() DataType {
@@ -2238,7 +2238,7 @@ type TemplateArrayValue struct {
 func (x *TemplateArrayValue) Reset() {
 	*x = TemplateArrayValue{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[23]
+		mi := &file_schema_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2251,7 +2251,7 @@ func (x *TemplateArrayValue) String() string {
 func (*TemplateArrayValue) ProtoMessage() {}
 
 func (x *TemplateArrayValue) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[23]
+	mi := &file_schema_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2264,7 +2264,7 @@ func (x *TemplateArrayValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TemplateArrayValue.ProtoReflect.Descriptor instead.
 func (*TemplateArrayValue) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{23}
+	return file_schema_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *TemplateArrayValue) GetArray() []*TemplateValue {
@@ -2603,7 +2603,7 @@ var file_schema_proto_rawDesc = []byte{
 	0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x1d, 0x2e, 0x6d, 0x69,
 	0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x73, 0x63, 0x68, 0x65, 0x6d,
 	0x61, 0x2e, 0x44, 0x61, 0x74, 0x61, 0x54, 0x79, 0x70, 0x65, 0x52, 0x0b, 0x65, 0x6c, 0x65, 0x6d,
-	0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x2a, 0xef, 0x01, 0x0a, 0x08, 0x44, 0x61, 0x74, 0x61,
+	0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x2a, 0xfd, 0x01, 0x0a, 0x08, 0x44, 0x61, 0x74, 0x61,
 	0x54, 0x79, 0x70, 0x65, 0x12, 0x08, 0x0a, 0x04, 0x4e, 0x6f, 0x6e, 0x65, 0x10, 0x00, 0x12, 0x08,
 	0x0a, 0x04, 0x42, 0x6f, 0x6f, 0x6c, 0x10, 0x01, 0x12, 0x08, 0x0a, 0x04, 0x49, 0x6e, 0x74, 0x38,
 	0x10, 0x02, 0x12, 0x09, 0x0a, 0x05, 0x49, 0x6e, 0x74, 0x31, 0x36, 0x10, 0x03, 0x12, 0x09, 0x0a,
@@ -2612,30 +2612,31 @@ var file_schema_proto_rawDesc = []byte{
 	0x0a, 0x06, 0x44, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x10, 0x0b, 0x12, 0x0a, 0x0a, 0x06, 0x53, 0x74,
 	0x72, 0x69, 0x6e, 0x67, 0x10, 0x14, 0x12, 0x0b, 0x0a, 0x07, 0x56, 0x61, 0x72, 0x43, 0x68, 0x61,
 	0x72, 0x10, 0x15, 0x12, 0x09, 0x0a, 0x05, 0x41, 0x72, 0x72, 0x61, 0x79, 0x10, 0x16, 0x12, 0x08,
-	0x0a, 0x04, 0x4a, 0x53, 0x4f, 0x4e, 0x10, 0x17, 0x12, 0x10, 0x0a, 0x0c, 0x42, 0x69, 0x6e, 0x61,
-	0x72, 0x79, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x64, 0x12, 0x0f, 0x0a, 0x0b, 0x46, 0x6c,
-	0x6f, 0x61, 0x74, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x65, 0x12, 0x11, 0x0a, 0x0d, 0x46,
-	0x6c, 0x6f, 0x61, 0x74, 0x31, 0x36, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x66, 0x12, 0x12,
-	0x0a, 0x0e, 0x42, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x31, 0x36, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72,
-	0x10, 0x67, 0x12, 0x15, 0x0a, 0x11, 0x53, 0x70, 0x61, 0x72, 0x73, 0x65, 0x46, 0x6c, 0x6f, 0x61,
-	0x74, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x68, 0x2a, 0x3a, 0x0a, 0x0c, 0x46, 0x75, 0x6e,
-	0x63, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x6e, 0x6b,
-	0x6e, 0x6f, 0x77, 0x6e, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x42, 0x4d, 0x32, 0x35, 0x10, 0x01,
-	0x12, 0x13, 0x0a, 0x0f, 0x4f, 0x70, 0x65, 0x6e, 0x41, 0x49, 0x45, 0x6d, 0x62, 0x65, 0x64, 0x64,
-	0x69, 0x6e, 0x67, 0x10, 0x02, 0x2a, 0x56, 0x0a, 0x0a, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x53, 0x74,
-	0x61, 0x74, 0x65, 0x12, 0x10, 0x0a, 0x0c, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72, 0x65, 0x61,
-	0x74, 0x65, 0x64, 0x10, 0x00, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72,
-	0x65, 0x61, 0x74, 0x69, 0x6e, 0x67, 0x10, 0x01, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c,
-	0x64, 0x44, 0x72, 0x6f, 0x70, 0x70, 0x69, 0x6e, 0x67, 0x10, 0x02, 0x12, 0x10, 0x0a, 0x0c, 0x46,
-	0x69, 0x65, 0x6c, 0x64, 0x44, 0x72, 0x6f, 0x70, 0x70, 0x65, 0x64, 0x10, 0x03, 0x42, 0x6d, 0x0a,
-	0x0e, 0x69, 0x6f, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x42,
-	0x0b, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34,
-	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75,
-	0x73, 0x2d, 0x69, 0x6f, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x2f, 0x67, 0x6f, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x32, 0x2f, 0x73, 0x63, 0x68, 0x65,
-	0x6d, 0x61, 0x70, 0x62, 0xa0, 0x01, 0x01, 0xaa, 0x02, 0x12, 0x4d, 0x69, 0x6c, 0x76, 0x75, 0x73,
-	0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2e, 0x47, 0x72, 0x70, 0x63, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x0a, 0x04, 0x4a, 0x53, 0x4f, 0x4e, 0x10, 0x17, 0x12, 0x0c, 0x0a, 0x08, 0x47, 0x65, 0x6f, 0x6d,
+	0x65, 0x74, 0x72, 0x79, 0x10, 0x18, 0x12, 0x10, 0x0a, 0x0c, 0x42, 0x69, 0x6e, 0x61, 0x72, 0x79,
+	0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x64, 0x12, 0x0f, 0x0a, 0x0b, 0x46, 0x6c, 0x6f, 0x61,
+	0x74, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x65, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x6c, 0x6f,
+	0x61, 0x74, 0x31, 0x36, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x66, 0x12, 0x12, 0x0a, 0x0e,
+	0x42, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x31, 0x36, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x67,
+	0x12, 0x15, 0x0a, 0x11, 0x53, 0x70, 0x61, 0x72, 0x73, 0x65, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x56,
+	0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x68, 0x2a, 0x3a, 0x0a, 0x0c, 0x46, 0x75, 0x6e, 0x63, 0x74,
+	0x69, 0x6f, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x6e, 0x6b, 0x6e, 0x6f,
+	0x77, 0x6e, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x42, 0x4d, 0x32, 0x35, 0x10, 0x01, 0x12, 0x13,
+	0x0a, 0x0f, 0x4f, 0x70, 0x65, 0x6e, 0x41, 0x49, 0x45, 0x6d, 0x62, 0x65, 0x64, 0x64, 0x69, 0x6e,
+	0x67, 0x10, 0x02, 0x2a, 0x56, 0x0a, 0x0a, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x53, 0x74, 0x61, 0x74,
+	0x65, 0x12, 0x10, 0x0a, 0x0c, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
+	0x64, 0x10, 0x00, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x69, 0x6e, 0x67, 0x10, 0x01, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x44,
+	0x72, 0x6f, 0x70, 0x70, 0x69, 0x6e, 0x67, 0x10, 0x02, 0x12, 0x10, 0x0a, 0x0c, 0x46, 0x69, 0x65,
+	0x6c, 0x64, 0x44, 0x72, 0x6f, 0x70, 0x70, 0x65, 0x64, 0x10, 0x03, 0x42, 0x6d, 0x0a, 0x0e, 0x69,
+	0x6f, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x42, 0x0b, 0x53,
+	0x63, 0x68, 0x65, 0x6d, 0x61, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x67, 0x69,
+	0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d,
+	0x69, 0x6f, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
+	0x67, 0x6f, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x32, 0x2f, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61,
+	0x70, 0x62, 0xa0, 0x01, 0x01, 0xaa, 0x02, 0x12, 0x4d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x43,
+	0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2e, 0x47, 0x72, 0x70, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -2651,7 +2652,7 @@ func file_schema_proto_rawDescGZIP() []byte {
 }
 
 var file_schema_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_schema_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_schema_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_schema_proto_goTypes = []interface{}{
 	(DataType)(0),                 // 0: milvus.proto.schema.DataType
 	(FunctionType)(0),             // 1: milvus.proto.schema.FunctionType
@@ -2668,31 +2669,32 @@ var file_schema_proto_goTypes = []interface{}{
 	(*StringArray)(nil),           // 12: milvus.proto.schema.StringArray
 	(*ArrayArray)(nil),            // 13: milvus.proto.schema.ArrayArray
 	(*JSONArray)(nil),             // 14: milvus.proto.schema.JSONArray
-	(*ValueField)(nil),            // 15: milvus.proto.schema.ValueField
-	(*ScalarField)(nil),           // 16: milvus.proto.schema.ScalarField
-	(*SparseFloatArray)(nil),      // 17: milvus.proto.schema.SparseFloatArray
-	(*VectorField)(nil),           // 18: milvus.proto.schema.VectorField
-	(*FieldData)(nil),             // 19: milvus.proto.schema.FieldData
-	(*IDs)(nil),                   // 20: milvus.proto.schema.IDs
-	(*SearchResultData)(nil),      // 21: milvus.proto.schema.SearchResultData
-	(*VectorClusteringInfo)(nil),  // 22: milvus.proto.schema.VectorClusteringInfo
-	(*ScalarClusteringInfo)(nil),  // 23: milvus.proto.schema.ScalarClusteringInfo
-	(*ClusteringInfo)(nil),        // 24: milvus.proto.schema.ClusteringInfo
-	(*TemplateValue)(nil),         // 25: milvus.proto.schema.TemplateValue
-	(*TemplateArrayValue)(nil),    // 26: milvus.proto.schema.TemplateArrayValue
-	(*commonpb.KeyValuePair)(nil), // 27: milvus.proto.common.KeyValuePair
+	(*GeometryArray)(nil),         // 15: milvus.proto.schema.GeometryArray
+	(*ValueField)(nil),            // 16: milvus.proto.schema.ValueField
+	(*ScalarField)(nil),           // 17: milvus.proto.schema.ScalarField
+	(*SparseFloatArray)(nil),      // 18: milvus.proto.schema.SparseFloatArray
+	(*VectorField)(nil),           // 19: milvus.proto.schema.VectorField
+	(*FieldData)(nil),             // 20: milvus.proto.schema.FieldData
+	(*IDs)(nil),                   // 21: milvus.proto.schema.IDs
+	(*SearchResultData)(nil),      // 22: milvus.proto.schema.SearchResultData
+	(*VectorClusteringInfo)(nil),  // 23: milvus.proto.schema.VectorClusteringInfo
+	(*ScalarClusteringInfo)(nil),  // 24: milvus.proto.schema.ScalarClusteringInfo
+	(*ClusteringInfo)(nil),        // 25: milvus.proto.schema.ClusteringInfo
+	(*TemplateValue)(nil),         // 26: milvus.proto.schema.TemplateValue
+	(*TemplateArrayValue)(nil),    // 27: milvus.proto.schema.TemplateArrayValue
+	(*commonpb.KeyValuePair)(nil), // 28: milvus.proto.common.KeyValuePair
 }
 var file_schema_proto_depIdxs = []int32{
 	0,  // 0: milvus.proto.schema.FieldSchema.data_type:type_name -> milvus.proto.schema.DataType
-	27, // 1: milvus.proto.schema.FieldSchema.type_params:type_name -> milvus.proto.common.KeyValuePair
-	27, // 2: milvus.proto.schema.FieldSchema.index_params:type_name -> milvus.proto.common.KeyValuePair
+	28, // 1: milvus.proto.schema.FieldSchema.type_params:type_name -> milvus.proto.common.KeyValuePair
+	28, // 2: milvus.proto.schema.FieldSchema.index_params:type_name -> milvus.proto.common.KeyValuePair
 	2,  // 3: milvus.proto.schema.FieldSchema.state:type_name -> milvus.proto.schema.FieldState
 	0,  // 4: milvus.proto.schema.FieldSchema.element_type:type_name -> milvus.proto.schema.DataType
 	16, // 5: milvus.proto.schema.FieldSchema.default_value:type_name -> milvus.proto.schema.ValueField
 	1,  // 6: milvus.proto.schema.FunctionSchema.type:type_name -> milvus.proto.schema.FunctionType
-	27, // 7: milvus.proto.schema.FunctionSchema.params:type_name -> milvus.proto.common.KeyValuePair
+	28, // 7: milvus.proto.schema.FunctionSchema.params:type_name -> milvus.proto.common.KeyValuePair
 	3,  // 8: milvus.proto.schema.CollectionSchema.fields:type_name -> milvus.proto.schema.FieldSchema
-	27, // 9: milvus.proto.schema.CollectionSchema.properties:type_name -> milvus.proto.common.KeyValuePair
+	28, // 9: milvus.proto.schema.CollectionSchema.properties:type_name -> milvus.proto.common.KeyValuePair
 	4,  // 10: milvus.proto.schema.CollectionSchema.functions:type_name -> milvus.proto.schema.FunctionSchema
 	17, // 11: milvus.proto.schema.ArrayArray.data:type_name -> milvus.proto.schema.ScalarField
 	0,  // 12: milvus.proto.schema.ArrayArray.element_type:type_name -> milvus.proto.schema.DataType
@@ -2705,28 +2707,29 @@ var file_schema_proto_depIdxs = []int32{
 	11, // 19: milvus.proto.schema.ScalarField.bytes_data:type_name -> milvus.proto.schema.BytesArray
 	13, // 20: milvus.proto.schema.ScalarField.array_data:type_name -> milvus.proto.schema.ArrayArray
 	14, // 21: milvus.proto.schema.ScalarField.json_data:type_name -> milvus.proto.schema.JSONArray
-	9,  // 22: milvus.proto.schema.VectorField.float_vector:type_name -> milvus.proto.schema.FloatArray
-	17, // 23: milvus.proto.schema.VectorField.sparse_float_vector:type_name -> milvus.proto.schema.SparseFloatArray
-	0,  // 24: milvus.proto.schema.FieldData.type:type_name -> milvus.proto.schema.DataType
-	16, // 25: milvus.proto.schema.FieldData.scalars:type_name -> milvus.proto.schema.ScalarField
-	18, // 26: milvus.proto.schema.FieldData.vectors:type_name -> milvus.proto.schema.VectorField
-	8,  // 27: milvus.proto.schema.IDs.int_id:type_name -> milvus.proto.schema.LongArray
-	12, // 28: milvus.proto.schema.IDs.str_id:type_name -> milvus.proto.schema.StringArray
-	19, // 29: milvus.proto.schema.SearchResultData.fields_data:type_name -> milvus.proto.schema.FieldData
-	20, // 30: milvus.proto.schema.SearchResultData.ids:type_name -> milvus.proto.schema.IDs
-	19, // 31: milvus.proto.schema.SearchResultData.group_by_field_value:type_name -> milvus.proto.schema.FieldData
-	18, // 32: milvus.proto.schema.VectorClusteringInfo.centroid:type_name -> milvus.proto.schema.VectorField
-	22, // 33: milvus.proto.schema.ClusteringInfo.vector_clustering_infos:type_name -> milvus.proto.schema.VectorClusteringInfo
-	23, // 34: milvus.proto.schema.ClusteringInfo.scalar_clustering_infos:type_name -> milvus.proto.schema.ScalarClusteringInfo
-	0,  // 35: milvus.proto.schema.TemplateValue.type:type_name -> milvus.proto.schema.DataType
-	26, // 36: milvus.proto.schema.TemplateValue.array_val:type_name -> milvus.proto.schema.TemplateArrayValue
-	25, // 37: milvus.proto.schema.TemplateArrayValue.array:type_name -> milvus.proto.schema.TemplateValue
-	0,  // 38: milvus.proto.schema.TemplateArrayValue.element_type:type_name -> milvus.proto.schema.DataType
-	39, // [39:39] is the sub-list for method output_type
-	39, // [39:39] is the sub-list for method input_type
-	39, // [39:39] is the sub-list for extension type_name
-	39, // [39:39] is the sub-list for extension extendee
-	0,  // [0:39] is the sub-list for field type_name
+	15, // 22: milvus.proto.schema.ScalarField.geometry_data:type_name -> milvus.proto.schema.GeometryArray
+	9,  // 23: milvus.proto.schema.VectorField.float_vector:type_name -> milvus.proto.schema.FloatArray
+	18, // 24: milvus.proto.schema.VectorField.sparse_float_vector:type_name -> milvus.proto.schema.SparseFloatArray
+	0,  // 25: milvus.proto.schema.FieldData.type:type_name -> milvus.proto.schema.DataType
+	17, // 26: milvus.proto.schema.FieldData.scalars:type_name -> milvus.proto.schema.ScalarField
+	19, // 27: milvus.proto.schema.FieldData.vectors:type_name -> milvus.proto.schema.VectorField
+	8,  // 28: milvus.proto.schema.IDs.int_id:type_name -> milvus.proto.schema.LongArray
+	12, // 29: milvus.proto.schema.IDs.str_id:type_name -> milvus.proto.schema.StringArray
+	20, // 30: milvus.proto.schema.SearchResultData.fields_data:type_name -> milvus.proto.schema.FieldData
+	21, // 31: milvus.proto.schema.SearchResultData.ids:type_name -> milvus.proto.schema.IDs
+	20, // 32: milvus.proto.schema.SearchResultData.group_by_field_value:type_name -> milvus.proto.schema.FieldData
+	19, // 33: milvus.proto.schema.VectorClusteringInfo.centroid:type_name -> milvus.proto.schema.VectorField
+	23, // 34: milvus.proto.schema.ClusteringInfo.vector_clustering_infos:type_name -> milvus.proto.schema.VectorClusteringInfo
+	24, // 35: milvus.proto.schema.ClusteringInfo.scalar_clustering_infos:type_name -> milvus.proto.schema.ScalarClusteringInfo
+	0,  // 36: milvus.proto.schema.TemplateValue.type:type_name -> milvus.proto.schema.DataType
+	27, // 37: milvus.proto.schema.TemplateValue.array_val:type_name -> milvus.proto.schema.TemplateArrayValue
+	26, // 38: milvus.proto.schema.TemplateArrayValue.array:type_name -> milvus.proto.schema.TemplateValue
+	0,  // 39: milvus.proto.schema.TemplateArrayValue.element_type:type_name -> milvus.proto.schema.DataType
+	40, // [40:40] is the sub-list for method output_type
+	40, // [40:40] is the sub-list for method input_type
+	40, // [40:40] is the sub-list for extension type_name
+	40, // [40:40] is the sub-list for extension extendee
+	0,  // [0:40] is the sub-list for field type_name
 }
 
 func init() { file_schema_proto_init() }
@@ -3011,7 +3014,7 @@ func file_schema_proto_init() {
 				return nil
 			}
 		}
-		file_schema_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+		file_schema_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TemplateValue); i {
 			case 0:
 				return &v.state
@@ -3023,7 +3026,7 @@ func file_schema_proto_init() {
 				return nil
 			}
 		}
-		file_schema_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+		file_schema_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TemplateArrayValue); i {
 			case 0:
 				return &v.state
@@ -3036,7 +3039,7 @@ func file_schema_proto_init() {
 			}
 		}
 	}
-	file_schema_proto_msgTypes[12].OneofWrappers = []interface{}{
+	file_schema_proto_msgTypes[13].OneofWrappers = []interface{}{
 		(*ValueField_BoolData)(nil),
 		(*ValueField_IntData)(nil),
 		(*ValueField_LongData)(nil),
@@ -3072,7 +3075,7 @@ func file_schema_proto_init() {
 		(*IDs_IntId)(nil),
 		(*IDs_StrId)(nil),
 	}
-	file_schema_proto_msgTypes[22].OneofWrappers = []interface{}{
+	file_schema_proto_msgTypes[23].OneofWrappers = []interface{}{
 		(*TemplateValue_BoolVal)(nil),
 		(*TemplateValue_Int64Val)(nil),
 		(*TemplateValue_FloatVal)(nil),
@@ -3085,7 +3088,7 @@ func file_schema_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_schema_proto_rawDesc,
 			NumEnums:      3,
-			NumMessages:   24,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
