@@ -31,6 +31,7 @@ enum DataType {
   VarChar = 21; // variable-length strings with a specified maximum length
   Array = 22;
   JSON = 23;
+  Geometry = 24;
 
   BinaryVector = 100;
   FloatVector = 101;
@@ -122,6 +123,8 @@ message ArrayArray {
 
 message JSONArray { repeated bytes data = 1; }
 
+message GeometryArray { repeated bytes data = 1; }
+
 message ValueField {
   oneof data {
     bool bool_data = 1;
@@ -145,6 +148,7 @@ message ScalarField {
     BytesArray bytes_data = 7;
     ArrayArray array_data = 8;
     JSONArray json_data = 9;
+    GeometryArray geometry_data = 10;
   }
 }
 
