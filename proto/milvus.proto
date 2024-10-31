@@ -736,6 +736,7 @@ message AlterIndexRequest {
   string collection_name = 3;
   string index_name = 4;
   repeated common.KeyValuePair extra_params = 5;
+  repeated string delete_keys = 6;
 }
 
 /*
