@@ -216,6 +216,7 @@ enum MsgType {
     Upsert = 404;
     ManualFlush = 405; // streaming service new msg type for internal usage compatible
     FlushSegment = 406; // streaming service new msg type for internal usage compatible
+    CreateSegment = 407; // streaming service new msg type for internal usage compatible
 
     /* QUERY */
     Search = 500;
