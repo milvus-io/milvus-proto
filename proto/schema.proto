@@ -43,7 +43,7 @@ enum DataType {
 enum FunctionType{
   Unknown =0;
   BM25 =1;
-  OpenAIEmbedding =2;
+  TextEmbedding =2;
 }
 
 enum FieldState {
