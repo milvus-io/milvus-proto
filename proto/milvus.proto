@@ -282,7 +282,7 @@ message AlterCollectionRequest {
   string collection_name = 3;
   int64  collectionID = 4;
   repeated common.KeyValuePair properties = 5;
-  repeater string delete_keys = 6;
+  repeated string delete_keys = 6;
 }
 
 message AlterCollectionFieldRequest {
