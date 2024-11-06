@@ -223,18 +223,26 @@ message ClusteringInfo {
 }
 
 message TemplateValue {
-  DataType type = 1;
   oneof val {
-    bool bool_val = 2;
-    int64 int64_val = 3;
-    double float_val = 4;
-    string string_val = 5;
-    TemplateArrayValue array_val = 6;
+    bool bool_val = 1;
+    int64 int64_val = 2;
+    double float_val = 3;
+    string string_val = 4;
+    TemplateArrayValue array_val = 5;
   };
 }
 
 message TemplateArrayValue {
-  repeated TemplateValue array = 1;
-  bool same_type = 2;
-  schema.DataType element_type = 3;
+  oneof data {
+    BoolArray bool_data = 1;
+    LongArray long_data = 2;
+    DoubleArray double_data = 3;
+    StringArray string_data = 4;
+    TemplateArrayValueArray array_data = 5;
+    JSONArray json_data = 6;
+  }
+}
+
+message TemplateArrayValueArray {
+  repeated TemplateArrayValue data = 1;
 }
