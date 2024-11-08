@@ -139,6 +139,11 @@ service MilvusService {
 
   rpc BackupRBAC(BackupRBACMetaRequest) returns (BackupRBACMetaResponse){}
   rpc RestoreRBAC(RestoreRBACMetaRequest) returns (common.Status){}
+
+  rpc CreatePrivilegeGroup(CreatePrivilegeGroupRequest) returns (common.Status) {}
+  rpc DropPrivilegeGroup(DropPrivilegeGroupRequest) returns (common.Status) {}
+  rpc ListPrivilegeGroups(ListPrivilegeGroupsRequest) returns (ListPrivilegeGroupsResponse) {}
+  rpc OperatePrivilegeGroup(OperatePrivilegeGroupRequest) returns (common.Status) {}
 }
 
 message CreateAliasRequest {
@@ -1440,6 +1445,66 @@ message DropRoleRequest {
   bool force_drop = 3;
 }
 
+message CreatePrivilegeGroupRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCreatePrivilegeGroup
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  // group name
+  string group_name = 2;
+}
+
+message DropPrivilegeGroupRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDropPrivilegeGroup
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  // group name
+  string group_name = 2;
+}
+
+message ListPrivilegeGroupsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeListPrivilegeGroups
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+}
+
+message ListPrivilegeGroupsResponse {
+  common.Status status = 1;
+  repeated PrivilegeGroupInfo privilege_groups = 2;
+}
+
+message OperatePrivilegeGroupRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeOperatePrivilegeGroup
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  // group name
+  string group_name = 2;
+  // privileges
+  repeated PrivilegeEntity privileges = 3;
+  // operation type
+  OperatePrivilegeGroupType type = 4;
+}
+
+enum OperatePrivilegeGroupType {
+  AddPrivilegesToGroup = 0;
+  RemovePrivilegesFromGroup = 1;
+}
+
 enum OperateUserRoleType {
   AddUserToRole = 0;
   RemoveUserFromRole = 1;
@@ -1459,6 +1524,11 @@ message OperateUserRoleRequest {
   string role_name = 3;
   // operation type
   OperateUserRoleType type = 4;
+}
+
+message PrivilegeGroupInfo {
+  string group_name = 1;
+  repeated PrivilegeEntity privileges = 2;
 }
 
 message SelectRoleRequest {
@@ -1594,6 +1664,8 @@ message RBACMeta {
   repeated milvus.RoleEntity roles = 2;
   // (role, object, previledge)
   repeated milvus.GrantEntity grants = 3;
+  // privilege group info
+  repeated milvus.PrivilegeGroupInfo privilege_groups = 4;
 }
 
 message BackupRBACMetaRequest {
