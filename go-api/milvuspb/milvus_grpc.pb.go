@@ -110,6 +110,10 @@ const (
 	MilvusService_ReplicateMessage_FullMethodName            = "/milvus.proto.milvus.MilvusService/ReplicateMessage"
 	MilvusService_BackupRBAC_FullMethodName                  = "/milvus.proto.milvus.MilvusService/BackupRBAC"
 	MilvusService_RestoreRBAC_FullMethodName                 = "/milvus.proto.milvus.MilvusService/RestoreRBAC"
+	MilvusService_CreatePrivilegeGroup_FullMethodName        = "/milvus.proto.milvus.MilvusService/CreatePrivilegeGroup"
+	MilvusService_DropPrivilegeGroup_FullMethodName          = "/milvus.proto.milvus.MilvusService/DropPrivilegeGroup"
+	MilvusService_ListPrivilegeGroups_FullMethodName         = "/milvus.proto.milvus.MilvusService/ListPrivilegeGroups"
+	MilvusService_OperatePrivilegeGroup_FullMethodName       = "/milvus.proto.milvus.MilvusService/OperatePrivilegeGroup"
 )
 
 // MilvusServiceClient is the client API for MilvusService service.
@@ -214,6 +218,10 @@ type MilvusServiceClient interface {
 	ReplicateMessage(ctx context.Context, in *ReplicateMessageRequest, opts ...grpc.CallOption) (*ReplicateMessageResponse, error)
 	BackupRBAC(ctx context.Context, in *BackupRBACMetaRequest, opts ...grpc.CallOption) (*BackupRBACMetaResponse, error)
 	RestoreRBAC(ctx context.Context, in *RestoreRBACMetaRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	CreatePrivilegeGroup(ctx context.Context, in *CreatePrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	DropPrivilegeGroup(ctx context.Context, in *DropPrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	ListPrivilegeGroups(ctx context.Context, in *ListPrivilegeGroupsRequest, opts ...grpc.CallOption) (*ListPrivilegeGroupsResponse, error)
+	OperatePrivilegeGroup(ctx context.Context, in *OperatePrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 }
 
 type milvusServiceClient struct {
@@ -1027,6 +1035,42 @@ func (c *milvusServiceClient) RestoreRBAC(ctx context.Context, in *RestoreRBACMe
 	return out, nil
 }
 
+func (c *milvusServiceClient) CreatePrivilegeGroup(ctx context.Context, in *CreatePrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_CreatePrivilegeGroup_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) DropPrivilegeGroup(ctx context.Context, in *DropPrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_DropPrivilegeGroup_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) ListPrivilegeGroups(ctx context.Context, in *ListPrivilegeGroupsRequest, opts ...grpc.CallOption) (*ListPrivilegeGroupsResponse, error) {
+	out := new(ListPrivilegeGroupsResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ListPrivilegeGroups_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) OperatePrivilegeGroup(ctx context.Context, in *OperatePrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_OperatePrivilegeGroup_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MilvusServiceServer is the server API for MilvusService service.
 // All implementations should embed UnimplementedMilvusServiceServer
 // for forward compatibility
@@ -1129,6 +1173,10 @@ type MilvusServiceServer interface {
 	ReplicateMessage(context.Context, *ReplicateMessageRequest) (*ReplicateMessageResponse, error)
 	BackupRBAC(context.Context, *BackupRBACMetaRequest) (*BackupRBACMetaResponse, error)
 	RestoreRBAC(context.Context, *RestoreRBACMetaRequest) (*commonpb.Status, error)
+	CreatePrivilegeGroup(context.Context, *CreatePrivilegeGroupRequest) (*commonpb.Status, error)
+	DropPrivilegeGroup(context.Context, *DropPrivilegeGroupRequest) (*commonpb.Status, error)
+	ListPrivilegeGroups(context.Context, *ListPrivilegeGroupsRequest) (*ListPrivilegeGroupsResponse, error)
+	OperatePrivilegeGroup(context.Context, *OperatePrivilegeGroupRequest) (*commonpb.Status, error)
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -1401,6 +1449,18 @@ func (UnimplementedMilvusServiceServer) BackupRBAC(context.Context, *BackupRBACM
 }
 func (UnimplementedMilvusServiceServer) RestoreRBAC(context.Context, *RestoreRBACMetaRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RestoreRBAC not implemented")
+}
+func (UnimplementedMilvusServiceServer) CreatePrivilegeGroup(context.Context, *CreatePrivilegeGroupRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePrivilegeGroup not implemented")
+}
+func (UnimplementedMilvusServiceServer) DropPrivilegeGroup(context.Context, *DropPrivilegeGroupRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DropPrivilegeGroup not implemented")
+}
+func (UnimplementedMilvusServiceServer) ListPrivilegeGroups(context.Context, *ListPrivilegeGroupsRequest) (*ListPrivilegeGroupsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPrivilegeGroups not implemented")
+}
+func (UnimplementedMilvusServiceServer) OperatePrivilegeGroup(context.Context, *OperatePrivilegeGroupRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OperatePrivilegeGroup not implemented")
 }
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -3016,6 +3076,78 @@ func _MilvusService_RestoreRBAC_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_CreatePrivilegeGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePrivilegeGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).CreatePrivilegeGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_CreatePrivilegeGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).CreatePrivilegeGroup(ctx, req.(*CreatePrivilegeGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_DropPrivilegeGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DropPrivilegeGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).DropPrivilegeGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_DropPrivilegeGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).DropPrivilegeGroup(ctx, req.(*DropPrivilegeGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_ListPrivilegeGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPrivilegeGroupsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ListPrivilegeGroups(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ListPrivilegeGroups_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ListPrivilegeGroups(ctx, req.(*ListPrivilegeGroupsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_OperatePrivilegeGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OperatePrivilegeGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).OperatePrivilegeGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_OperatePrivilegeGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).OperatePrivilegeGroup(ctx, req.(*OperatePrivilegeGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MilvusService_ServiceDesc is the grpc.ServiceDesc for MilvusService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -3378,6 +3510,22 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RestoreRBAC",
 			Handler:    _MilvusService_RestoreRBAC_Handler,
+		},
+		{
+			MethodName: "CreatePrivilegeGroup",
+			Handler:    _MilvusService_CreatePrivilegeGroup_Handler,
+		},
+		{
+			MethodName: "DropPrivilegeGroup",
+			Handler:    _MilvusService_DropPrivilegeGroup_Handler,
+		},
+		{
+			MethodName: "ListPrivilegeGroups",
+			Handler:    _MilvusService_ListPrivilegeGroups_Handler,
+		},
+		{
+			MethodName: "OperatePrivilegeGroup",
+			Handler:    _MilvusService_OperatePrivilegeGroup_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
