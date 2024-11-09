@@ -1977,6 +1977,7 @@ message ListDatabasesResponse {
   common.Status status = 1;
   repeated string db_names = 2;
   repeated uint64 created_timestamp = 3;
+  repeated int64 db_ids = 4;
 }
 
 message AlterDatabaseRequest {
