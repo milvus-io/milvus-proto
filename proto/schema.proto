@@ -190,6 +190,11 @@ message IDs {
   }
 }
 
+message SearchIteratorV2Results {
+  string token = 1;
+  float last_bound = 2;
+}
+
 message SearchResultData {
   int64 num_queries = 1;
   int64 top_k = 2;
@@ -201,6 +206,7 @@ message SearchResultData {
   FieldData group_by_field_value = 8;
   int64 all_search_count = 9;
   repeated float distances = 10;
+  optional SearchIteratorV2Results search_iterator_v2_results = 11;
 }
 
 // vector field clustering info
