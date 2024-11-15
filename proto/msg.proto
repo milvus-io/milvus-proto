@@ -106,3 +106,10 @@ message DataNodeTtMsg {
   repeated common.SegmentStats segments_stats = 4;
 }
 
+message ReplicateMsg {
+  common.MsgBase base = 1;
+  bool is_end = 2;
+  bool is_cluster = 3;
+  string database = 4;
+  string collection = 5;
+}
