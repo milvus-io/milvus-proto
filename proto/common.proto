@@ -263,6 +263,7 @@ enum MsgType {
     Connect = 1209;
     ListClientInfos = 1210;
     AllocTimestamp = 1211;
+    Replicate = 1212;
 
     /* Credential */
     CreateCredential = 1500;
@@ -318,6 +319,7 @@ message MsgBase {
 message ReplicateInfo {
     bool isReplicate = 1;
     uint64 msgTimestamp = 2;
+    string replicateID = 3;
 }
 
 enum DslType {
