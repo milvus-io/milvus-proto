@@ -366,6 +366,12 @@ enum ObjectType {
     User = 2;
 }
 
+enum PrivilegeLevel {
+    ClusterLevel = 0;
+    DatabaseLevel = 1;
+    CollectionLevel = 2;
+}
+
 enum ObjectPrivilege {
     PrivilegeAll = 0;
     PrivilegeCreateCollection = 1;
