@@ -1635,6 +1635,12 @@ message GrantEntity {
   string db_name = 5;
 }
 
+enum PrivilegeLevel {
+  Cluster = 0;
+  Database = 1;
+  Collection = 2;
+}
+
 message SelectGrantRequest {
   option (common.privilege_ext_obj) = {
     object_type: Global
@@ -1671,6 +1677,8 @@ message OperatePrivilegeRequest {
   GrantEntity entity = 2;
   // operation type
   OperatePrivilegeType type = 3;
+  // version
+  string version = 4;
 }
 
 message UserInfo {
