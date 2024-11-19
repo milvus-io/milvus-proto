@@ -108,6 +108,7 @@ service MilvusService {
   rpc SelectRole(SelectRoleRequest) returns (SelectRoleResponse) {}
   rpc SelectUser(SelectUserRequest) returns (SelectUserResponse) {}
   rpc OperatePrivilege(OperatePrivilegeRequest) returns (common.Status) {}
+  rpc OperatePrivilegeV2(OperatePrivilegeV2Request) returns (common.Status) {}
   rpc SelectGrant(SelectGrantRequest) returns (SelectGrantResponse) {}
 
   rpc GetVersion(GetVersionRequest) returns (GetVersionResponse) {}
@@ -1679,6 +1680,27 @@ message OperatePrivilegeRequest {
   OperatePrivilegeType type = 3;
   // version
   string version = 4;
+}
+
+
+message OperatePrivilegeV2Request {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeManageOwnership
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  // role
+  RoleEntity role = 2;
+  // privilege
+  PrivilegeEntity privilege = 3;
+  // operation type
+  OperatePrivilegeType type = 4;
+  // db name
+  string db_name = 5;
+  // collection name
+  string collection_name = 6; 
 }
 
 message UserInfo {
