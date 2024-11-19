@@ -1694,7 +1694,7 @@ message OperatePrivilegeV2Request {
   // role
   RoleEntity role = 2;
   // privilege
-  PrivilegeEntity privilege = 3;
+  GrantorEntity grantor = 3;
   // operation type
   OperatePrivilegeType type = 4;
   // db name
