@@ -86,6 +86,7 @@ const (
 	MilvusService_SelectRole_FullMethodName                  = "/milvus.proto.milvus.MilvusService/SelectRole"
 	MilvusService_SelectUser_FullMethodName                  = "/milvus.proto.milvus.MilvusService/SelectUser"
 	MilvusService_OperatePrivilege_FullMethodName            = "/milvus.proto.milvus.MilvusService/OperatePrivilege"
+	MilvusService_OperatePrivilegeV2_FullMethodName          = "/milvus.proto.milvus.MilvusService/OperatePrivilegeV2"
 	MilvusService_SelectGrant_FullMethodName                 = "/milvus.proto.milvus.MilvusService/SelectGrant"
 	MilvusService_GetVersion_FullMethodName                  = "/milvus.proto.milvus.MilvusService/GetVersion"
 	MilvusService_CheckHealth_FullMethodName                 = "/milvus.proto.milvus.MilvusService/CheckHealth"
@@ -193,6 +194,7 @@ type MilvusServiceClient interface {
 	SelectRole(ctx context.Context, in *SelectRoleRequest, opts ...grpc.CallOption) (*SelectRoleResponse, error)
 	SelectUser(ctx context.Context, in *SelectUserRequest, opts ...grpc.CallOption) (*SelectUserResponse, error)
 	OperatePrivilege(ctx context.Context, in *OperatePrivilegeRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	OperatePrivilegeV2(ctx context.Context, in *OperatePrivilegeV2Request, opts ...grpc.CallOption) (*commonpb.Status, error)
 	SelectGrant(ctx context.Context, in *SelectGrantRequest, opts ...grpc.CallOption) (*SelectGrantResponse, error)
 	GetVersion(ctx context.Context, in *GetVersionRequest, opts ...grpc.CallOption) (*GetVersionResponse, error)
 	CheckHealth(ctx context.Context, in *CheckHealthRequest, opts ...grpc.CallOption) (*CheckHealthResponse, error)
@@ -817,6 +819,15 @@ func (c *milvusServiceClient) OperatePrivilege(ctx context.Context, in *OperateP
 	return out, nil
 }
 
+func (c *milvusServiceClient) OperatePrivilegeV2(ctx context.Context, in *OperatePrivilegeV2Request, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_OperatePrivilegeV2_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *milvusServiceClient) SelectGrant(ctx context.Context, in *SelectGrantRequest, opts ...grpc.CallOption) (*SelectGrantResponse, error) {
 	out := new(SelectGrantResponse)
 	err := c.cc.Invoke(ctx, MilvusService_SelectGrant_FullMethodName, in, out, opts...)
@@ -1138,6 +1149,7 @@ type MilvusServiceServer interface {
 	SelectRole(context.Context, *SelectRoleRequest) (*SelectRoleResponse, error)
 	SelectUser(context.Context, *SelectUserRequest) (*SelectUserResponse, error)
 	OperatePrivilege(context.Context, *OperatePrivilegeRequest) (*commonpb.Status, error)
+	OperatePrivilegeV2(context.Context, *OperatePrivilegeV2Request) (*commonpb.Status, error)
 	SelectGrant(context.Context, *SelectGrantRequest) (*SelectGrantResponse, error)
 	GetVersion(context.Context, *GetVersionRequest) (*GetVersionResponse, error)
 	CheckHealth(context.Context, *CheckHealthRequest) (*CheckHealthResponse, error)
@@ -1365,6 +1377,9 @@ func (UnimplementedMilvusServiceServer) SelectUser(context.Context, *SelectUserR
 }
 func (UnimplementedMilvusServiceServer) OperatePrivilege(context.Context, *OperatePrivilegeRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OperatePrivilege not implemented")
+}
+func (UnimplementedMilvusServiceServer) OperatePrivilegeV2(context.Context, *OperatePrivilegeV2Request) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OperatePrivilegeV2 not implemented")
 }
 func (UnimplementedMilvusServiceServer) SelectGrant(context.Context, *SelectGrantRequest) (*SelectGrantResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SelectGrant not implemented")
@@ -2629,6 +2644,24 @@ func _MilvusService_OperatePrivilege_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_OperatePrivilegeV2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OperatePrivilegeV2Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).OperatePrivilegeV2(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_OperatePrivilegeV2_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).OperatePrivilegeV2(ctx, req.(*OperatePrivilegeV2Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MilvusService_SelectGrant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SelectGrantRequest)
 	if err := dec(in); err != nil {
@@ -3381,6 +3414,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "OperatePrivilege",
 			Handler:    _MilvusService_OperatePrivilege_Handler,
+		},
+		{
+			MethodName: "OperatePrivilegeV2",
+			Handler:    _MilvusService_OperatePrivilegeV2_Handler,
 		},
 		{
 			MethodName: "SelectGrant",
