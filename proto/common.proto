@@ -433,6 +433,16 @@ enum ObjectPrivilege {
     PrivilegeDropPrivilegeGroup = 57;
     PrivilegeListPrivilegeGroups = 58;
     PrivilegeOperatePrivilegeGroup = 59;
+
+    PrivilegeGroupClusterReadOnly = 60;
+    PrivilegeGroupClusterReadWrite = 61;
+    PrivilegeGroupClusterAdmin = 62;
+    PrivilegeGroupDatabaseReadOnly = 63;
+    PrivilegeGroupDatabaseReadWrite = 64;
+    PrivilegeGroupDatabaseAdmin = 65;
+    PrivilegeGroupCollectionReadOnly = 66;
+    PrivilegeGroupCollectionReadWrite = 67;
+    PrivilegeGroupCollectionAdmin = 68;
 }
 
 message PrivilegeExt {
