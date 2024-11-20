@@ -175,6 +175,7 @@ message SearchResultData {
   FieldData group_by_field_value = 8;
   int64 all_search_count = 9;
   repeated float distances = 10;
+  repeated float recalls = 12;
 }
 
 // vector field clustering info
