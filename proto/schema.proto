@@ -208,6 +208,7 @@ message SearchResultData {
   int64 all_search_count = 9;
   repeated float distances = 10;
   optional SearchIteratorV2Results search_iterator_v2_results = 11;
+  repeated float recalls = 12;
 }
 
 // vector field clustering info
