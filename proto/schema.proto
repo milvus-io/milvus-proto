@@ -99,6 +99,7 @@ message CollectionSchema {
   bool enable_dynamic_field = 5; // mark whether this table has the dynamic field function enabled.
   repeated common.KeyValuePair properties = 6;
   repeated FunctionSchema functions = 7;
+  string dbName = 8;
 }
 
 message BoolArray { repeated bool data = 1; }
