@@ -950,6 +950,85 @@ func (x *DataNodeTtMsg) GetSegmentsStats() []*commonpb.SegmentStats {
 	return nil
 }
 
+type ReplicateMsg struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Base       *commonpb.MsgBase `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	IsEnd      bool              `protobuf:"varint,2,opt,name=is_end,json=isEnd,proto3" json:"is_end,omitempty"`
+	IsCluster  bool              `protobuf:"varint,3,opt,name=is_cluster,json=isCluster,proto3" json:"is_cluster,omitempty"`
+	Database   string            `protobuf:"bytes,4,opt,name=database,proto3" json:"database,omitempty"`
+	Collection string            `protobuf:"bytes,5,opt,name=collection,proto3" json:"collection,omitempty"`
+}
+
+func (x *ReplicateMsg) Reset() {
+	*x = ReplicateMsg{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_msg_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ReplicateMsg) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReplicateMsg) ProtoMessage() {}
+
+func (x *ReplicateMsg) ProtoReflect() protoreflect.Message {
+	mi := &file_msg_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReplicateMsg.ProtoReflect.Descriptor instead.
+func (*ReplicateMsg) Descriptor() ([]byte, []int) {
+	return file_msg_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ReplicateMsg) GetBase() *commonpb.MsgBase {
+	if x != nil {
+		return x.Base
+	}
+	return nil
+}
+
+func (x *ReplicateMsg) GetIsEnd() bool {
+	if x != nil {
+		return x.IsEnd
+	}
+	return false
+}
+
+func (x *ReplicateMsg) GetIsCluster() bool {
+	if x != nil {
+		return x.IsCluster
+	}
+	return false
+}
+
+func (x *ReplicateMsg) GetDatabase() string {
+	if x != nil {
+		return x.Database
+	}
+	return ""
+}
+
+func (x *ReplicateMsg) GetCollection() string {
+	if x != nil {
+		return x.Collection
+	}
+	return ""
+}
+
 var File_msg_proto protoreflect.FileDescriptor
 
 var file_msg_proto_rawDesc = []byte{
@@ -1120,14 +1199,25 @@ var file_msg_proto_rawDesc = []byte{
 	0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x53, 0x65, 0x67, 0x6d,
 	0x65, 0x6e, 0x74, 0x53, 0x74, 0x61, 0x74, 0x73, 0x52, 0x0d, 0x73, 0x65, 0x67, 0x6d, 0x65, 0x6e,
-	0x74, 0x73, 0x53, 0x74, 0x61, 0x74, 0x73, 0x2a, 0x32, 0x0a, 0x11, 0x49, 0x6e, 0x73, 0x65, 0x72,
-	0x74, 0x44, 0x61, 0x74, 0x61, 0x56, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x0c, 0x0a, 0x08,
-	0x52, 0x6f, 0x77, 0x42, 0x61, 0x73, 0x65, 0x64, 0x10, 0x00, 0x12, 0x0f, 0x0a, 0x0b, 0x43, 0x6f,
-	0x6c, 0x75, 0x6d, 0x6e, 0x42, 0x61, 0x73, 0x65, 0x64, 0x10, 0x01, 0x42, 0x33, 0x5a, 0x31, 0x67,
-	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73,
-	0x2d, 0x69, 0x6f, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x2f, 0x67, 0x6f, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x32, 0x2f, 0x6d, 0x73, 0x67, 0x70, 0x62,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x74, 0x73, 0x53, 0x74, 0x61, 0x74, 0x73, 0x22, 0xb2, 0x01, 0x0a, 0x0c, 0x52, 0x65, 0x70, 0x6c,
+	0x69, 0x63, 0x61, 0x74, 0x65, 0x4d, 0x73, 0x67, 0x12, 0x30, 0x0a, 0x04, 0x62, 0x61, 0x73, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x4d, 0x73, 0x67,
+	0x42, 0x61, 0x73, 0x65, 0x52, 0x04, 0x62, 0x61, 0x73, 0x65, 0x12, 0x15, 0x0a, 0x06, 0x69, 0x73,
+	0x5f, 0x65, 0x6e, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x05, 0x69, 0x73, 0x45, 0x6e,
+	0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x69, 0x73, 0x5f, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x08, 0x52, 0x09, 0x69, 0x73, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72,
+	0x12, 0x1a, 0x0a, 0x08, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x08, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x12, 0x1e, 0x0a, 0x0a,
+	0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x0a, 0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x2a, 0x32, 0x0a, 0x11,
+	0x49, 0x6e, 0x73, 0x65, 0x72, 0x74, 0x44, 0x61, 0x74, 0x61, 0x56, 0x65, 0x72, 0x73, 0x69, 0x6f,
+	0x6e, 0x12, 0x0c, 0x0a, 0x08, 0x52, 0x6f, 0x77, 0x42, 0x61, 0x73, 0x65, 0x64, 0x10, 0x00, 0x12,
+	0x0f, 0x0a, 0x0b, 0x43, 0x6f, 0x6c, 0x75, 0x6d, 0x6e, 0x42, 0x61, 0x73, 0x65, 0x64, 0x10, 0x01,
+	0x42, 0x33, 0x5a, 0x31, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d,
+	0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x69, 0x6f, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x32, 0x2f,
+	0x6d, 0x73, 0x67, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1143,7 +1233,7 @@ func file_msg_proto_rawDescGZIP() []byte {
 }
 
 var file_msg_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_msg_proto_goTypes = []interface{}{
 	(InsertDataVersion)(0),          // 0: milvus.proto.msg.InsertDataVersion
 	(*InsertRequest)(nil),           // 1: milvus.proto.msg.InsertRequest
@@ -1155,31 +1245,33 @@ var file_msg_proto_goTypes = []interface{}{
 	(*DropPartitionRequest)(nil),    // 7: milvus.proto.msg.DropPartitionRequest
 	(*TimeTickMsg)(nil),             // 8: milvus.proto.msg.TimeTickMsg
 	(*DataNodeTtMsg)(nil),           // 9: milvus.proto.msg.DataNodeTtMsg
-	(*commonpb.MsgBase)(nil),        // 10: milvus.proto.common.MsgBase
-	(*commonpb.Blob)(nil),           // 11: milvus.proto.common.Blob
-	(*schemapb.FieldData)(nil),      // 12: milvus.proto.schema.FieldData
-	(*schemapb.IDs)(nil),            // 13: milvus.proto.schema.IDs
-	(*commonpb.SegmentStats)(nil),   // 14: milvus.proto.common.SegmentStats
+	(*ReplicateMsg)(nil),            // 10: milvus.proto.msg.ReplicateMsg
+	(*commonpb.MsgBase)(nil),        // 11: milvus.proto.common.MsgBase
+	(*commonpb.Blob)(nil),           // 12: milvus.proto.common.Blob
+	(*schemapb.FieldData)(nil),      // 13: milvus.proto.schema.FieldData
+	(*schemapb.IDs)(nil),            // 14: milvus.proto.schema.IDs
+	(*commonpb.SegmentStats)(nil),   // 15: milvus.proto.common.SegmentStats
 }
 var file_msg_proto_depIdxs = []int32{
-	10, // 0: milvus.proto.msg.InsertRequest.base:type_name -> milvus.proto.common.MsgBase
-	11, // 1: milvus.proto.msg.InsertRequest.row_data:type_name -> milvus.proto.common.Blob
-	12, // 2: milvus.proto.msg.InsertRequest.fields_data:type_name -> milvus.proto.schema.FieldData
+	11, // 0: milvus.proto.msg.InsertRequest.base:type_name -> milvus.proto.common.MsgBase
+	12, // 1: milvus.proto.msg.InsertRequest.row_data:type_name -> milvus.proto.common.Blob
+	13, // 2: milvus.proto.msg.InsertRequest.fields_data:type_name -> milvus.proto.schema.FieldData
 	0,  // 3: milvus.proto.msg.InsertRequest.version:type_name -> milvus.proto.msg.InsertDataVersion
-	10, // 4: milvus.proto.msg.DeleteRequest.base:type_name -> milvus.proto.common.MsgBase
-	13, // 5: milvus.proto.msg.DeleteRequest.primary_keys:type_name -> milvus.proto.schema.IDs
-	10, // 6: milvus.proto.msg.CreateCollectionRequest.base:type_name -> milvus.proto.common.MsgBase
-	10, // 7: milvus.proto.msg.DropCollectionRequest.base:type_name -> milvus.proto.common.MsgBase
-	10, // 8: milvus.proto.msg.CreatePartitionRequest.base:type_name -> milvus.proto.common.MsgBase
-	10, // 9: milvus.proto.msg.DropPartitionRequest.base:type_name -> milvus.proto.common.MsgBase
-	10, // 10: milvus.proto.msg.TimeTickMsg.base:type_name -> milvus.proto.common.MsgBase
-	10, // 11: milvus.proto.msg.DataNodeTtMsg.base:type_name -> milvus.proto.common.MsgBase
-	14, // 12: milvus.proto.msg.DataNodeTtMsg.segments_stats:type_name -> milvus.proto.common.SegmentStats
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	11, // 4: milvus.proto.msg.DeleteRequest.base:type_name -> milvus.proto.common.MsgBase
+	14, // 5: milvus.proto.msg.DeleteRequest.primary_keys:type_name -> milvus.proto.schema.IDs
+	11, // 6: milvus.proto.msg.CreateCollectionRequest.base:type_name -> milvus.proto.common.MsgBase
+	11, // 7: milvus.proto.msg.DropCollectionRequest.base:type_name -> milvus.proto.common.MsgBase
+	11, // 8: milvus.proto.msg.CreatePartitionRequest.base:type_name -> milvus.proto.common.MsgBase
+	11, // 9: milvus.proto.msg.DropPartitionRequest.base:type_name -> milvus.proto.common.MsgBase
+	11, // 10: milvus.proto.msg.TimeTickMsg.base:type_name -> milvus.proto.common.MsgBase
+	11, // 11: milvus.proto.msg.DataNodeTtMsg.base:type_name -> milvus.proto.common.MsgBase
+	15, // 12: milvus.proto.msg.DataNodeTtMsg.segments_stats:type_name -> milvus.proto.common.SegmentStats
+	11, // 13: milvus.proto.msg.ReplicateMsg.base:type_name -> milvus.proto.common.MsgBase
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_msg_proto_init() }
@@ -1296,6 +1388,18 @@ func file_msg_proto_init() {
 				return nil
 			}
 		}
+		file_msg_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ReplicateMsg); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1303,7 +1407,7 @@ func file_msg_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_msg_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   9,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
