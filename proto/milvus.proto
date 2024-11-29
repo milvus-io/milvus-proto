@@ -27,7 +27,7 @@ service MilvusService {
   rpc GetCollectionStatistics(GetCollectionStatisticsRequest) returns (GetCollectionStatisticsResponse) {}
   rpc ShowCollections(ShowCollectionsRequest) returns (ShowCollectionsResponse) {}
   rpc AlterCollection(AlterCollectionRequest) returns (common.Status) {}
-
+  rpc AlterCollectionField(AlterCollectionFieldRequest) returns (common.Status) {}
   rpc CreatePartition(CreatePartitionRequest) returns (common.Status) {}
   rpc DropPartition(DropPartitionRequest) returns (common.Status) {}
   rpc HasPartition(HasPartitionRequest) returns (BoolResponse) {}
@@ -287,6 +287,22 @@ message AlterCollectionRequest {
   // The unique collection name in milvus.(Required)
   string collection_name = 3;
   int64  collectionID = 4;
+  repeated common.KeyValuePair properties = 5;
+  repeated string delete_keys = 6;
+}
+
+message AlterCollectionFieldRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCreateCollection
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  string db_name = 2;
+  // The unique collection name in milvus.(Required)
+  string collection_name = 3;
+  string field_name =4;
   repeated common.KeyValuePair properties = 5;
 }
 
@@ -742,6 +758,7 @@ message AlterIndexRequest {
   string collection_name = 3;
   string index_name = 4;
   repeated common.KeyValuePair extra_params = 5;
+  repeated string delete_keys = 6;
 }
 
 /*
