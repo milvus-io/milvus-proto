@@ -1216,6 +1216,7 @@ message ManualCompactionRequest {
   uint64 timetravel = 2;
   bool majorCompaction = 3;
   string collection_name = 4;
+  string db_name = 5;
 }
 
 message ManualCompactionResponse {
