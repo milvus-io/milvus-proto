@@ -383,6 +383,7 @@ message DescribeCollectionResponse {
   string db_name = 14;
   int64 num_partitions = 15;
   int64 db_id =16;
+  uint64 request_time = 17;
 }
 
 /**
