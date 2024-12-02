@@ -1,6 +1,8 @@
 package hook
 
-import "context"
+import (
+	"context"
+)
 
 type Hook interface {
 	Init(params map[string]string) error
@@ -11,6 +13,15 @@ type Hook interface {
 	Release()
 }
 
+type LogInfo interface {
+	GetFields(fields []string) map[string]any
+}
+
 type Extension interface {
 	Report(info any) int
+	ReportRefused(ctx context.Context, req interface{}, resp interface{}, err error, fullMethod string) error
 }
+
+type HookContextKeyType string
+
+const GinParamsKey = HookContextKeyType("gin_params")
