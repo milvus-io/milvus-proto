@@ -184,6 +184,7 @@ enum MsgType {
     RenameCollection = 112;
     DescribeAlias = 113;
     ListAliases = 114;
+    AlterCollectionField = 115;
 
     /* DEFINITION REQUESTS: PARTITION */
     CreatePartition = 200;
