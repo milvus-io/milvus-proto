@@ -184,6 +184,7 @@ enum MsgType {
     RenameCollection = 112;
     DescribeAlias = 113;
     ListAliases = 114;
+    AlterCollectionField = 115;
 
     /* DEFINITION REQUESTS: PARTITION */
     CreatePartition = 200;
@@ -263,6 +264,7 @@ enum MsgType {
     Connect = 1209;
     ListClientInfos = 1210;
     AllocTimestamp = 1211;
+    Replicate = 1212;
 
     /* Credential */
     CreateCredential = 1500;
@@ -318,6 +320,7 @@ message MsgBase {
 message ReplicateInfo {
     bool isReplicate = 1;
     uint64 msgTimestamp = 2;
+    string replicateID = 3;
 }
 
 enum DslType {
@@ -433,6 +436,16 @@ enum ObjectPrivilege {
     PrivilegeDropPrivilegeGroup = 57;
     PrivilegeListPrivilegeGroups = 58;
     PrivilegeOperatePrivilegeGroup = 59;
+
+    PrivilegeGroupClusterReadOnly = 60;
+    PrivilegeGroupClusterReadWrite = 61;
+    PrivilegeGroupClusterAdmin = 62;
+    PrivilegeGroupDatabaseReadOnly = 63;
+    PrivilegeGroupDatabaseReadWrite = 64;
+    PrivilegeGroupDatabaseAdmin = 65;
+    PrivilegeGroupCollectionReadOnly = 66;
+    PrivilegeGroupCollectionReadWrite = 67;
+    PrivilegeGroupCollectionAdmin = 68;
 }
 
 message PrivilegeExt {

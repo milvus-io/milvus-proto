@@ -108,6 +108,7 @@ service MilvusService {
   rpc SelectRole(SelectRoleRequest) returns (SelectRoleResponse) {}
   rpc SelectUser(SelectUserRequest) returns (SelectUserResponse) {}
   rpc OperatePrivilege(OperatePrivilegeRequest) returns (common.Status) {}
+  rpc OperatePrivilegeV2(OperatePrivilegeV2Request) returns (common.Status) {}
   rpc SelectGrant(SelectGrantRequest) returns (SelectGrantResponse) {}
 
   rpc GetVersion(GetVersionRequest) returns (GetVersionResponse) {}
@@ -382,6 +383,7 @@ message DescribeCollectionResponse {
   string db_name = 14;
   int64 num_partitions = 15;
   int64 db_id =16;
+  uint64 request_time = 17;
 }
 
 /**
@@ -1209,11 +1211,13 @@ message ManualCompactionRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
     object_privilege: PrivilegeCompaction
-    object_name_index: 1
+    object_name_index: 4
   };
   int64 collectionID = 1;
   uint64 timetravel = 2;
   bool majorCompaction = 3;
+  string collection_name = 4;
+  string db_name = 5;
 }
 
 message ManualCompactionResponse {
@@ -1635,6 +1639,12 @@ message GrantEntity {
   string db_name = 5;
 }
 
+enum PrivilegeLevel {
+  Cluster = 0;
+  Database = 1;
+  Collection = 2;
+}
+
 message SelectGrantRequest {
   option (common.privilege_ext_obj) = {
     object_type: Global
@@ -1671,6 +1681,29 @@ message OperatePrivilegeRequest {
   GrantEntity entity = 2;
   // operation type
   OperatePrivilegeType type = 3;
+  // version
+  string version = 4;
+}
+
+
+message OperatePrivilegeV2Request {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeManageOwnership
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  // role
+  RoleEntity role = 2;
+  // privilege
+  GrantorEntity grantor = 3;
+  // operation type
+  OperatePrivilegeType type = 4;
+  // db name
+  string db_name = 5;
+  // collection name
+  string collection_name = 6; 
 }
 
 message UserInfo {
@@ -2029,7 +2062,7 @@ message ImportAuthPlaceholder {
   option (common.privilege_ext_obj) = {
     object_type: Collection
     object_privilege: PrivilegeImport
-    object_name_index: 1
+    object_name_index: 2
   };
   string db_name = 1;
   string collection_name = 2;
@@ -2040,7 +2073,7 @@ message GetImportProgressAuthPlaceholder {
   option (common.privilege_ext_obj) = {
     object_type: Collection
     object_privilege: PrivilegeImport
-    object_name_index: 1
+    object_name_index: -1
   };
   string db_name = 1;
 }
