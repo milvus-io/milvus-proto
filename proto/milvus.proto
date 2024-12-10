@@ -1053,6 +1053,14 @@ message QueryResults {
   uint64 session_ts = 5; // for session-like operation like iterator
 }
 
+message QueryCursor {
+  uint64 session_ts = 1;
+  oneof cursor_pk {
+    string str_pk = 2;
+    int64  int_pk = 3;
+  }
+}
+
 message VectorIDs {
   string collection_name = 1;
   string field_name = 2;
