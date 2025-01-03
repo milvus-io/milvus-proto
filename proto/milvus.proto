@@ -1339,6 +1339,11 @@ message ListImportTasksResponse {
 }
 
 message GetReplicasRequest {
+   option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeLoad
+    object_name_index: 4
+  };
   common.MsgBase base = 1;
   int64 collectionID = 2;
   bool with_shard_nodes = 3;
