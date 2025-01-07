@@ -381,7 +381,9 @@ message DescribeCollectionResponse {
   repeated common.KeyValuePair properties = 13;
   string db_name = 14;
   int64 num_partitions = 15;
-  int64 db_id = 16;
+  int64 db_id =16;
+  uint64 request_time = 17;
+  uint64 update_timestamp = 18;
 }
 
 /**
