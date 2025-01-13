@@ -1048,6 +1048,8 @@ message QueryResults {
   repeated schema.FieldData fields_data = 2;
   string collection_name = 3;
   repeated string output_fields = 4;
+  uint64 session_ts = 5; // for session-like operation like iterator
+  string primary_field_name = 6;
 }
 
 message VectorIDs {
