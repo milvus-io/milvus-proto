@@ -70,6 +70,8 @@ service MilvusService {
   rpc CalcDistance(CalcDistanceRequest) returns (CalcDistanceResults) {}
   rpc FlushAll(FlushAllRequest) returns (FlushAllResponse) {}
 
+  rpc AddField(AddFieldRequest) returns (common.Status) {}
+
   rpc GetFlushState(GetFlushStateRequest) returns (GetFlushStateResponse) {}
   rpc GetFlushAllState(GetFlushAllStateRequest) returns (GetFlushAllStateResponse) {}
   rpc GetPersistentSegmentInfo(GetPersistentSegmentInfoRequest) returns (GetPersistentSegmentInfoResponse) {}
@@ -890,6 +892,18 @@ message InsertRequest {
   repeated uint32 hash_keys = 6;
   uint32 num_rows = 7;
   uint64 schema_timestamp = 8;
+}
+
+message AddFieldRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeAddField
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  repeated schema.FieldSchema field_schema = 4;
 }
 
 message UpsertRequest {
