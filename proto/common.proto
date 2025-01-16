@@ -447,6 +447,9 @@ enum ObjectPrivilege {
     PrivilegeGroupCollectionReadOnly = 66;
     PrivilegeGroupCollectionReadWrite = 67;
     PrivilegeGroupCollectionAdmin = 68;
+
+    PrivilegeGetImportProgress = 69;
+    PrivilegeListImport = 70;
 }
 
 message PrivilegeExt {
