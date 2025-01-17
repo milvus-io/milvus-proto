@@ -384,6 +384,7 @@ message DescribeCollectionResponse {
   int64 num_partitions = 15;
   int64 db_id =16;
   uint64 request_time = 17;
+  uint64 update_timestamp = 18;
 }
 
 /**
@@ -888,6 +889,7 @@ message InsertRequest {
   repeated schema.FieldData fields_data = 5;
   repeated uint32 hash_keys = 6;
   uint32 num_rows = 7;
+  uint64 schema_timestamp = 8;
 }
 
 message UpsertRequest {
@@ -903,6 +905,7 @@ message UpsertRequest {
   repeated schema.FieldData fields_data = 5;
   repeated uint32 hash_keys = 6;
   uint32 num_rows = 7;
+  uint64 schema_timestamp = 8;
 }
 
 message MutationResult {

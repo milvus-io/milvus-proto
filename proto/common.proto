@@ -77,7 +77,7 @@ enum ErrorCode {
     DropPrivilegeGroupFailure = 59;
     ListPrivilegeGroupsFailure = 60;
     OperatePrivilegeGroupFailure = 61;
-
+    SchemaMismatch = 62;
     // Service availability.
     // NA: Not Available.
     DataCoordNA = 100;
