@@ -1047,6 +1047,7 @@ message QueryRequest {
   common.ConsistencyLevel consistency_level = 11;
   bool use_default_consistency = 12;
   map<string, schema.TemplateValue> expr_template_values = 13;
+  uint64 schema_timestamp = 14;
 }
 
 message QueryResults {
