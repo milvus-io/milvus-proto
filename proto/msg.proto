@@ -114,3 +114,20 @@ message ReplicateMsg {
   string database = 4;
   string collection = 5;
 }
+
+message ImportFile {
+  int64 id = 1;
+  // A singular row-based file or multiple column-based files.
+  repeated string paths = 2;
+}
+message ImportMsg {
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  int64 collectionID = 4;
+  repeated int64 partitionIDs = 5;
+  map<string, string> options = 6;
+  repeated ImportFile files = 7;
+  schema.CollectionSchema schema = 8;
+  int64 jobID = 9;
+}
