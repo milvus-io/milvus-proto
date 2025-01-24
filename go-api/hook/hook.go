@@ -25,3 +25,17 @@ type Extension interface {
 type HookContextKeyType string
 
 const GinParamsKey = HookContextKeyType("gin_params")
+
+type Associate struct {
+	ID        int64
+	Verifier  []byte
+	UnsafeKey []byte
+}
+type Cipher interface {
+	Init(params map[string]string) error
+	Encrypt(data []byte, associate Associate) (cipherText []byte, err error)
+	Decrypt(data []byte, associate Associate) (plainText []byte, err error)
+
+	// For CPP Tasks
+	GetEZK(associate Associate) []byte
+}
