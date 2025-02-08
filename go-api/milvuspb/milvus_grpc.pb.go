@@ -115,6 +115,7 @@ const (
 	MilvusService_DropPrivilegeGroup_FullMethodName          = "/milvus.proto.milvus.MilvusService/DropPrivilegeGroup"
 	MilvusService_ListPrivilegeGroups_FullMethodName         = "/milvus.proto.milvus.MilvusService/ListPrivilegeGroups"
 	MilvusService_OperatePrivilegeGroup_FullMethodName       = "/milvus.proto.milvus.MilvusService/OperatePrivilegeGroup"
+	MilvusService_RunAnalyzer_FullMethodName                 = "/milvus.proto.milvus.MilvusService/RunAnalyzer"
 )
 
 // MilvusServiceClient is the client API for MilvusService service.
@@ -224,6 +225,7 @@ type MilvusServiceClient interface {
 	DropPrivilegeGroup(ctx context.Context, in *DropPrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	ListPrivilegeGroups(ctx context.Context, in *ListPrivilegeGroupsRequest, opts ...grpc.CallOption) (*ListPrivilegeGroupsResponse, error)
 	OperatePrivilegeGroup(ctx context.Context, in *OperatePrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	RunAnalyzer(ctx context.Context, in *RunAnalyzerRequset, opts ...grpc.CallOption) (*RunAnalyzerResponse, error)
 }
 
 type milvusServiceClient struct {
@@ -1082,6 +1084,15 @@ func (c *milvusServiceClient) OperatePrivilegeGroup(ctx context.Context, in *Ope
 	return out, nil
 }
 
+func (c *milvusServiceClient) RunAnalyzer(ctx context.Context, in *RunAnalyzerRequset, opts ...grpc.CallOption) (*RunAnalyzerResponse, error) {
+	out := new(RunAnalyzerResponse)
+	err := c.cc.Invoke(ctx, MilvusService_RunAnalyzer_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MilvusServiceServer is the server API for MilvusService service.
 // All implementations should embed UnimplementedMilvusServiceServer
 // for forward compatibility
@@ -1189,6 +1200,7 @@ type MilvusServiceServer interface {
 	DropPrivilegeGroup(context.Context, *DropPrivilegeGroupRequest) (*commonpb.Status, error)
 	ListPrivilegeGroups(context.Context, *ListPrivilegeGroupsRequest) (*ListPrivilegeGroupsResponse, error)
 	OperatePrivilegeGroup(context.Context, *OperatePrivilegeGroupRequest) (*commonpb.Status, error)
+	RunAnalyzer(context.Context, *RunAnalyzerRequset) (*RunAnalyzerResponse, error)
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -1476,6 +1488,9 @@ func (UnimplementedMilvusServiceServer) ListPrivilegeGroups(context.Context, *Li
 }
 func (UnimplementedMilvusServiceServer) OperatePrivilegeGroup(context.Context, *OperatePrivilegeGroupRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OperatePrivilegeGroup not implemented")
+}
+func (UnimplementedMilvusServiceServer) RunAnalyzer(context.Context, *RunAnalyzerRequset) (*RunAnalyzerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RunAnalyzer not implemented")
 }
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -3181,6 +3196,24 @@ func _MilvusService_OperatePrivilegeGroup_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_RunAnalyzer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RunAnalyzerRequset)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).RunAnalyzer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_RunAnalyzer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).RunAnalyzer(ctx, req.(*RunAnalyzerRequset))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MilvusService_ServiceDesc is the grpc.ServiceDesc for MilvusService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -3563,6 +3596,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "OperatePrivilegeGroup",
 			Handler:    _MilvusService_OperatePrivilegeGroup_Handler,
+		},
+		{
+			MethodName: "RunAnalyzer",
+			Handler:    _MilvusService_RunAnalyzer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
