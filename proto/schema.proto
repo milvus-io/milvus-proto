@@ -32,6 +32,7 @@ enum DataType {
   Array = 22;
   JSON = 23;
   Geometry = 24;
+  Text = 25;
 
   BinaryVector = 100;
   FloatVector = 101;
