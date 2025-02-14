@@ -1037,6 +1037,173 @@ func (x *ReplicateMsg) GetCollection() string {
 	return ""
 }
 
+type ImportFile struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// A singular row-based file or multiple column-based files.
+	Paths []string `protobuf:"bytes,2,rep,name=paths,proto3" json:"paths,omitempty"`
+}
+
+func (x *ImportFile) Reset() {
+	*x = ImportFile{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_msg_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ImportFile) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ImportFile) ProtoMessage() {}
+
+func (x *ImportFile) ProtoReflect() protoreflect.Message {
+	mi := &file_msg_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ImportFile.ProtoReflect.Descriptor instead.
+func (*ImportFile) Descriptor() ([]byte, []int) {
+	return file_msg_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ImportFile) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *ImportFile) GetPaths() []string {
+	if x != nil {
+		return x.Paths
+	}
+	return nil
+}
+
+type ImportMsg struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Base           *commonpb.MsgBase          `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	DbName         string                     `protobuf:"bytes,2,opt,name=db_name,json=dbName,proto3" json:"db_name,omitempty"`
+	CollectionName string                     `protobuf:"bytes,3,opt,name=collection_name,json=collectionName,proto3" json:"collection_name,omitempty"`
+	CollectionID   int64                      `protobuf:"varint,4,opt,name=collectionID,proto3" json:"collectionID,omitempty"`
+	PartitionIDs   []int64                    `protobuf:"varint,5,rep,packed,name=partitionIDs,proto3" json:"partitionIDs,omitempty"`
+	Options        map[string]string          `protobuf:"bytes,6,rep,name=options,proto3" json:"options,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Files          []*ImportFile              `protobuf:"bytes,7,rep,name=files,proto3" json:"files,omitempty"`
+	Schema         *schemapb.CollectionSchema `protobuf:"bytes,8,opt,name=schema,proto3" json:"schema,omitempty"`
+	JobID          int64                      `protobuf:"varint,9,opt,name=jobID,proto3" json:"jobID,omitempty"`
+}
+
+func (x *ImportMsg) Reset() {
+	*x = ImportMsg{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_msg_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ImportMsg) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ImportMsg) ProtoMessage() {}
+
+func (x *ImportMsg) ProtoReflect() protoreflect.Message {
+	mi := &file_msg_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ImportMsg.ProtoReflect.Descriptor instead.
+func (*ImportMsg) Descriptor() ([]byte, []int) {
+	return file_msg_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ImportMsg) GetBase() *commonpb.MsgBase {
+	if x != nil {
+		return x.Base
+	}
+	return nil
+}
+
+func (x *ImportMsg) GetDbName() string {
+	if x != nil {
+		return x.DbName
+	}
+	return ""
+}
+
+func (x *ImportMsg) GetCollectionName() string {
+	if x != nil {
+		return x.CollectionName
+	}
+	return ""
+}
+
+func (x *ImportMsg) GetCollectionID() int64 {
+	if x != nil {
+		return x.CollectionID
+	}
+	return 0
+}
+
+func (x *ImportMsg) GetPartitionIDs() []int64 {
+	if x != nil {
+		return x.PartitionIDs
+	}
+	return nil
+}
+
+func (x *ImportMsg) GetOptions() map[string]string {
+	if x != nil {
+		return x.Options
+	}
+	return nil
+}
+
+func (x *ImportMsg) GetFiles() []*ImportFile {
+	if x != nil {
+		return x.Files
+	}
+	return nil
+}
+
+func (x *ImportMsg) GetSchema() *schemapb.CollectionSchema {
+	if x != nil {
+		return x.Schema
+	}
+	return nil
+}
+
+func (x *ImportMsg) GetJobID() int64 {
+	if x != nil {
+		return x.JobID
+	}
+	return 0
+}
+
 var File_msg_proto protoreflect.FileDescriptor
 
 var file_msg_proto_rawDesc = []byte{
@@ -1220,14 +1387,47 @@ var file_msg_proto_rawDesc = []byte{
 	0x1a, 0x0a, 0x08, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x08, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x63,
 	0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x0a, 0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x2a, 0x32, 0x0a, 0x11, 0x49,
-	0x6e, 0x73, 0x65, 0x72, 0x74, 0x44, 0x61, 0x74, 0x61, 0x56, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e,
-	0x12, 0x0c, 0x0a, 0x08, 0x52, 0x6f, 0x77, 0x42, 0x61, 0x73, 0x65, 0x64, 0x10, 0x00, 0x12, 0x0f,
-	0x0a, 0x0b, 0x43, 0x6f, 0x6c, 0x75, 0x6d, 0x6e, 0x42, 0x61, 0x73, 0x65, 0x64, 0x10, 0x01, 0x42,
-	0x33, 0x5a, 0x31, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d, 0x69,
-	0x6c, 0x76, 0x75, 0x73, 0x2d, 0x69, 0x6f, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x32, 0x2f, 0x6d,
-	0x73, 0x67, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x0a, 0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x32, 0x0a, 0x0a, 0x49,
+	0x6d, 0x70, 0x6f, 0x72, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x61, 0x74,
+	0x68, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x09, 0x52, 0x05, 0x70, 0x61, 0x74, 0x68, 0x73, 0x22,
+	0xd0, 0x03, 0x0a, 0x09, 0x49, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x4d, 0x73, 0x67, 0x12, 0x30, 0x0a,
+	0x04, 0x62, 0x61, 0x73, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x6d, 0x69,
+	0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f,
+	0x6e, 0x2e, 0x4d, 0x73, 0x67, 0x42, 0x61, 0x73, 0x65, 0x52, 0x04, 0x62, 0x61, 0x73, 0x65, 0x12,
+	0x17, 0x0a, 0x07, 0x64, 0x62, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x06, 0x64, 0x62, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x27, 0x0a, 0x0f, 0x63, 0x6f, 0x6c, 0x6c,
+	0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0e, 0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x4e, 0x61, 0x6d,
+	0x65, 0x12, 0x22, 0x0a, 0x0c, 0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x49,
+	0x44, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0c, 0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74,
+	0x69, 0x6f, 0x6e, 0x49, 0x44, 0x12, 0x22, 0x0a, 0x0c, 0x70, 0x61, 0x72, 0x74, 0x69, 0x74, 0x69,
+	0x6f, 0x6e, 0x49, 0x44, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x03, 0x52, 0x0c, 0x70, 0x61, 0x72,
+	0x74, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x44, 0x73, 0x12, 0x42, 0x0a, 0x07, 0x6f, 0x70, 0x74,
+	0x69, 0x6f, 0x6e, 0x73, 0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x28, 0x2e, 0x6d, 0x69, 0x6c,
+	0x76, 0x75, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6d, 0x73, 0x67, 0x2e, 0x49, 0x6d,
+	0x70, 0x6f, 0x72, 0x74, 0x4d, 0x73, 0x67, 0x2e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x45,
+	0x6e, 0x74, 0x72, 0x79, 0x52, 0x07, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x32, 0x0a,
+	0x05, 0x66, 0x69, 0x6c, 0x65, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x6d,
+	0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6d, 0x73, 0x67, 0x2e,
+	0x49, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x05, 0x66, 0x69, 0x6c, 0x65,
+	0x73, 0x12, 0x3d, 0x0a, 0x06, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x18, 0x08, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x25, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x2e, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2e, 0x43, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x69,
+	0x6f, 0x6e, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x52, 0x06, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61,
+	0x12, 0x14, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x44, 0x18, 0x09, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x05, 0x6a, 0x6f, 0x62, 0x49, 0x44, 0x1a, 0x3a, 0x0a, 0x0c, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e,
+	0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75,
+	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02,
+	0x38, 0x01, 0x2a, 0x32, 0x0a, 0x11, 0x49, 0x6e, 0x73, 0x65, 0x72, 0x74, 0x44, 0x61, 0x74, 0x61,
+	0x56, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x0c, 0x0a, 0x08, 0x52, 0x6f, 0x77, 0x42, 0x61,
+	0x73, 0x65, 0x64, 0x10, 0x00, 0x12, 0x0f, 0x0a, 0x0b, 0x43, 0x6f, 0x6c, 0x75, 0x6d, 0x6e, 0x42,
+	0x61, 0x73, 0x65, 0x64, 0x10, 0x01, 0x42, 0x33, 0x5a, 0x31, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
+	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x69, 0x6f, 0x2f, 0x6d,
+	0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2d, 0x61,
+	0x70, 0x69, 0x2f, 0x76, 0x32, 0x2f, 0x6d, 0x73, 0x67, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1243,45 +1443,53 @@ func file_msg_proto_rawDescGZIP() []byte {
 }
 
 var file_msg_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_msg_proto_goTypes = []interface{}{
-	(InsertDataVersion)(0),          // 0: milvus.proto.msg.InsertDataVersion
-	(*InsertRequest)(nil),           // 1: milvus.proto.msg.InsertRequest
-	(*DeleteRequest)(nil),           // 2: milvus.proto.msg.DeleteRequest
-	(*MsgPosition)(nil),             // 3: milvus.proto.msg.MsgPosition
-	(*CreateCollectionRequest)(nil), // 4: milvus.proto.msg.CreateCollectionRequest
-	(*DropCollectionRequest)(nil),   // 5: milvus.proto.msg.DropCollectionRequest
-	(*CreatePartitionRequest)(nil),  // 6: milvus.proto.msg.CreatePartitionRequest
-	(*DropPartitionRequest)(nil),    // 7: milvus.proto.msg.DropPartitionRequest
-	(*TimeTickMsg)(nil),             // 8: milvus.proto.msg.TimeTickMsg
-	(*DataNodeTtMsg)(nil),           // 9: milvus.proto.msg.DataNodeTtMsg
-	(*ReplicateMsg)(nil),            // 10: milvus.proto.msg.ReplicateMsg
-	(*commonpb.MsgBase)(nil),        // 11: milvus.proto.common.MsgBase
-	(*commonpb.Blob)(nil),           // 12: milvus.proto.common.Blob
-	(*schemapb.FieldData)(nil),      // 13: milvus.proto.schema.FieldData
-	(*schemapb.IDs)(nil),            // 14: milvus.proto.schema.IDs
-	(*commonpb.SegmentStats)(nil),   // 15: milvus.proto.common.SegmentStats
+	(InsertDataVersion)(0),            // 0: milvus.proto.msg.InsertDataVersion
+	(*InsertRequest)(nil),             // 1: milvus.proto.msg.InsertRequest
+	(*DeleteRequest)(nil),             // 2: milvus.proto.msg.DeleteRequest
+	(*MsgPosition)(nil),               // 3: milvus.proto.msg.MsgPosition
+	(*CreateCollectionRequest)(nil),   // 4: milvus.proto.msg.CreateCollectionRequest
+	(*DropCollectionRequest)(nil),     // 5: milvus.proto.msg.DropCollectionRequest
+	(*CreatePartitionRequest)(nil),    // 6: milvus.proto.msg.CreatePartitionRequest
+	(*DropPartitionRequest)(nil),      // 7: milvus.proto.msg.DropPartitionRequest
+	(*TimeTickMsg)(nil),               // 8: milvus.proto.msg.TimeTickMsg
+	(*DataNodeTtMsg)(nil),             // 9: milvus.proto.msg.DataNodeTtMsg
+	(*ReplicateMsg)(nil),              // 10: milvus.proto.msg.ReplicateMsg
+	(*ImportFile)(nil),                // 11: milvus.proto.msg.ImportFile
+	(*ImportMsg)(nil),                 // 12: milvus.proto.msg.ImportMsg
+	nil,                               // 13: milvus.proto.msg.ImportMsg.OptionsEntry
+	(*commonpb.MsgBase)(nil),          // 14: milvus.proto.common.MsgBase
+	(*commonpb.Blob)(nil),             // 15: milvus.proto.common.Blob
+	(*schemapb.FieldData)(nil),        // 16: milvus.proto.schema.FieldData
+	(*schemapb.IDs)(nil),              // 17: milvus.proto.schema.IDs
+	(*commonpb.SegmentStats)(nil),     // 18: milvus.proto.common.SegmentStats
+	(*schemapb.CollectionSchema)(nil), // 19: milvus.proto.schema.CollectionSchema
 }
 var file_msg_proto_depIdxs = []int32{
-	11, // 0: milvus.proto.msg.InsertRequest.base:type_name -> milvus.proto.common.MsgBase
-	12, // 1: milvus.proto.msg.InsertRequest.row_data:type_name -> milvus.proto.common.Blob
-	13, // 2: milvus.proto.msg.InsertRequest.fields_data:type_name -> milvus.proto.schema.FieldData
+	14, // 0: milvus.proto.msg.InsertRequest.base:type_name -> milvus.proto.common.MsgBase
+	15, // 1: milvus.proto.msg.InsertRequest.row_data:type_name -> milvus.proto.common.Blob
+	16, // 2: milvus.proto.msg.InsertRequest.fields_data:type_name -> milvus.proto.schema.FieldData
 	0,  // 3: milvus.proto.msg.InsertRequest.version:type_name -> milvus.proto.msg.InsertDataVersion
-	11, // 4: milvus.proto.msg.DeleteRequest.base:type_name -> milvus.proto.common.MsgBase
-	14, // 5: milvus.proto.msg.DeleteRequest.primary_keys:type_name -> milvus.proto.schema.IDs
-	11, // 6: milvus.proto.msg.CreateCollectionRequest.base:type_name -> milvus.proto.common.MsgBase
-	11, // 7: milvus.proto.msg.DropCollectionRequest.base:type_name -> milvus.proto.common.MsgBase
-	11, // 8: milvus.proto.msg.CreatePartitionRequest.base:type_name -> milvus.proto.common.MsgBase
-	11, // 9: milvus.proto.msg.DropPartitionRequest.base:type_name -> milvus.proto.common.MsgBase
-	11, // 10: milvus.proto.msg.TimeTickMsg.base:type_name -> milvus.proto.common.MsgBase
-	11, // 11: milvus.proto.msg.DataNodeTtMsg.base:type_name -> milvus.proto.common.MsgBase
-	15, // 12: milvus.proto.msg.DataNodeTtMsg.segments_stats:type_name -> milvus.proto.common.SegmentStats
-	11, // 13: milvus.proto.msg.ReplicateMsg.base:type_name -> milvus.proto.common.MsgBase
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	14, // 4: milvus.proto.msg.DeleteRequest.base:type_name -> milvus.proto.common.MsgBase
+	17, // 5: milvus.proto.msg.DeleteRequest.primary_keys:type_name -> milvus.proto.schema.IDs
+	14, // 6: milvus.proto.msg.CreateCollectionRequest.base:type_name -> milvus.proto.common.MsgBase
+	14, // 7: milvus.proto.msg.DropCollectionRequest.base:type_name -> milvus.proto.common.MsgBase
+	14, // 8: milvus.proto.msg.CreatePartitionRequest.base:type_name -> milvus.proto.common.MsgBase
+	14, // 9: milvus.proto.msg.DropPartitionRequest.base:type_name -> milvus.proto.common.MsgBase
+	14, // 10: milvus.proto.msg.TimeTickMsg.base:type_name -> milvus.proto.common.MsgBase
+	14, // 11: milvus.proto.msg.DataNodeTtMsg.base:type_name -> milvus.proto.common.MsgBase
+	18, // 12: milvus.proto.msg.DataNodeTtMsg.segments_stats:type_name -> milvus.proto.common.SegmentStats
+	14, // 13: milvus.proto.msg.ReplicateMsg.base:type_name -> milvus.proto.common.MsgBase
+	14, // 14: milvus.proto.msg.ImportMsg.base:type_name -> milvus.proto.common.MsgBase
+	13, // 15: milvus.proto.msg.ImportMsg.options:type_name -> milvus.proto.msg.ImportMsg.OptionsEntry
+	11, // 16: milvus.proto.msg.ImportMsg.files:type_name -> milvus.proto.msg.ImportFile
+	19, // 17: milvus.proto.msg.ImportMsg.schema:type_name -> milvus.proto.schema.CollectionSchema
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_msg_proto_init() }
@@ -1410,6 +1618,30 @@ func file_msg_proto_init() {
 				return nil
 			}
 		}
+		file_msg_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ImportFile); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_msg_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ImportMsg); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1417,7 +1649,7 @@ func file_msg_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_msg_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   10,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
