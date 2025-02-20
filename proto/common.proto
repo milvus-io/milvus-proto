@@ -307,6 +307,8 @@ enum MsgType {
     ListDatabases = 1803;
     AlterDatabase = 1804;
     DescribeDatabase = 1805;
+
+    AddCollectionField = 1900;
 }
 
 message MsgBase {
@@ -451,6 +453,7 @@ enum ObjectPrivilege {
 
     PrivilegeGetImportProgress = 69;
     PrivilegeListImport = 70;
+    PrivilegeAddCollectionField = 71;
 }
 
 message PrivilegeExt {
