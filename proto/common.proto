@@ -290,6 +290,7 @@ enum MsgType {
     DropPrivilegeGroup = 1611;
     ListPrivilegeGroups = 1612;
     OperatePrivilegeGroup = 1613;
+    OperatePrivilegeV2 = 1614;
 
 
     /* Resource group */
