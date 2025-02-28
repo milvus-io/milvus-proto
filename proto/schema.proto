@@ -40,6 +40,8 @@ enum DataType {
   BFloat16Vector = 103;
   SparseFloatVector = 104;
   Int8Vector = 105;
+
+  Binary = 150;
 }
 
 enum FunctionType{
