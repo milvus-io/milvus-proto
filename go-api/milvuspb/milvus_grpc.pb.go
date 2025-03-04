@@ -227,7 +227,7 @@ type MilvusServiceClient interface {
 	DropPrivilegeGroup(ctx context.Context, in *DropPrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	ListPrivilegeGroups(ctx context.Context, in *ListPrivilegeGroupsRequest, opts ...grpc.CallOption) (*ListPrivilegeGroupsResponse, error)
 	OperatePrivilegeGroup(ctx context.Context, in *OperatePrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
-	RunAnalyzer(ctx context.Context, in *RunAnalyzerRequset, opts ...grpc.CallOption) (*RunAnalyzerResponse, error)
+	RunAnalyzer(ctx context.Context, in *RunAnalyzerRequest, opts ...grpc.CallOption) (*RunAnalyzerResponse, error)
 }
 
 type milvusServiceClient struct {
@@ -1095,7 +1095,7 @@ func (c *milvusServiceClient) OperatePrivilegeGroup(ctx context.Context, in *Ope
 	return out, nil
 }
 
-func (c *milvusServiceClient) RunAnalyzer(ctx context.Context, in *RunAnalyzerRequset, opts ...grpc.CallOption) (*RunAnalyzerResponse, error) {
+func (c *milvusServiceClient) RunAnalyzer(ctx context.Context, in *RunAnalyzerRequest, opts ...grpc.CallOption) (*RunAnalyzerResponse, error) {
 	out := new(RunAnalyzerResponse)
 	err := c.cc.Invoke(ctx, MilvusService_RunAnalyzer_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -1212,7 +1212,7 @@ type MilvusServiceServer interface {
 	DropPrivilegeGroup(context.Context, *DropPrivilegeGroupRequest) (*commonpb.Status, error)
 	ListPrivilegeGroups(context.Context, *ListPrivilegeGroupsRequest) (*ListPrivilegeGroupsResponse, error)
 	OperatePrivilegeGroup(context.Context, *OperatePrivilegeGroupRequest) (*commonpb.Status, error)
-	RunAnalyzer(context.Context, *RunAnalyzerRequset) (*RunAnalyzerResponse, error)
+	RunAnalyzer(context.Context, *RunAnalyzerRequest) (*RunAnalyzerResponse, error)
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -1504,7 +1504,7 @@ func (UnimplementedMilvusServiceServer) ListPrivilegeGroups(context.Context, *Li
 func (UnimplementedMilvusServiceServer) OperatePrivilegeGroup(context.Context, *OperatePrivilegeGroupRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OperatePrivilegeGroup not implemented")
 }
-func (UnimplementedMilvusServiceServer) RunAnalyzer(context.Context, *RunAnalyzerRequset) (*RunAnalyzerResponse, error) {
+func (UnimplementedMilvusServiceServer) RunAnalyzer(context.Context, *RunAnalyzerRequest) (*RunAnalyzerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RunAnalyzer not implemented")
 }
 
@@ -3230,7 +3230,7 @@ func _MilvusService_OperatePrivilegeGroup_Handler(srv interface{}, ctx context.C
 }
 
 func _MilvusService_RunAnalyzer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RunAnalyzerRequset)
+	in := new(RunAnalyzerRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -3242,7 +3242,7 @@ func _MilvusService_RunAnalyzer_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: MilvusService_RunAnalyzer_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MilvusServiceServer).RunAnalyzer(ctx, req.(*RunAnalyzerRequset))
+		return srv.(MilvusServiceServer).RunAnalyzer(ctx, req.(*RunAnalyzerRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
