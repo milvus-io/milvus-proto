@@ -66,6 +66,7 @@ const (
 	MilvusService_GetFlushAllState_FullMethodName            = "/milvus.proto.milvus.MilvusService/GetFlushAllState"
 	MilvusService_GetPersistentSegmentInfo_FullMethodName    = "/milvus.proto.milvus.MilvusService/GetPersistentSegmentInfo"
 	MilvusService_GetQuerySegmentInfo_FullMethodName         = "/milvus.proto.milvus.MilvusService/GetQuerySegmentInfo"
+	MilvusService_GetSegmentsInfo_FullMethodName             = "/milvus.proto.milvus.MilvusService/GetSegmentsInfo"
 	MilvusService_GetReplicas_FullMethodName                 = "/milvus.proto.milvus.MilvusService/GetReplicas"
 	MilvusService_Dummy_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Dummy"
 	MilvusService_RegisterLink_FullMethodName                = "/milvus.proto.milvus.MilvusService/RegisterLink"
@@ -172,6 +173,7 @@ type MilvusServiceClient interface {
 	GetFlushAllState(ctx context.Context, in *GetFlushAllStateRequest, opts ...grpc.CallOption) (*GetFlushAllStateResponse, error)
 	GetPersistentSegmentInfo(ctx context.Context, in *GetPersistentSegmentInfoRequest, opts ...grpc.CallOption) (*GetPersistentSegmentInfoResponse, error)
 	GetQuerySegmentInfo(ctx context.Context, in *GetQuerySegmentInfoRequest, opts ...grpc.CallOption) (*GetQuerySegmentInfoResponse, error)
+	GetSegmentsInfo(ctx context.Context, in *GetSegmentsInfoRequest, opts ...grpc.CallOption) (*GetSegmentsInfoResponse, error)
 	GetReplicas(ctx context.Context, in *GetReplicasRequest, opts ...grpc.CallOption) (*GetReplicasResponse, error)
 	Dummy(ctx context.Context, in *DummyRequest, opts ...grpc.CallOption) (*DummyResponse, error)
 	// TODO: remove
@@ -639,6 +641,15 @@ func (c *milvusServiceClient) GetPersistentSegmentInfo(ctx context.Context, in *
 func (c *milvusServiceClient) GetQuerySegmentInfo(ctx context.Context, in *GetQuerySegmentInfoRequest, opts ...grpc.CallOption) (*GetQuerySegmentInfoResponse, error) {
 	out := new(GetQuerySegmentInfoResponse)
 	err := c.cc.Invoke(ctx, MilvusService_GetQuerySegmentInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) GetSegmentsInfo(ctx context.Context, in *GetSegmentsInfoRequest, opts ...grpc.CallOption) (*GetSegmentsInfoResponse, error) {
+	out := new(GetSegmentsInfoResponse)
+	err := c.cc.Invoke(ctx, MilvusService_GetSegmentsInfo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1157,6 +1168,7 @@ type MilvusServiceServer interface {
 	GetFlushAllState(context.Context, *GetFlushAllStateRequest) (*GetFlushAllStateResponse, error)
 	GetPersistentSegmentInfo(context.Context, *GetPersistentSegmentInfoRequest) (*GetPersistentSegmentInfoResponse, error)
 	GetQuerySegmentInfo(context.Context, *GetQuerySegmentInfoRequest) (*GetQuerySegmentInfoResponse, error)
+	GetSegmentsInfo(context.Context, *GetSegmentsInfoRequest) (*GetSegmentsInfoResponse, error)
 	GetReplicas(context.Context, *GetReplicasRequest) (*GetReplicasResponse, error)
 	Dummy(context.Context, *DummyRequest) (*DummyResponse, error)
 	// TODO: remove
@@ -1353,6 +1365,9 @@ func (UnimplementedMilvusServiceServer) GetPersistentSegmentInfo(context.Context
 }
 func (UnimplementedMilvusServiceServer) GetQuerySegmentInfo(context.Context, *GetQuerySegmentInfoRequest) (*GetQuerySegmentInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetQuerySegmentInfo not implemented")
+}
+func (UnimplementedMilvusServiceServer) GetSegmentsInfo(context.Context, *GetSegmentsInfoRequest) (*GetSegmentsInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSegmentsInfo not implemented")
 }
 func (UnimplementedMilvusServiceServer) GetReplicas(context.Context, *GetReplicasRequest) (*GetReplicasResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetReplicas not implemented")
@@ -2325,6 +2340,24 @@ func _MilvusService_GetQuerySegmentInfo_Handler(srv interface{}, ctx context.Con
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MilvusServiceServer).GetQuerySegmentInfo(ctx, req.(*GetQuerySegmentInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_GetSegmentsInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSegmentsInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).GetSegmentsInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_GetSegmentsInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).GetSegmentsInfo(ctx, req.(*GetSegmentsInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3433,6 +3466,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetQuerySegmentInfo",
 			Handler:    _MilvusService_GetQuerySegmentInfo_Handler,
+		},
+		{
+			MethodName: "GetSegmentsInfo",
+			Handler:    _MilvusService_GetSegmentsInfo_Handler,
 		},
 		{
 			MethodName: "GetReplicas",
