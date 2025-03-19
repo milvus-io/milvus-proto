@@ -1808,6 +1808,7 @@ enum QuotaState {
   WriteLimited = 3;
   DenyToRead = 4;
   DenyToWrite = 5;
+  DenyToDDL = 6;
 }
 
 message CheckHealthRequest {
