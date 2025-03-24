@@ -1248,6 +1248,9 @@ message ManualCompactionRequest {
   bool majorCompaction = 3;
   string collection_name = 4;
   string db_name = 5;
+  int64 partition_id = 6;
+  string channel = 7;
+  int64 segment_id = 8;
 }
 
 message ManualCompactionResponse {
