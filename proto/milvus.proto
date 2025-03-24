@@ -1250,7 +1250,7 @@ message ManualCompactionRequest {
   string db_name = 5;
   int64 partition_id = 6;
   string channel = 7;
-  int64 segment_id = 8;
+  repeated int64 segment_ids = 8;
 }
 
 message ManualCompactionResponse {
