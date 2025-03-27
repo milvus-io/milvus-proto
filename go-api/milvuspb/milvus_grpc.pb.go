@@ -31,6 +31,7 @@ const (
 	MilvusService_ShowCollections_FullMethodName             = "/milvus.proto.milvus.MilvusService/ShowCollections"
 	MilvusService_AlterCollection_FullMethodName             = "/milvus.proto.milvus.MilvusService/AlterCollection"
 	MilvusService_AlterCollectionField_FullMethodName        = "/milvus.proto.milvus.MilvusService/AlterCollectionField"
+	MilvusService_AlterCollectionAddField_FullMethodName     = "/milvus.proto.milvus.MilvusService/AlterCollectionAddField"
 	MilvusService_CreatePartition_FullMethodName             = "/milvus.proto.milvus.MilvusService/CreatePartition"
 	MilvusService_DropPartition_FullMethodName               = "/milvus.proto.milvus.MilvusService/DropPartition"
 	MilvusService_HasPartition_FullMethodName                = "/milvus.proto.milvus.MilvusService/HasPartition"
@@ -133,6 +134,7 @@ type MilvusServiceClient interface {
 	ShowCollections(ctx context.Context, in *ShowCollectionsRequest, opts ...grpc.CallOption) (*ShowCollectionsResponse, error)
 	AlterCollection(ctx context.Context, in *AlterCollectionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	AlterCollectionField(ctx context.Context, in *AlterCollectionFieldRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	AlterCollectionAddField(ctx context.Context, in *AlterCollectionFieldRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	CreatePartition(ctx context.Context, in *CreatePartitionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DropPartition(ctx context.Context, in *DropPartitionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	HasPartition(ctx context.Context, in *HasPartitionRequest, opts ...grpc.CallOption) (*BoolResponse, error)
@@ -322,6 +324,15 @@ func (c *milvusServiceClient) AlterCollection(ctx context.Context, in *AlterColl
 func (c *milvusServiceClient) AlterCollectionField(ctx context.Context, in *AlterCollectionFieldRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
 	out := new(commonpb.Status)
 	err := c.cc.Invoke(ctx, MilvusService_AlterCollectionField_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) AlterCollectionAddField(ctx context.Context, in *AlterCollectionFieldRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_AlterCollectionAddField_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1118,6 +1129,7 @@ type MilvusServiceServer interface {
 	ShowCollections(context.Context, *ShowCollectionsRequest) (*ShowCollectionsResponse, error)
 	AlterCollection(context.Context, *AlterCollectionRequest) (*commonpb.Status, error)
 	AlterCollectionField(context.Context, *AlterCollectionFieldRequest) (*commonpb.Status, error)
+	AlterCollectionAddField(context.Context, *AlterCollectionFieldRequest) (*commonpb.Status, error)
 	CreatePartition(context.Context, *CreatePartitionRequest) (*commonpb.Status, error)
 	DropPartition(context.Context, *DropPartitionRequest) (*commonpb.Status, error)
 	HasPartition(context.Context, *HasPartitionRequest) (*BoolResponse, error)
@@ -1248,6 +1260,9 @@ func (UnimplementedMilvusServiceServer) AlterCollection(context.Context, *AlterC
 }
 func (UnimplementedMilvusServiceServer) AlterCollectionField(context.Context, *AlterCollectionFieldRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AlterCollectionField not implemented")
+}
+func (UnimplementedMilvusServiceServer) AlterCollectionAddField(context.Context, *AlterCollectionFieldRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AlterCollectionAddField not implemented")
 }
 func (UnimplementedMilvusServiceServer) CreatePartition(context.Context, *CreatePartitionRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePartition not implemented")
@@ -1695,6 +1710,24 @@ func _MilvusService_AlterCollectionField_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MilvusServiceServer).AlterCollectionField(ctx, req.(*AlterCollectionFieldRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_AlterCollectionAddField_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AlterCollectionFieldRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).AlterCollectionAddField(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_AlterCollectionAddField_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).AlterCollectionAddField(ctx, req.(*AlterCollectionFieldRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3293,6 +3326,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AlterCollectionField",
 			Handler:    _MilvusService_AlterCollectionField_Handler,
+		},
+		{
+			MethodName: "AlterCollectionAddField",
+			Handler:    _MilvusService_AlterCollectionAddField_Handler,
 		},
 		{
 			MethodName: "CreatePartition",

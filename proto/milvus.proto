@@ -28,6 +28,7 @@ service MilvusService {
   rpc ShowCollections(ShowCollectionsRequest) returns (ShowCollectionsResponse) {}
   rpc AlterCollection(AlterCollectionRequest) returns (common.Status) {}
   rpc AlterCollectionField(AlterCollectionFieldRequest) returns (common.Status) {}
+  rpc AlterCollectionAddField(AlterCollectionFieldRequest) returns (common.Status) {}
 
   rpc CreatePartition(CreatePartitionRequest) returns (common.Status) {}
   rpc DropPartition(DropPartitionRequest) returns (common.Status) {}
