@@ -990,6 +990,7 @@ message SearchRequest {
   bool search_by_primary_keys = 16;
   repeated SubSearchRequest sub_reqs = 17;
   map<string, schema.TemplateValue> expr_template_values = 18;
+  schema.FunctionScore function_score = 19;  
 }
 
 message Hits {
@@ -1023,6 +1024,7 @@ message HybridSearchRequest {
   repeated string output_fields = 10;
   common.ConsistencyLevel consistency_level = 11;
   bool use_default_consistency = 12;
+  schema.FunctionScore function_score = 13;  
 }
 
 message FlushRequest {

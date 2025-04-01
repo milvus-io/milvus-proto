@@ -130,6 +130,7 @@ const (
 	FunctionType_Unknown       FunctionType = 0
 	FunctionType_BM25          FunctionType = 1
 	FunctionType_TextEmbedding FunctionType = 2
+	FunctionType_Rerank        FunctionType = 3
 )
 
 // Enum value maps for FunctionType.
@@ -138,11 +139,13 @@ var (
 		0: "Unknown",
 		1: "BM25",
 		2: "TextEmbedding",
+		3: "Rerank",
 	}
 	FunctionType_value = map[string]int32{
 		"Unknown":       0,
 		"BM25":          1,
 		"TextEmbedding": 2,
+		"Rerank":        3,
 	}
 )
 
@@ -506,6 +509,62 @@ func (x *FunctionSchema) GetParams() []*commonpb.KeyValuePair {
 	return nil
 }
 
+type FunctionScore struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Functions []*FunctionSchema `protobuf:"bytes,1,rep,name=functions,proto3" json:"functions,omitempty"` // Currently only a single function is supported, and multiple functions
+	// may be supported in the future, so repeated is used here.
+	Params []*commonpb.KeyValuePair `protobuf:"bytes,2,rep,name=params,proto3" json:"params,omitempty"`
+}
+
+func (x *FunctionScore) Reset() {
+	*x = FunctionScore{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_schema_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *FunctionScore) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FunctionScore) ProtoMessage() {}
+
+func (x *FunctionScore) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FunctionScore.ProtoReflect.Descriptor instead.
+func (*FunctionScore) Descriptor() ([]byte, []int) {
+	return file_schema_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *FunctionScore) GetFunctions() []*FunctionSchema {
+	if x != nil {
+		return x.Functions
+	}
+	return nil
+}
+
+func (x *FunctionScore) GetParams() []*commonpb.KeyValuePair {
+	if x != nil {
+		return x.Params
+	}
+	return nil
+}
+
 // *
 // @brief Collection schema
 type CollectionSchema struct {
@@ -527,7 +586,7 @@ type CollectionSchema struct {
 func (x *CollectionSchema) Reset() {
 	*x = CollectionSchema{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[2]
+		mi := &file_schema_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -540,7 +599,7 @@ func (x *CollectionSchema) String() string {
 func (*CollectionSchema) ProtoMessage() {}
 
 func (x *CollectionSchema) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[2]
+	mi := &file_schema_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -553,7 +612,7 @@ func (x *CollectionSchema) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CollectionSchema.ProtoReflect.Descriptor instead.
 func (*CollectionSchema) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{2}
+	return file_schema_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CollectionSchema) GetName() string {
@@ -624,7 +683,7 @@ type BoolArray struct {
 func (x *BoolArray) Reset() {
 	*x = BoolArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[3]
+		mi := &file_schema_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -637,7 +696,7 @@ func (x *BoolArray) String() string {
 func (*BoolArray) ProtoMessage() {}
 
 func (x *BoolArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[3]
+	mi := &file_schema_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -650,7 +709,7 @@ func (x *BoolArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BoolArray.ProtoReflect.Descriptor instead.
 func (*BoolArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{3}
+	return file_schema_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *BoolArray) GetData() []bool {
@@ -671,7 +730,7 @@ type IntArray struct {
 func (x *IntArray) Reset() {
 	*x = IntArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[4]
+		mi := &file_schema_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -684,7 +743,7 @@ func (x *IntArray) String() string {
 func (*IntArray) ProtoMessage() {}
 
 func (x *IntArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[4]
+	mi := &file_schema_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -697,7 +756,7 @@ func (x *IntArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IntArray.ProtoReflect.Descriptor instead.
 func (*IntArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{4}
+	return file_schema_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *IntArray) GetData() []int32 {
@@ -718,7 +777,7 @@ type LongArray struct {
 func (x *LongArray) Reset() {
 	*x = LongArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[5]
+		mi := &file_schema_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -731,7 +790,7 @@ func (x *LongArray) String() string {
 func (*LongArray) ProtoMessage() {}
 
 func (x *LongArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[5]
+	mi := &file_schema_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -744,7 +803,7 @@ func (x *LongArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LongArray.ProtoReflect.Descriptor instead.
 func (*LongArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{5}
+	return file_schema_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LongArray) GetData() []int64 {
@@ -765,7 +824,7 @@ type FloatArray struct {
 func (x *FloatArray) Reset() {
 	*x = FloatArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[6]
+		mi := &file_schema_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -778,7 +837,7 @@ func (x *FloatArray) String() string {
 func (*FloatArray) ProtoMessage() {}
 
 func (x *FloatArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[6]
+	mi := &file_schema_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -791,7 +850,7 @@ func (x *FloatArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FloatArray.ProtoReflect.Descriptor instead.
 func (*FloatArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{6}
+	return file_schema_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *FloatArray) GetData() []float32 {
@@ -812,7 +871,7 @@ type DoubleArray struct {
 func (x *DoubleArray) Reset() {
 	*x = DoubleArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[7]
+		mi := &file_schema_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -825,7 +884,7 @@ func (x *DoubleArray) String() string {
 func (*DoubleArray) ProtoMessage() {}
 
 func (x *DoubleArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[7]
+	mi := &file_schema_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -838,7 +897,7 @@ func (x *DoubleArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DoubleArray.ProtoReflect.Descriptor instead.
 func (*DoubleArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{7}
+	return file_schema_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DoubleArray) GetData() []float64 {
@@ -860,7 +919,7 @@ type BytesArray struct {
 func (x *BytesArray) Reset() {
 	*x = BytesArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[8]
+		mi := &file_schema_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -873,7 +932,7 @@ func (x *BytesArray) String() string {
 func (*BytesArray) ProtoMessage() {}
 
 func (x *BytesArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[8]
+	mi := &file_schema_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -886,7 +945,7 @@ func (x *BytesArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BytesArray.ProtoReflect.Descriptor instead.
 func (*BytesArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{8}
+	return file_schema_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *BytesArray) GetData() [][]byte {
@@ -907,7 +966,7 @@ type StringArray struct {
 func (x *StringArray) Reset() {
 	*x = StringArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[9]
+		mi := &file_schema_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -920,7 +979,7 @@ func (x *StringArray) String() string {
 func (*StringArray) ProtoMessage() {}
 
 func (x *StringArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[9]
+	mi := &file_schema_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -933,7 +992,7 @@ func (x *StringArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StringArray.ProtoReflect.Descriptor instead.
 func (*StringArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{9}
+	return file_schema_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *StringArray) GetData() []string {
@@ -955,7 +1014,7 @@ type ArrayArray struct {
 func (x *ArrayArray) Reset() {
 	*x = ArrayArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[10]
+		mi := &file_schema_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -968,7 +1027,7 @@ func (x *ArrayArray) String() string {
 func (*ArrayArray) ProtoMessage() {}
 
 func (x *ArrayArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[10]
+	mi := &file_schema_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -981,7 +1040,7 @@ func (x *ArrayArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ArrayArray.ProtoReflect.Descriptor instead.
 func (*ArrayArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{10}
+	return file_schema_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ArrayArray) GetData() []*ScalarField {
@@ -1009,7 +1068,7 @@ type JSONArray struct {
 func (x *JSONArray) Reset() {
 	*x = JSONArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[11]
+		mi := &file_schema_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1022,7 +1081,7 @@ func (x *JSONArray) String() string {
 func (*JSONArray) ProtoMessage() {}
 
 func (x *JSONArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[11]
+	mi := &file_schema_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1035,7 +1094,7 @@ func (x *JSONArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JSONArray.ProtoReflect.Descriptor instead.
 func (*JSONArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{11}
+	return file_schema_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *JSONArray) GetData() [][]byte {
@@ -1056,7 +1115,7 @@ type GeometryArray struct {
 func (x *GeometryArray) Reset() {
 	*x = GeometryArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[12]
+		mi := &file_schema_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1069,7 +1128,7 @@ func (x *GeometryArray) String() string {
 func (*GeometryArray) ProtoMessage() {}
 
 func (x *GeometryArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[12]
+	mi := &file_schema_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1082,7 +1141,7 @@ func (x *GeometryArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GeometryArray.ProtoReflect.Descriptor instead.
 func (*GeometryArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{12}
+	return file_schema_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GeometryArray) GetData() [][]byte {
@@ -1112,7 +1171,7 @@ type ValueField struct {
 func (x *ValueField) Reset() {
 	*x = ValueField{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[13]
+		mi := &file_schema_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1125,7 +1184,7 @@ func (x *ValueField) String() string {
 func (*ValueField) ProtoMessage() {}
 
 func (x *ValueField) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[13]
+	mi := &file_schema_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1138,7 +1197,7 @@ func (x *ValueField) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValueField.ProtoReflect.Descriptor instead.
 func (*ValueField) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{13}
+	return file_schema_proto_rawDescGZIP(), []int{14}
 }
 
 func (m *ValueField) GetData() isValueField_Data {
@@ -1266,7 +1325,7 @@ type ScalarField struct {
 func (x *ScalarField) Reset() {
 	*x = ScalarField{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[14]
+		mi := &file_schema_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1279,7 +1338,7 @@ func (x *ScalarField) String() string {
 func (*ScalarField) ProtoMessage() {}
 
 func (x *ScalarField) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[14]
+	mi := &file_schema_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1292,7 +1351,7 @@ func (x *ScalarField) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScalarField.ProtoReflect.Descriptor instead.
 func (*ScalarField) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{14}
+	return file_schema_proto_rawDescGZIP(), []int{15}
 }
 
 func (m *ScalarField) GetData() isScalarField_Data {
@@ -1450,7 +1509,7 @@ type SparseFloatArray struct {
 func (x *SparseFloatArray) Reset() {
 	*x = SparseFloatArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[15]
+		mi := &file_schema_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1463,7 +1522,7 @@ func (x *SparseFloatArray) String() string {
 func (*SparseFloatArray) ProtoMessage() {}
 
 func (x *SparseFloatArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[15]
+	mi := &file_schema_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1476,7 +1535,7 @@ func (x *SparseFloatArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SparseFloatArray.ProtoReflect.Descriptor instead.
 func (*SparseFloatArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{15}
+	return file_schema_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *SparseFloatArray) GetContents() [][]byte {
@@ -1514,7 +1573,7 @@ type VectorField struct {
 func (x *VectorField) Reset() {
 	*x = VectorField{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[16]
+		mi := &file_schema_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1527,7 +1586,7 @@ func (x *VectorField) String() string {
 func (*VectorField) ProtoMessage() {}
 
 func (x *VectorField) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[16]
+	mi := &file_schema_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1540,7 +1599,7 @@ func (x *VectorField) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VectorField.ProtoReflect.Descriptor instead.
 func (*VectorField) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{16}
+	return file_schema_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *VectorField) GetDim() int64 {
@@ -1659,7 +1718,7 @@ type FieldData struct {
 func (x *FieldData) Reset() {
 	*x = FieldData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[17]
+		mi := &file_schema_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1672,7 +1731,7 @@ func (x *FieldData) String() string {
 func (*FieldData) ProtoMessage() {}
 
 func (x *FieldData) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[17]
+	mi := &file_schema_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1685,7 +1744,7 @@ func (x *FieldData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FieldData.ProtoReflect.Descriptor instead.
 func (*FieldData) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{17}
+	return file_schema_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *FieldData) GetType() DataType {
@@ -1775,7 +1834,7 @@ type IDs struct {
 func (x *IDs) Reset() {
 	*x = IDs{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[18]
+		mi := &file_schema_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1788,7 +1847,7 @@ func (x *IDs) String() string {
 func (*IDs) ProtoMessage() {}
 
 func (x *IDs) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[18]
+	mi := &file_schema_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1801,7 +1860,7 @@ func (x *IDs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IDs.ProtoReflect.Descriptor instead.
 func (*IDs) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{18}
+	return file_schema_proto_rawDescGZIP(), []int{19}
 }
 
 func (m *IDs) GetIdField() isIDs_IdField {
@@ -1853,7 +1912,7 @@ type SearchIteratorV2Results struct {
 func (x *SearchIteratorV2Results) Reset() {
 	*x = SearchIteratorV2Results{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[19]
+		mi := &file_schema_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1866,7 +1925,7 @@ func (x *SearchIteratorV2Results) String() string {
 func (*SearchIteratorV2Results) ProtoMessage() {}
 
 func (x *SearchIteratorV2Results) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[19]
+	mi := &file_schema_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1879,7 +1938,7 @@ func (x *SearchIteratorV2Results) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchIteratorV2Results.ProtoReflect.Descriptor instead.
 func (*SearchIteratorV2Results) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{19}
+	return file_schema_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *SearchIteratorV2Results) GetToken() string {
@@ -1919,7 +1978,7 @@ type SearchResultData struct {
 func (x *SearchResultData) Reset() {
 	*x = SearchResultData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[20]
+		mi := &file_schema_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1932,7 +1991,7 @@ func (x *SearchResultData) String() string {
 func (*SearchResultData) ProtoMessage() {}
 
 func (x *SearchResultData) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[20]
+	mi := &file_schema_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1945,7 +2004,7 @@ func (x *SearchResultData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchResultData.ProtoReflect.Descriptor instead.
 func (*SearchResultData) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{20}
+	return file_schema_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *SearchResultData) GetNumQueries() int64 {
@@ -2053,7 +2112,7 @@ type VectorClusteringInfo struct {
 func (x *VectorClusteringInfo) Reset() {
 	*x = VectorClusteringInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[21]
+		mi := &file_schema_proto_msgTypes[22]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2066,7 +2125,7 @@ func (x *VectorClusteringInfo) String() string {
 func (*VectorClusteringInfo) ProtoMessage() {}
 
 func (x *VectorClusteringInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[21]
+	mi := &file_schema_proto_msgTypes[22]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2079,7 +2138,7 @@ func (x *VectorClusteringInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VectorClusteringInfo.ProtoReflect.Descriptor instead.
 func (*VectorClusteringInfo) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{21}
+	return file_schema_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *VectorClusteringInfo) GetField() string {
@@ -2109,7 +2168,7 @@ type ScalarClusteringInfo struct {
 func (x *ScalarClusteringInfo) Reset() {
 	*x = ScalarClusteringInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[22]
+		mi := &file_schema_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2122,7 +2181,7 @@ func (x *ScalarClusteringInfo) String() string {
 func (*ScalarClusteringInfo) ProtoMessage() {}
 
 func (x *ScalarClusteringInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[22]
+	mi := &file_schema_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2135,7 +2194,7 @@ func (x *ScalarClusteringInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScalarClusteringInfo.ProtoReflect.Descriptor instead.
 func (*ScalarClusteringInfo) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{22}
+	return file_schema_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ScalarClusteringInfo) GetField() string {
@@ -2158,7 +2217,7 @@ type ClusteringInfo struct {
 func (x *ClusteringInfo) Reset() {
 	*x = ClusteringInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[23]
+		mi := &file_schema_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2171,7 +2230,7 @@ func (x *ClusteringInfo) String() string {
 func (*ClusteringInfo) ProtoMessage() {}
 
 func (x *ClusteringInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[23]
+	mi := &file_schema_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2184,7 +2243,7 @@ func (x *ClusteringInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClusteringInfo.ProtoReflect.Descriptor instead.
 func (*ClusteringInfo) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{23}
+	return file_schema_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *ClusteringInfo) GetVectorClusteringInfos() []*VectorClusteringInfo {
@@ -2219,7 +2278,7 @@ type TemplateValue struct {
 func (x *TemplateValue) Reset() {
 	*x = TemplateValue{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[24]
+		mi := &file_schema_proto_msgTypes[25]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2232,7 +2291,7 @@ func (x *TemplateValue) String() string {
 func (*TemplateValue) ProtoMessage() {}
 
 func (x *TemplateValue) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[24]
+	mi := &file_schema_proto_msgTypes[25]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2245,7 +2304,7 @@ func (x *TemplateValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TemplateValue.ProtoReflect.Descriptor instead.
 func (*TemplateValue) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{24}
+	return file_schema_proto_rawDescGZIP(), []int{25}
 }
 
 func (m *TemplateValue) GetVal() isTemplateValue_Val {
@@ -2343,7 +2402,7 @@ type TemplateArrayValue struct {
 func (x *TemplateArrayValue) Reset() {
 	*x = TemplateArrayValue{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[25]
+		mi := &file_schema_proto_msgTypes[26]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2356,7 +2415,7 @@ func (x *TemplateArrayValue) String() string {
 func (*TemplateArrayValue) ProtoMessage() {}
 
 func (x *TemplateArrayValue) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[25]
+	mi := &file_schema_proto_msgTypes[26]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2369,7 +2428,7 @@ func (x *TemplateArrayValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TemplateArrayValue.ProtoReflect.Descriptor instead.
 func (*TemplateArrayValue) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{25}
+	return file_schema_proto_rawDescGZIP(), []int{26}
 }
 
 func (m *TemplateArrayValue) GetData() isTemplateArrayValue_Data {
@@ -2472,7 +2531,7 @@ type TemplateArrayValueArray struct {
 func (x *TemplateArrayValueArray) Reset() {
 	*x = TemplateArrayValueArray{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_proto_msgTypes[26]
+		mi := &file_schema_proto_msgTypes[27]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2485,7 +2544,7 @@ func (x *TemplateArrayValueArray) String() string {
 func (*TemplateArrayValueArray) ProtoMessage() {}
 
 func (x *TemplateArrayValueArray) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_proto_msgTypes[26]
+	mi := &file_schema_proto_msgTypes[27]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2498,7 +2557,7 @@ func (x *TemplateArrayValueArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TemplateArrayValueArray.ProtoReflect.Descriptor instead.
 func (*TemplateArrayValueArray) Descriptor() ([]byte, []int) {
-	return file_schema_proto_rawDescGZIP(), []int{26}
+	return file_schema_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *TemplateArrayValueArray) GetData() []*TemplateArrayValue {
@@ -2583,6 +2642,15 @@ var file_schema_proto_rawDesc = []byte{
 	0x74, 0x5f, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x08, 0x20, 0x03, 0x28,
 	0x03, 0x52, 0x0e, 0x6f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x49, 0x64,
 	0x73, 0x12, 0x39, 0x0a, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x09, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x21, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65,
+	0x50, 0x61, 0x69, 0x72, 0x52, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x22, 0x8d, 0x01, 0x0a,
+	0x0d, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x63, 0x6f, 0x72, 0x65, 0x12, 0x41,
+	0x0a, 0x09, 0x66, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x23, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x2e, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2e, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x52, 0x09, 0x66, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x73, 0x12, 0x39, 0x0a, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28,
 	0x0b, 0x32, 0x21, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65,
 	0x50, 0x61, 0x69, 0x72, 0x52, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x22, 0xee, 0x02, 0x0a,
@@ -2881,24 +2949,25 @@ var file_schema_proto_rawDesc = []byte{
 	0x10, 0x66, 0x12, 0x12, 0x0a, 0x0e, 0x42, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x31, 0x36, 0x56, 0x65,
 	0x63, 0x74, 0x6f, 0x72, 0x10, 0x67, 0x12, 0x15, 0x0a, 0x11, 0x53, 0x70, 0x61, 0x72, 0x73, 0x65,
 	0x46, 0x6c, 0x6f, 0x61, 0x74, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x68, 0x12, 0x0e, 0x0a,
-	0x0a, 0x49, 0x6e, 0x74, 0x38, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x69, 0x2a, 0x38, 0x0a,
+	0x0a, 0x49, 0x6e, 0x74, 0x38, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x69, 0x2a, 0x44, 0x0a,
 	0x0c, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0b, 0x0a,
 	0x07, 0x55, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x6e, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x42, 0x4d,
 	0x32, 0x35, 0x10, 0x01, 0x12, 0x11, 0x0a, 0x0d, 0x54, 0x65, 0x78, 0x74, 0x45, 0x6d, 0x62, 0x65,
-	0x64, 0x64, 0x69, 0x6e, 0x67, 0x10, 0x02, 0x2a, 0x56, 0x0a, 0x0a, 0x46, 0x69, 0x65, 0x6c, 0x64,
-	0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x10, 0x0a, 0x0c, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72,
-	0x65, 0x61, 0x74, 0x65, 0x64, 0x10, 0x00, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c, 0x64,
-	0x43, 0x72, 0x65, 0x61, 0x74, 0x69, 0x6e, 0x67, 0x10, 0x01, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69,
-	0x65, 0x6c, 0x64, 0x44, 0x72, 0x6f, 0x70, 0x70, 0x69, 0x6e, 0x67, 0x10, 0x02, 0x12, 0x10, 0x0a,
-	0x0c, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x44, 0x72, 0x6f, 0x70, 0x70, 0x65, 0x64, 0x10, 0x03, 0x42,
-	0x6d, 0x0a, 0x0e, 0x69, 0x6f, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x67, 0x72, 0x70,
-	0x63, 0x42, 0x0b, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01,
-	0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d, 0x69, 0x6c,
-	0x76, 0x75, 0x73, 0x2d, 0x69, 0x6f, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x32, 0x2f, 0x73, 0x63,
-	0x68, 0x65, 0x6d, 0x61, 0x70, 0x62, 0xa0, 0x01, 0x01, 0xaa, 0x02, 0x12, 0x4d, 0x69, 0x6c, 0x76,
-	0x75, 0x73, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2e, 0x47, 0x72, 0x70, 0x63, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x64, 0x64, 0x69, 0x6e, 0x67, 0x10, 0x02, 0x12, 0x0a, 0x0a, 0x06, 0x52, 0x65, 0x72, 0x61, 0x6e,
+	0x6b, 0x10, 0x03, 0x2a, 0x56, 0x0a, 0x0a, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x53, 0x74, 0x61, 0x74,
+	0x65, 0x12, 0x10, 0x0a, 0x0c, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
+	0x64, 0x10, 0x00, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x69, 0x6e, 0x67, 0x10, 0x01, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x44,
+	0x72, 0x6f, 0x70, 0x70, 0x69, 0x6e, 0x67, 0x10, 0x02, 0x12, 0x10, 0x0a, 0x0c, 0x46, 0x69, 0x65,
+	0x6c, 0x64, 0x44, 0x72, 0x6f, 0x70, 0x70, 0x65, 0x64, 0x10, 0x03, 0x42, 0x6d, 0x0a, 0x0e, 0x69,
+	0x6f, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x42, 0x0b, 0x53,
+	0x63, 0x68, 0x65, 0x6d, 0x61, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x67, 0x69,
+	0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d,
+	0x69, 0x6f, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
+	0x67, 0x6f, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x32, 0x2f, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61,
+	0x70, 0x62, 0xa0, 0x01, 0x01, 0xaa, 0x02, 0x12, 0x4d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x43,
+	0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2e, 0x47, 0x72, 0x70, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -2914,91 +2983,94 @@ func file_schema_proto_rawDescGZIP() []byte {
 }
 
 var file_schema_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_schema_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
+var file_schema_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_schema_proto_goTypes = []interface{}{
 	(DataType)(0),                   // 0: milvus.proto.schema.DataType
 	(FunctionType)(0),               // 1: milvus.proto.schema.FunctionType
 	(FieldState)(0),                 // 2: milvus.proto.schema.FieldState
 	(*FieldSchema)(nil),             // 3: milvus.proto.schema.FieldSchema
 	(*FunctionSchema)(nil),          // 4: milvus.proto.schema.FunctionSchema
-	(*CollectionSchema)(nil),        // 5: milvus.proto.schema.CollectionSchema
-	(*BoolArray)(nil),               // 6: milvus.proto.schema.BoolArray
-	(*IntArray)(nil),                // 7: milvus.proto.schema.IntArray
-	(*LongArray)(nil),               // 8: milvus.proto.schema.LongArray
-	(*FloatArray)(nil),              // 9: milvus.proto.schema.FloatArray
-	(*DoubleArray)(nil),             // 10: milvus.proto.schema.DoubleArray
-	(*BytesArray)(nil),              // 11: milvus.proto.schema.BytesArray
-	(*StringArray)(nil),             // 12: milvus.proto.schema.StringArray
-	(*ArrayArray)(nil),              // 13: milvus.proto.schema.ArrayArray
-	(*JSONArray)(nil),               // 14: milvus.proto.schema.JSONArray
-	(*GeometryArray)(nil),           // 15: milvus.proto.schema.GeometryArray
-	(*ValueField)(nil),              // 16: milvus.proto.schema.ValueField
-	(*ScalarField)(nil),             // 17: milvus.proto.schema.ScalarField
-	(*SparseFloatArray)(nil),        // 18: milvus.proto.schema.SparseFloatArray
-	(*VectorField)(nil),             // 19: milvus.proto.schema.VectorField
-	(*FieldData)(nil),               // 20: milvus.proto.schema.FieldData
-	(*IDs)(nil),                     // 21: milvus.proto.schema.IDs
-	(*SearchIteratorV2Results)(nil), // 22: milvus.proto.schema.SearchIteratorV2Results
-	(*SearchResultData)(nil),        // 23: milvus.proto.schema.SearchResultData
-	(*VectorClusteringInfo)(nil),    // 24: milvus.proto.schema.VectorClusteringInfo
-	(*ScalarClusteringInfo)(nil),    // 25: milvus.proto.schema.ScalarClusteringInfo
-	(*ClusteringInfo)(nil),          // 26: milvus.proto.schema.ClusteringInfo
-	(*TemplateValue)(nil),           // 27: milvus.proto.schema.TemplateValue
-	(*TemplateArrayValue)(nil),      // 28: milvus.proto.schema.TemplateArrayValue
-	(*TemplateArrayValueArray)(nil), // 29: milvus.proto.schema.TemplateArrayValueArray
-	(*commonpb.KeyValuePair)(nil),   // 30: milvus.proto.common.KeyValuePair
+	(*FunctionScore)(nil),           // 5: milvus.proto.schema.FunctionScore
+	(*CollectionSchema)(nil),        // 6: milvus.proto.schema.CollectionSchema
+	(*BoolArray)(nil),               // 7: milvus.proto.schema.BoolArray
+	(*IntArray)(nil),                // 8: milvus.proto.schema.IntArray
+	(*LongArray)(nil),               // 9: milvus.proto.schema.LongArray
+	(*FloatArray)(nil),              // 10: milvus.proto.schema.FloatArray
+	(*DoubleArray)(nil),             // 11: milvus.proto.schema.DoubleArray
+	(*BytesArray)(nil),              // 12: milvus.proto.schema.BytesArray
+	(*StringArray)(nil),             // 13: milvus.proto.schema.StringArray
+	(*ArrayArray)(nil),              // 14: milvus.proto.schema.ArrayArray
+	(*JSONArray)(nil),               // 15: milvus.proto.schema.JSONArray
+	(*GeometryArray)(nil),           // 16: milvus.proto.schema.GeometryArray
+	(*ValueField)(nil),              // 17: milvus.proto.schema.ValueField
+	(*ScalarField)(nil),             // 18: milvus.proto.schema.ScalarField
+	(*SparseFloatArray)(nil),        // 19: milvus.proto.schema.SparseFloatArray
+	(*VectorField)(nil),             // 20: milvus.proto.schema.VectorField
+	(*FieldData)(nil),               // 21: milvus.proto.schema.FieldData
+	(*IDs)(nil),                     // 22: milvus.proto.schema.IDs
+	(*SearchIteratorV2Results)(nil), // 23: milvus.proto.schema.SearchIteratorV2Results
+	(*SearchResultData)(nil),        // 24: milvus.proto.schema.SearchResultData
+	(*VectorClusteringInfo)(nil),    // 25: milvus.proto.schema.VectorClusteringInfo
+	(*ScalarClusteringInfo)(nil),    // 26: milvus.proto.schema.ScalarClusteringInfo
+	(*ClusteringInfo)(nil),          // 27: milvus.proto.schema.ClusteringInfo
+	(*TemplateValue)(nil),           // 28: milvus.proto.schema.TemplateValue
+	(*TemplateArrayValue)(nil),      // 29: milvus.proto.schema.TemplateArrayValue
+	(*TemplateArrayValueArray)(nil), // 30: milvus.proto.schema.TemplateArrayValueArray
+	(*commonpb.KeyValuePair)(nil),   // 31: milvus.proto.common.KeyValuePair
 }
 var file_schema_proto_depIdxs = []int32{
 	0,  // 0: milvus.proto.schema.FieldSchema.data_type:type_name -> milvus.proto.schema.DataType
-	30, // 1: milvus.proto.schema.FieldSchema.type_params:type_name -> milvus.proto.common.KeyValuePair
-	30, // 2: milvus.proto.schema.FieldSchema.index_params:type_name -> milvus.proto.common.KeyValuePair
+	31, // 1: milvus.proto.schema.FieldSchema.type_params:type_name -> milvus.proto.common.KeyValuePair
+	31, // 2: milvus.proto.schema.FieldSchema.index_params:type_name -> milvus.proto.common.KeyValuePair
 	2,  // 3: milvus.proto.schema.FieldSchema.state:type_name -> milvus.proto.schema.FieldState
 	0,  // 4: milvus.proto.schema.FieldSchema.element_type:type_name -> milvus.proto.schema.DataType
-	16, // 5: milvus.proto.schema.FieldSchema.default_value:type_name -> milvus.proto.schema.ValueField
+	17, // 5: milvus.proto.schema.FieldSchema.default_value:type_name -> milvus.proto.schema.ValueField
 	1,  // 6: milvus.proto.schema.FunctionSchema.type:type_name -> milvus.proto.schema.FunctionType
-	30, // 7: milvus.proto.schema.FunctionSchema.params:type_name -> milvus.proto.common.KeyValuePair
-	3,  // 8: milvus.proto.schema.CollectionSchema.fields:type_name -> milvus.proto.schema.FieldSchema
-	30, // 9: milvus.proto.schema.CollectionSchema.properties:type_name -> milvus.proto.common.KeyValuePair
-	4,  // 10: milvus.proto.schema.CollectionSchema.functions:type_name -> milvus.proto.schema.FunctionSchema
-	17, // 11: milvus.proto.schema.ArrayArray.data:type_name -> milvus.proto.schema.ScalarField
-	0,  // 12: milvus.proto.schema.ArrayArray.element_type:type_name -> milvus.proto.schema.DataType
-	6,  // 13: milvus.proto.schema.ScalarField.bool_data:type_name -> milvus.proto.schema.BoolArray
-	7,  // 14: milvus.proto.schema.ScalarField.int_data:type_name -> milvus.proto.schema.IntArray
-	8,  // 15: milvus.proto.schema.ScalarField.long_data:type_name -> milvus.proto.schema.LongArray
-	9,  // 16: milvus.proto.schema.ScalarField.float_data:type_name -> milvus.proto.schema.FloatArray
-	10, // 17: milvus.proto.schema.ScalarField.double_data:type_name -> milvus.proto.schema.DoubleArray
-	12, // 18: milvus.proto.schema.ScalarField.string_data:type_name -> milvus.proto.schema.StringArray
-	11, // 19: milvus.proto.schema.ScalarField.bytes_data:type_name -> milvus.proto.schema.BytesArray
-	13, // 20: milvus.proto.schema.ScalarField.array_data:type_name -> milvus.proto.schema.ArrayArray
-	14, // 21: milvus.proto.schema.ScalarField.json_data:type_name -> milvus.proto.schema.JSONArray
-	15, // 22: milvus.proto.schema.ScalarField.geometry_data:type_name -> milvus.proto.schema.GeometryArray
-	9,  // 23: milvus.proto.schema.VectorField.float_vector:type_name -> milvus.proto.schema.FloatArray
-	18, // 24: milvus.proto.schema.VectorField.sparse_float_vector:type_name -> milvus.proto.schema.SparseFloatArray
-	0,  // 25: milvus.proto.schema.FieldData.type:type_name -> milvus.proto.schema.DataType
-	17, // 26: milvus.proto.schema.FieldData.scalars:type_name -> milvus.proto.schema.ScalarField
-	19, // 27: milvus.proto.schema.FieldData.vectors:type_name -> milvus.proto.schema.VectorField
-	8,  // 28: milvus.proto.schema.IDs.int_id:type_name -> milvus.proto.schema.LongArray
-	12, // 29: milvus.proto.schema.IDs.str_id:type_name -> milvus.proto.schema.StringArray
-	20, // 30: milvus.proto.schema.SearchResultData.fields_data:type_name -> milvus.proto.schema.FieldData
-	21, // 31: milvus.proto.schema.SearchResultData.ids:type_name -> milvus.proto.schema.IDs
-	20, // 32: milvus.proto.schema.SearchResultData.group_by_field_value:type_name -> milvus.proto.schema.FieldData
-	22, // 33: milvus.proto.schema.SearchResultData.search_iterator_v2_results:type_name -> milvus.proto.schema.SearchIteratorV2Results
-	19, // 34: milvus.proto.schema.VectorClusteringInfo.centroid:type_name -> milvus.proto.schema.VectorField
-	24, // 35: milvus.proto.schema.ClusteringInfo.vector_clustering_infos:type_name -> milvus.proto.schema.VectorClusteringInfo
-	25, // 36: milvus.proto.schema.ClusteringInfo.scalar_clustering_infos:type_name -> milvus.proto.schema.ScalarClusteringInfo
-	28, // 37: milvus.proto.schema.TemplateValue.array_val:type_name -> milvus.proto.schema.TemplateArrayValue
-	6,  // 38: milvus.proto.schema.TemplateArrayValue.bool_data:type_name -> milvus.proto.schema.BoolArray
-	8,  // 39: milvus.proto.schema.TemplateArrayValue.long_data:type_name -> milvus.proto.schema.LongArray
-	10, // 40: milvus.proto.schema.TemplateArrayValue.double_data:type_name -> milvus.proto.schema.DoubleArray
-	12, // 41: milvus.proto.schema.TemplateArrayValue.string_data:type_name -> milvus.proto.schema.StringArray
-	29, // 42: milvus.proto.schema.TemplateArrayValue.array_data:type_name -> milvus.proto.schema.TemplateArrayValueArray
-	14, // 43: milvus.proto.schema.TemplateArrayValue.json_data:type_name -> milvus.proto.schema.JSONArray
-	28, // 44: milvus.proto.schema.TemplateArrayValueArray.data:type_name -> milvus.proto.schema.TemplateArrayValue
-	45, // [45:45] is the sub-list for method output_type
-	45, // [45:45] is the sub-list for method input_type
-	45, // [45:45] is the sub-list for extension type_name
-	45, // [45:45] is the sub-list for extension extendee
-	0,  // [0:45] is the sub-list for field type_name
+	31, // 7: milvus.proto.schema.FunctionSchema.params:type_name -> milvus.proto.common.KeyValuePair
+	4,  // 8: milvus.proto.schema.FunctionScore.functions:type_name -> milvus.proto.schema.FunctionSchema
+	31, // 9: milvus.proto.schema.FunctionScore.params:type_name -> milvus.proto.common.KeyValuePair
+	3,  // 10: milvus.proto.schema.CollectionSchema.fields:type_name -> milvus.proto.schema.FieldSchema
+	31, // 11: milvus.proto.schema.CollectionSchema.properties:type_name -> milvus.proto.common.KeyValuePair
+	4,  // 12: milvus.proto.schema.CollectionSchema.functions:type_name -> milvus.proto.schema.FunctionSchema
+	18, // 13: milvus.proto.schema.ArrayArray.data:type_name -> milvus.proto.schema.ScalarField
+	0,  // 14: milvus.proto.schema.ArrayArray.element_type:type_name -> milvus.proto.schema.DataType
+	7,  // 15: milvus.proto.schema.ScalarField.bool_data:type_name -> milvus.proto.schema.BoolArray
+	8,  // 16: milvus.proto.schema.ScalarField.int_data:type_name -> milvus.proto.schema.IntArray
+	9,  // 17: milvus.proto.schema.ScalarField.long_data:type_name -> milvus.proto.schema.LongArray
+	10, // 18: milvus.proto.schema.ScalarField.float_data:type_name -> milvus.proto.schema.FloatArray
+	11, // 19: milvus.proto.schema.ScalarField.double_data:type_name -> milvus.proto.schema.DoubleArray
+	13, // 20: milvus.proto.schema.ScalarField.string_data:type_name -> milvus.proto.schema.StringArray
+	12, // 21: milvus.proto.schema.ScalarField.bytes_data:type_name -> milvus.proto.schema.BytesArray
+	14, // 22: milvus.proto.schema.ScalarField.array_data:type_name -> milvus.proto.schema.ArrayArray
+	15, // 23: milvus.proto.schema.ScalarField.json_data:type_name -> milvus.proto.schema.JSONArray
+	16, // 24: milvus.proto.schema.ScalarField.geometry_data:type_name -> milvus.proto.schema.GeometryArray
+	10, // 25: milvus.proto.schema.VectorField.float_vector:type_name -> milvus.proto.schema.FloatArray
+	19, // 26: milvus.proto.schema.VectorField.sparse_float_vector:type_name -> milvus.proto.schema.SparseFloatArray
+	0,  // 27: milvus.proto.schema.FieldData.type:type_name -> milvus.proto.schema.DataType
+	18, // 28: milvus.proto.schema.FieldData.scalars:type_name -> milvus.proto.schema.ScalarField
+	20, // 29: milvus.proto.schema.FieldData.vectors:type_name -> milvus.proto.schema.VectorField
+	9,  // 30: milvus.proto.schema.IDs.int_id:type_name -> milvus.proto.schema.LongArray
+	13, // 31: milvus.proto.schema.IDs.str_id:type_name -> milvus.proto.schema.StringArray
+	21, // 32: milvus.proto.schema.SearchResultData.fields_data:type_name -> milvus.proto.schema.FieldData
+	22, // 33: milvus.proto.schema.SearchResultData.ids:type_name -> milvus.proto.schema.IDs
+	21, // 34: milvus.proto.schema.SearchResultData.group_by_field_value:type_name -> milvus.proto.schema.FieldData
+	23, // 35: milvus.proto.schema.SearchResultData.search_iterator_v2_results:type_name -> milvus.proto.schema.SearchIteratorV2Results
+	20, // 36: milvus.proto.schema.VectorClusteringInfo.centroid:type_name -> milvus.proto.schema.VectorField
+	25, // 37: milvus.proto.schema.ClusteringInfo.vector_clustering_infos:type_name -> milvus.proto.schema.VectorClusteringInfo
+	26, // 38: milvus.proto.schema.ClusteringInfo.scalar_clustering_infos:type_name -> milvus.proto.schema.ScalarClusteringInfo
+	29, // 39: milvus.proto.schema.TemplateValue.array_val:type_name -> milvus.proto.schema.TemplateArrayValue
+	7,  // 40: milvus.proto.schema.TemplateArrayValue.bool_data:type_name -> milvus.proto.schema.BoolArray
+	9,  // 41: milvus.proto.schema.TemplateArrayValue.long_data:type_name -> milvus.proto.schema.LongArray
+	11, // 42: milvus.proto.schema.TemplateArrayValue.double_data:type_name -> milvus.proto.schema.DoubleArray
+	13, // 43: milvus.proto.schema.TemplateArrayValue.string_data:type_name -> milvus.proto.schema.StringArray
+	30, // 44: milvus.proto.schema.TemplateArrayValue.array_data:type_name -> milvus.proto.schema.TemplateArrayValueArray
+	15, // 45: milvus.proto.schema.TemplateArrayValue.json_data:type_name -> milvus.proto.schema.JSONArray
+	29, // 46: milvus.proto.schema.TemplateArrayValueArray.data:type_name -> milvus.proto.schema.TemplateArrayValue
+	47, // [47:47] is the sub-list for method output_type
+	47, // [47:47] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_schema_proto_init() }
@@ -3032,7 +3104,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CollectionSchema); i {
+			switch v := v.(*FunctionScore); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3044,7 +3116,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BoolArray); i {
+			switch v := v.(*CollectionSchema); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3056,7 +3128,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*IntArray); i {
+			switch v := v.(*BoolArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3068,7 +3140,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LongArray); i {
+			switch v := v.(*IntArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3080,7 +3152,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FloatArray); i {
+			switch v := v.(*LongArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3092,7 +3164,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DoubleArray); i {
+			switch v := v.(*FloatArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3104,7 +3176,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BytesArray); i {
+			switch v := v.(*DoubleArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3116,7 +3188,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StringArray); i {
+			switch v := v.(*BytesArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3128,7 +3200,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ArrayArray); i {
+			switch v := v.(*StringArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3140,7 +3212,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*JSONArray); i {
+			switch v := v.(*ArrayArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3152,7 +3224,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GeometryArray); i {
+			switch v := v.(*JSONArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3164,7 +3236,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ValueField); i {
+			switch v := v.(*GeometryArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3176,7 +3248,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ScalarField); i {
+			switch v := v.(*ValueField); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3188,7 +3260,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SparseFloatArray); i {
+			switch v := v.(*ScalarField); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3200,7 +3272,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*VectorField); i {
+			switch v := v.(*SparseFloatArray); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3212,7 +3284,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FieldData); i {
+			switch v := v.(*VectorField); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3224,7 +3296,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*IDs); i {
+			switch v := v.(*FieldData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3236,7 +3308,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SearchIteratorV2Results); i {
+			switch v := v.(*IDs); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3248,7 +3320,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SearchResultData); i {
+			switch v := v.(*SearchIteratorV2Results); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3260,7 +3332,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*VectorClusteringInfo); i {
+			switch v := v.(*SearchResultData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3272,7 +3344,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ScalarClusteringInfo); i {
+			switch v := v.(*VectorClusteringInfo); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3284,7 +3356,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ClusteringInfo); i {
+			switch v := v.(*ScalarClusteringInfo); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3296,7 +3368,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TemplateValue); i {
+			switch v := v.(*ClusteringInfo); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3308,7 +3380,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TemplateArrayValue); i {
+			switch v := v.(*TemplateValue); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3320,6 +3392,18 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TemplateArrayValue); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_schema_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TemplateArrayValueArray); i {
 			case 0:
 				return &v.state
@@ -3332,7 +3416,7 @@ func file_schema_proto_init() {
 			}
 		}
 	}
-	file_schema_proto_msgTypes[13].OneofWrappers = []interface{}{
+	file_schema_proto_msgTypes[14].OneofWrappers = []interface{}{
 		(*ValueField_BoolData)(nil),
 		(*ValueField_IntData)(nil),
 		(*ValueField_LongData)(nil),
@@ -3341,7 +3425,7 @@ func file_schema_proto_init() {
 		(*ValueField_StringData)(nil),
 		(*ValueField_BytesData)(nil),
 	}
-	file_schema_proto_msgTypes[14].OneofWrappers = []interface{}{
+	file_schema_proto_msgTypes[15].OneofWrappers = []interface{}{
 		(*ScalarField_BoolData)(nil),
 		(*ScalarField_IntData)(nil),
 		(*ScalarField_LongData)(nil),
@@ -3353,7 +3437,7 @@ func file_schema_proto_init() {
 		(*ScalarField_JsonData)(nil),
 		(*ScalarField_GeometryData)(nil),
 	}
-	file_schema_proto_msgTypes[16].OneofWrappers = []interface{}{
+	file_schema_proto_msgTypes[17].OneofWrappers = []interface{}{
 		(*VectorField_FloatVector)(nil),
 		(*VectorField_BinaryVector)(nil),
 		(*VectorField_Float16Vector)(nil),
@@ -3361,23 +3445,23 @@ func file_schema_proto_init() {
 		(*VectorField_SparseFloatVector)(nil),
 		(*VectorField_Int8Vector)(nil),
 	}
-	file_schema_proto_msgTypes[17].OneofWrappers = []interface{}{
+	file_schema_proto_msgTypes[18].OneofWrappers = []interface{}{
 		(*FieldData_Scalars)(nil),
 		(*FieldData_Vectors)(nil),
 	}
-	file_schema_proto_msgTypes[18].OneofWrappers = []interface{}{
+	file_schema_proto_msgTypes[19].OneofWrappers = []interface{}{
 		(*IDs_IntId)(nil),
 		(*IDs_StrId)(nil),
 	}
-	file_schema_proto_msgTypes[20].OneofWrappers = []interface{}{}
-	file_schema_proto_msgTypes[24].OneofWrappers = []interface{}{
+	file_schema_proto_msgTypes[21].OneofWrappers = []interface{}{}
+	file_schema_proto_msgTypes[25].OneofWrappers = []interface{}{
 		(*TemplateValue_BoolVal)(nil),
 		(*TemplateValue_Int64Val)(nil),
 		(*TemplateValue_FloatVal)(nil),
 		(*TemplateValue_StringVal)(nil),
 		(*TemplateValue_ArrayVal)(nil),
 	}
-	file_schema_proto_msgTypes[25].OneofWrappers = []interface{}{
+	file_schema_proto_msgTypes[26].OneofWrappers = []interface{}{
 		(*TemplateArrayValue_BoolData)(nil),
 		(*TemplateArrayValue_LongData)(nil),
 		(*TemplateArrayValue_DoubleData)(nil),
@@ -3391,7 +3475,7 @@ func file_schema_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_schema_proto_rawDesc,
 			NumEnums:      3,
-			NumMessages:   27,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
