@@ -996,6 +996,8 @@ message SearchRequest {
   repeated SubSearchRequest sub_reqs = 17;
   map<string, schema.TemplateValue> expr_template_values = 18;
   schema.FunctionScore function_score = 19;  
+  bool enable_partial_result = 20;
+  float partial_result_required_data_ratio = 21;
 }
 
 message Hits {
@@ -1009,6 +1011,7 @@ message SearchResults {
   schema.SearchResultData results = 2;
   string collection_name = 3;
   uint64 session_ts = 4; // for session-like operation like iterator
+  float accessed_data_ratio = 5;
 }
 
 message HybridSearchRequest {
@@ -1029,7 +1032,9 @@ message HybridSearchRequest {
   repeated string output_fields = 10;
   common.ConsistencyLevel consistency_level = 11;
   bool use_default_consistency = 12;
-  schema.FunctionScore function_score = 13;  
+  schema.FunctionScore function_score = 13;
+  bool enable_partial_result = 14;
+  float partial_result_required_data_ratio = 15;
 }
 
 message FlushRequest {
@@ -1072,6 +1077,8 @@ message QueryRequest {
   common.ConsistencyLevel consistency_level = 11;
   bool use_default_consistency = 12;
   map<string, schema.TemplateValue> expr_template_values = 13;
+  bool enable_partial_result = 14;
+  float partial_result_required_data_ratio = 15;
 }
 
 message QueryResults {
@@ -1081,6 +1088,7 @@ message QueryResults {
   repeated string output_fields = 4;
   uint64 session_ts = 5; // for session-like operation like iterator
   string primary_field_name = 6;
+  float accessed_data_ratio = 7;
 }
 
 message QueryCursor {
