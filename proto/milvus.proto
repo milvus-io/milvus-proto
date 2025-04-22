@@ -146,6 +146,8 @@ service MilvusService {
   rpc DropPrivilegeGroup(DropPrivilegeGroupRequest) returns (common.Status) {}
   rpc ListPrivilegeGroups(ListPrivilegeGroupsRequest) returns (ListPrivilegeGroupsResponse) {}
   rpc OperatePrivilegeGroup(OperatePrivilegeGroupRequest) returns (common.Status) {}
+
+  rpc RunAnalyzer(RunAnalyzerRequest) returns (RunAnalyzerResponse) {}
 }
 
 message CreateAliasRequest {
@@ -2103,4 +2105,30 @@ message ListImportsAuthPlaceholder {
   };
   string db_name = 3;
   string collection_name = 1;
+}
+
+message RunAnalyzerRequest{
+  common.MsgBase base = 1;
+  string analyzer_params = 2;
+  repeated bytes placeholder = 3;
+  bool with_detail = 4;
+  bool with_hash =5;
+}
+
+message AnalyzerToken{
+  string token = 1;
+  int64 start_offset = 2;
+  int64 end_offset = 3;
+  int64 position = 4;
+  int64 position_length = 5;
+  uint32 hash = 6;
+}
+
+message AnalyzerResult {
+  repeated AnalyzerToken tokens=1;
+}
+
+message RunAnalyzerResponse{
+  common.Status status = 1;
+  repeated AnalyzerResult results = 2;
 }
