@@ -102,6 +102,14 @@ message CollectionSchema {
   repeated common.KeyValuePair properties = 6;
   repeated FunctionSchema functions = 7;
   string dbName = 8;
+  repeated StructSchema struct_fields = 9;
+}
+
+message StructSchema {
+  string name = 1;
+  repeated FieldSchema fields = 2;
+  bool enable_dynamic_field = 3;
+  repeated FunctionSchema functions = 4;
 }
 
 message BoolArray { repeated bool data = 1; }
