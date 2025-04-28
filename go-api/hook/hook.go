@@ -26,13 +26,12 @@ type HookContextKeyType string
 
 const GinParamsKey = HookContextKeyType("gin_params")
 
-// Design
 type Cipher interface {
 	Init(params map[string]string) error
 
-	GetEncryptor(ezID int64) (encryptor Encryptor, safeKey []byte, err error)
-	GetDecryptor(ezID int64, safeKey []byte) (Decryptor, error)
-	GetUnsafeKey(ezID int64) []byte
+	GetEncryptor(ezID, collectionID int64) (encryptor Encryptor, safeKey []byte, err error)
+	GetDecryptor(ezID, collectionID int64, safeKey []byte) (Decryptor, error)
+	GetUnsafeKey(ezID, collectionID int64) []byte
 }
 
 // Encryptor uses one DEK in the life cycle
