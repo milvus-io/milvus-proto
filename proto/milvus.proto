@@ -389,6 +389,7 @@ message DescribeCollectionResponse {
   int64 db_id =16;
   uint64 request_time = 17;
   uint64 update_timestamp = 18;
+  string update_timestamp_str = 19;
 }
 
 /**
