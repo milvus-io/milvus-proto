@@ -509,3 +509,8 @@ message NodeInfo {
     string address = 2;
     string hostname = 3;
 }
+
+enum LoadPriority {
+    HIGH = 0;
+    LOW = 1;
+}
