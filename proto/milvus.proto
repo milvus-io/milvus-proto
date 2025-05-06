@@ -416,6 +416,8 @@ message LoadCollectionRequest {
   repeated string load_fields = 7;
   // Field Partial load skip load dynamic fields 
   bool skip_load_dynamic_field = 8;
+  // Additional parameters for load
+  map<string, string> load_params = 9;
 }
 
 /**
@@ -622,6 +624,8 @@ message LoadPartitionsRequest {
   repeated string load_fields = 8;
   // Field Partial load skip load dynamic fields 
   bool skip_load_dynamic_field = 9;
+  // Additional parameters for load
+  map<string, string> load_params = 10;
 }
 
 /*
