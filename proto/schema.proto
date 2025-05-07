@@ -102,10 +102,10 @@ message CollectionSchema {
   repeated common.KeyValuePair properties = 6;
   repeated FunctionSchema functions = 7;
   string dbName = 8;
-  repeated StructSchema struct_fields = 9;
+  repeated StructField struct_fields = 9;
 }
 
-message StructSchema {
+message StructField {
   int64 fieldID = 1;
   string name = 2;
   repeated FieldSchema fields = 3;
