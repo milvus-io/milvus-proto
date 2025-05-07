@@ -106,10 +106,11 @@ message CollectionSchema {
 }
 
 message StructSchema {
-  string name = 1;
-  repeated FieldSchema fields = 2;
-  bool enable_dynamic_field = 3;
-  repeated FunctionSchema functions = 4;
+  int64 fieldID = 1;
+  string name = 2;
+  repeated FieldSchema fields = 3;
+  bool enable_dynamic_field = 4;
+  repeated FunctionSchema functions = 5;
 }
 
 message BoolArray { repeated bool data = 1; }
