@@ -33,6 +33,7 @@ enum DataType {
   JSON = 23;
   Geometry = 24;
   Text = 25;
+  Struct = 26;
 
   BinaryVector = 100;
   FloatVector = 101;
@@ -102,10 +103,10 @@ message CollectionSchema {
   repeated common.KeyValuePair properties = 6;
   repeated FunctionSchema functions = 7;
   string dbName = 8;
-  repeated StructField struct_fields = 9;
+  repeated StructFieldSchema struct_fields = 9;
 }
 
-message StructField {
+message StructFieldSchema {
   int64 fieldID = 1;
   string name = 2;
   repeated FieldSchema fields = 3;
@@ -184,12 +185,17 @@ message VectorField {
   }
 }
 
+message StructField {
+  repeated FieldData fields = 1;
+}
+
 message FieldData {
   DataType type = 1;
   string field_name = 2;
   oneof field {
     ScalarField scalars = 3;
     VectorField vectors = 4;
+    StructField structs = 8;
   }
   int64 field_id = 5;
   bool is_dynamic = 6;
