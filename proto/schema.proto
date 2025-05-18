@@ -41,6 +41,7 @@ enum DataType {
   BFloat16Vector = 103;
   SparseFloatVector = 104;
   Int8Vector = 105;
+  ArrayOfVector = 106;
 }
 
 enum FunctionType{
@@ -187,8 +188,9 @@ message VectorField {
 }
 
 message ArrayVector {
-  repeated VectorField data = 1;
-  DataType element_type = 2;
+  int64 dim = 1;
+  repeated VectorField data = 2;
+  DataType element_type = 3;
 }
 
 message StructField {
