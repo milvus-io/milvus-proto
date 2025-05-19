@@ -34,6 +34,7 @@ enum DataType {
   Geometry = 24;
   Text = 25;
   Struct = 26;
+  ArrayOfStruct = 27;
 
   BinaryVector = 100;
   FloatVector = 101;
@@ -193,7 +194,7 @@ message ArrayVector {
   DataType element_type = 3;
 }
 
-message StructField {
+message ArrayStructField {
   repeated FieldData fields = 1;
 }
 
@@ -203,7 +204,7 @@ message FieldData {
   oneof field {
     ScalarField scalars = 3;
     VectorField vectors = 4;
-    StructField structs = 8;
+    ArrayStructField array_struct = 8;
   }
   int64 field_id = 5;
   bool is_dynamic = 6;
