@@ -309,6 +309,7 @@ message AlterCollectionFieldRequest {
   string collection_name = 3;
   string field_name =4;
   repeated common.KeyValuePair properties = 5;
+  repeated string delete_keys = 6;
 }
 
 /**
