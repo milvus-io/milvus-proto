@@ -10,7 +10,7 @@ all: generate-proto
 build:
 	@(env bash $(PWD)/scripts/core_build.sh)
 
-generate-proto: export protoc:=${PWD}/cmake-build/protobuf/protobuf-build/protoc
+generate-proto: export protoc=$(PROTOC)
 generate-proto: build
 	@echo "Generate proto files"
 	@echo "Installing protoc-gen-go to ./bin" && GOBIN=$(INSTALL_PATH) go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.33.0
