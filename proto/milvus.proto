@@ -2123,6 +2123,10 @@ message RunAnalyzerRequest{
   repeated bytes placeholder = 3;
   bool with_detail = 4;
   bool with_hash =5;
+  string db_name = 6;
+  string collection_name = 7;
+  string field_name = 8;
+  repeated string analyzer_names = 9;
 }
 
 message AnalyzerToken{
