@@ -245,6 +245,7 @@ enum MsgType {
     UnsubDmChannel = 516;
     GetDistribution = 517;
     SyncDistribution = 518;
+    RunAnalyzer = 519;
 
     /* DATA SERVICE */
     SegmentInfo = 600;
@@ -515,4 +516,9 @@ message NodeInfo {
     int64 node_id = 1;
     string address = 2;
     string hostname = 3;
+}
+
+enum LoadPriority {
+    HIGH = 0;
+    LOW = 1;
 }

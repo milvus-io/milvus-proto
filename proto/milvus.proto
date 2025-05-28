@@ -309,6 +309,7 @@ message AlterCollectionFieldRequest {
   string collection_name = 3;
   string field_name =4;
   repeated common.KeyValuePair properties = 5;
+  repeated string delete_keys = 6;
 }
 
 /**
@@ -389,6 +390,7 @@ message DescribeCollectionResponse {
   int64 db_id =16;
   uint64 request_time = 17;
   uint64 update_timestamp = 18;
+  string update_timestamp_str = 19;
 }
 
 /**
@@ -415,6 +417,8 @@ message LoadCollectionRequest {
   repeated string load_fields = 7;
   // Field Partial load skip load dynamic fields 
   bool skip_load_dynamic_field = 8;
+  // Additional parameters for load
+  map<string, string> load_params = 9;
 }
 
 /**
@@ -621,6 +625,8 @@ message LoadPartitionsRequest {
   repeated string load_fields = 8;
   // Field Partial load skip load dynamic fields 
   bool skip_load_dynamic_field = 9;
+  // Additional parameters for load
+  map<string, string> load_params = 10;
 }
 
 /*
@@ -809,6 +815,10 @@ message IndexDescription {
   common.IndexState state = 7;
   string index_state_fail_reason = 8;
   int64 pending_index_rows = 9;
+  // minimal index version for current index 
+  int32 min_index_version = 10;
+  // maximum index version for current index 
+  int32 max_index_version = 11;
 }
 
 /*
@@ -990,6 +1000,7 @@ message SearchRequest {
   bool search_by_primary_keys = 16;
   repeated SubSearchRequest sub_reqs = 17;
   map<string, schema.TemplateValue> expr_template_values = 18;
+  schema.FunctionScore function_score = 19;  
 }
 
 message Hits {
@@ -1023,6 +1034,7 @@ message HybridSearchRequest {
   repeated string output_fields = 10;
   common.ConsistencyLevel consistency_level = 11;
   bool use_default_consistency = 12;
+  schema.FunctionScore function_score = 13;  
 }
 
 message FlushRequest {
@@ -2129,6 +2141,10 @@ message RunAnalyzerRequest{
   repeated bytes placeholder = 3;
   bool with_detail = 4;
   bool with_hash =5;
+  string db_name = 6;
+  string collection_name = 7;
+  string field_name = 8;
+  repeated string analyzer_names = 9;
 }
 
 message AnalyzerToken{
