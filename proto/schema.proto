@@ -200,7 +200,7 @@ message ArrayVector {
   DataType element_type = 3;
 }
 
-message ArrayStructField {
+message StructArrayField {
   repeated FieldData fields = 1;
 }
 
@@ -210,7 +210,7 @@ message FieldData {
   oneof field {
     ScalarField scalars = 3;
     VectorField vectors = 4;
-    ArrayStructField array_struct = 8;
+    StructArrayField struct_arrays = 8;
   }
   int64 field_id = 5;
   bool is_dynamic = 6;
