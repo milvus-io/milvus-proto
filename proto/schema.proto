@@ -191,7 +191,7 @@ message VectorField {
     bytes bfloat16_vector = 5;
     SparseFloatArray sparse_float_vector = 6;
     bytes int8_vector = 7;
-    VectorArray array_vector = 8;
+    VectorArray vector_array = 8;
   }
 }
 
