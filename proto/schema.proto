@@ -112,7 +112,7 @@ message CollectionSchema {
   repeated common.KeyValuePair properties = 6;
   repeated FunctionSchema functions = 7;
   string dbName = 8;
-  repeated StructArrayFieldSchema struct_fields = 9;
+  repeated StructArrayFieldSchema struct_array_fields = 9;
 }
 
 message StructArrayFieldSchema {
