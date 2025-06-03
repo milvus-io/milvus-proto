@@ -118,9 +118,11 @@ message CollectionSchema {
 message StructArrayFieldSchema {
   int64 fieldID = 1;
   string name = 2;
-  repeated FieldSchema fields = 3;
-  bool enable_dynamic_field = 4;
-  repeated FunctionSchema functions = 5;
+  string description = 3;
+  repeated FieldSchema fields = 4;
+  repeated common.KeyValuePair type_params = 5;
+  bool enable_dynamic_field = 6;
+  repeated FunctionSchema functions = 7;
 }
 
 message BoolArray { repeated bool data = 1; }
