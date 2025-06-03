@@ -1752,7 +1752,7 @@ func (x *VectorField) GetInt8Vector() []byte {
 	return nil
 }
 
-func (x *VectorField) GetArrayVector() *ArrayVector {
+func (x *VectorField) GetArrayVector() *VectorArray {
 	if x, ok := x.GetData().(*VectorField_ArrayVector); ok {
 		return x.ArrayVector
 	}
@@ -1788,7 +1788,7 @@ type VectorField_Int8Vector struct {
 }
 
 type VectorField_ArrayVector struct {
-	ArrayVector *ArrayVector `protobuf:"bytes,8,opt,name=array_vector,json=arrayVector,proto3,oneof"`
+	ArrayVector *VectorArray `protobuf:"bytes,8,opt,name=array_vector,json=arrayVector,proto3,oneof"`
 }
 
 func (*VectorField_FloatVector) isVectorField_Data() {}
@@ -1805,7 +1805,7 @@ func (*VectorField_Int8Vector) isVectorField_Data() {}
 
 func (*VectorField_ArrayVector) isVectorField_Data() {}
 
-type ArrayVector struct {
+type VectorArray struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1815,8 +1815,8 @@ type ArrayVector struct {
 	ElementType DataType       `protobuf:"varint,3,opt,name=element_type,json=elementType,proto3,enum=milvus.proto.schema.DataType" json:"element_type,omitempty"`
 }
 
-func (x *ArrayVector) Reset() {
-	*x = ArrayVector{}
+func (x *VectorArray) Reset() {
+	*x = VectorArray{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_schema_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1824,13 +1824,13 @@ func (x *ArrayVector) Reset() {
 	}
 }
 
-func (x *ArrayVector) String() string {
+func (x *VectorArray) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ArrayVector) ProtoMessage() {}
+func (*VectorArray) ProtoMessage() {}
 
-func (x *ArrayVector) ProtoReflect() protoreflect.Message {
+func (x *VectorArray) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1842,26 +1842,26 @@ func (x *ArrayVector) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ArrayVector.ProtoReflect.Descriptor instead.
-func (*ArrayVector) Descriptor() ([]byte, []int) {
+// Deprecated: Use VectorArray.ProtoReflect.Descriptor instead.
+func (*VectorArray) Descriptor() ([]byte, []int) {
 	return file_schema_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *ArrayVector) GetDim() int64 {
+func (x *VectorArray) GetDim() int64 {
 	if x != nil {
 		return x.Dim
 	}
 	return 0
 }
 
-func (x *ArrayVector) GetData() []*VectorField {
+func (x *VectorArray) GetData() []*VectorField {
 	if x != nil {
 		return x.Data
 	}
 	return nil
 }
 
-func (x *ArrayVector) GetElementType() DataType {
+func (x *VectorArray) GetElementType() DataType {
 	if x != nil {
 		return x.ElementType
 	}
@@ -3043,10 +3043,10 @@ var file_schema_proto_rawDesc = []byte{
 	0x38, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x12, 0x45, 0x0a, 0x0c, 0x61, 0x72, 0x72, 0x61, 0x79,
 	0x5f, 0x76, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x18, 0x08, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x20, 0x2e,
 	0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x73, 0x63, 0x68,
-	0x65, 0x6d, 0x61, 0x2e, 0x41, 0x72, 0x72, 0x61, 0x79, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x48,
+	0x65, 0x6d, 0x61, 0x2e, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x41, 0x72, 0x72, 0x61, 0x79, 0x48,
 	0x00, 0x52, 0x0b, 0x61, 0x72, 0x72, 0x61, 0x79, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x42, 0x06,
-	0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x97, 0x01, 0x0a, 0x0b, 0x41, 0x72, 0x72, 0x61, 0x79,
-	0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x12, 0x10, 0x0a, 0x03, 0x64, 0x69, 0x6d, 0x18, 0x01, 0x20,
+	0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x97, 0x01, 0x0a, 0x0b, 0x56, 0x65, 0x63, 0x74, 0x6f,
+	0x72, 0x41, 0x72, 0x72, 0x61, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x64, 0x69, 0x6d, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x03, 0x52, 0x03, 0x64, 0x69, 0x6d, 0x12, 0x34, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61,
 	0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e,
 	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2e, 0x56, 0x65, 0x63,
@@ -3284,7 +3284,7 @@ var file_schema_proto_goTypes = []interface{}{
 	(*ScalarField)(nil),             // 19: milvus.proto.schema.ScalarField
 	(*SparseFloatArray)(nil),        // 20: milvus.proto.schema.SparseFloatArray
 	(*VectorField)(nil),             // 21: milvus.proto.schema.VectorField
-	(*ArrayVector)(nil),             // 22: milvus.proto.schema.ArrayVector
+	(*VectorArray)(nil),             // 22: milvus.proto.schema.VectorArray
 	(*StructArrayField)(nil),        // 23: milvus.proto.schema.StructArrayField
 	(*FieldData)(nil),               // 24: milvus.proto.schema.FieldData
 	(*IDs)(nil),                     // 25: milvus.proto.schema.IDs
@@ -3329,9 +3329,9 @@ var file_schema_proto_depIdxs = []int32{
 	17, // 27: milvus.proto.schema.ScalarField.geometry_data:type_name -> milvus.proto.schema.GeometryArray
 	11, // 28: milvus.proto.schema.VectorField.float_vector:type_name -> milvus.proto.schema.FloatArray
 	20, // 29: milvus.proto.schema.VectorField.sparse_float_vector:type_name -> milvus.proto.schema.SparseFloatArray
-	22, // 30: milvus.proto.schema.VectorField.array_vector:type_name -> milvus.proto.schema.ArrayVector
-	21, // 31: milvus.proto.schema.ArrayVector.data:type_name -> milvus.proto.schema.VectorField
-	0,  // 32: milvus.proto.schema.ArrayVector.element_type:type_name -> milvus.proto.schema.DataType
+	22, // 30: milvus.proto.schema.VectorField.array_vector:type_name -> milvus.proto.schema.VectorArray
+	21, // 31: milvus.proto.schema.VectorArray.data:type_name -> milvus.proto.schema.VectorField
+	0,  // 32: milvus.proto.schema.VectorArray.element_type:type_name -> milvus.proto.schema.DataType
 	24, // 33: milvus.proto.schema.StructArrayField.fields:type_name -> milvus.proto.schema.FieldData
 	0,  // 34: milvus.proto.schema.FieldData.type:type_name -> milvus.proto.schema.DataType
 	19, // 35: milvus.proto.schema.FieldData.scalars:type_name -> milvus.proto.schema.ScalarField
@@ -3596,7 +3596,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ArrayVector); i {
+			switch v := v.(*VectorArray); i {
 			case 0:
 				return &v.state
 			case 1:
