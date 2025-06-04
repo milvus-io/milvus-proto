@@ -120,7 +120,8 @@ message StructArrayFieldSchema {
   string name = 2;
   string description = 3;
   repeated FieldSchema fields = 4;
-  repeated FunctionSchema functions = 5;
+
+  // TODO: STRUCT type may also need to support Function in the future
 }
 
 message BoolArray { repeated bool data = 1; }
