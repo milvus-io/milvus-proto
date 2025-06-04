@@ -120,9 +120,7 @@ message StructArrayFieldSchema {
   string name = 2;
   string description = 3;
   repeated FieldSchema fields = 4;
-  repeated common.KeyValuePair type_params = 5;
-  bool enable_dynamic_field = 6;
-  repeated FunctionSchema functions = 7;
+  repeated FunctionSchema functions = 5;
 }
 
 message BoolArray { repeated bool data = 1; }
