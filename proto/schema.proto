@@ -40,6 +40,9 @@ enum DataType {
   BFloat16Vector = 103;
   SparseFloatVector = 104;
   Int8Vector = 105;
+  ArrayOfVector = 106;
+
+  ArrayOfStruct = 200;
 }
 
 enum FunctionType{
@@ -109,6 +112,16 @@ message CollectionSchema {
   repeated common.KeyValuePair properties = 6;
   repeated FunctionSchema functions = 7;
   string dbName = 8;
+  repeated StructArrayFieldSchema struct_array_fields = 9;
+}
+
+message StructArrayFieldSchema {
+  int64 fieldID = 1;
+  string name = 2;
+  string description = 3;
+  repeated FieldSchema fields = 4;
+
+  // TODO: STRUCT type may also need to support Function in the future
 }
 
 message BoolArray { repeated bool data = 1; }
@@ -179,7 +192,18 @@ message VectorField {
     bytes bfloat16_vector = 5;
     SparseFloatArray sparse_float_vector = 6;
     bytes int8_vector = 7;
+    VectorArray vector_array = 8;
   }
+}
+
+message VectorArray {
+  int64 dim = 1;
+  repeated VectorField data = 2;
+  DataType element_type = 3;
+}
+
+message StructArrayField {
+  repeated FieldData fields = 1;
 }
 
 message FieldData {
@@ -188,6 +212,7 @@ message FieldData {
   oneof field {
     ScalarField scalars = 3;
     VectorField vectors = 4;
+    StructArrayField struct_arrays = 8;
   }
   int64 field_id = 5;
   bool is_dynamic = 6;
