@@ -24,4 +24,5 @@ message Token {
   int32 offset_from = 2;
   int32 offset_to = 3;
   int32 position = 4;
+  int32 position_length = 5;
 }
