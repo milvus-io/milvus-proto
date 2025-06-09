@@ -1,0 +1,28 @@
+syntax = "proto3";
+package milvus.proto.tokenizer;
+option go_package = "github.com/milvus-io/milvus-proto/go-api/v2/schemapb";
+
+service Tokenizer {
+  rpc Tokenize (TokenizationRequest) returns (TokenizationResponse) {}
+}
+
+message TokenizationRequest {
+  string text = 1;
+  message Parameter {
+    string key = 1;
+    repeated string values = 2;
+  }
+  repeated Parameter parameters = 2;
+}
+
+message TokenizationResponse {
+  repeated Token tokens = 1;
+}
+
+message Token {
+  string text = 1;
+  int32 offset_from = 2;
+  int32 offset_to = 3;
+  int32 position = 4;
+  int32 position_length = 5;
+}
