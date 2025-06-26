@@ -150,6 +150,16 @@ service MilvusService {
   rpc OperatePrivilegeGroup(OperatePrivilegeGroupRequest) returns (common.Status) {}
 
   rpc RunAnalyzer(RunAnalyzerRequest) returns (RunAnalyzerResponse) {}
+
+  // Row Level Security (RLS) APIs
+  rpc AddUserTags(AddUserTagsRequest) returns (common.Status) {}
+  rpc DeleteUserTags(DeleteUserTagsRequest) returns (common.Status) {}
+  rpc GetUserTags(GetUserTagsRequest) returns (GetUserTagsResponse) {}
+  rpc ListUsersWithTag(ListUsersWithTagRequest) returns (ListUsersWithTagResponse) {}
+
+  rpc CreateRowPolicy(CreateRowPolicyRequest) returns (common.Status) {}
+  rpc DropRowPolicy(DropRowPolicyRequest) returns (common.Status) {}
+  rpc ListRowPolicies(ListRowPoliciesRequest) returns (ListRowPoliciesResponse) {}
 }
 
 message CreateAliasRequest {
@@ -2163,4 +2173,134 @@ message AnalyzerResult {
 message RunAnalyzerResponse{
   common.Status status = 1;
   repeated AnalyzerResult results = 2;
+}
+
+// ===== Row Level Security (RLS) Messages =====
+
+// Row Policy Action enum
+enum RowPolicyAction {
+  Query = 0;
+  Search = 1;
+  Insert = 2;
+  Delete = 3;
+  Upsert = 4;
+}
+
+// User Tag Management
+message AddUserTagsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: User
+    object_privilege: PrivilegeUpdateUser
+    object_name_index: 2
+  };
+
+  common.MsgBase base = 1;
+  string user_name = 2;
+  map<string, string> tags = 3;
+}
+
+message DeleteUserTagsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: User
+    object_privilege: PrivilegeUpdateUser
+    object_name_index: 2
+  };
+
+  common.MsgBase base = 1;
+  string user_name = 2;
+  repeated string tag_keys = 3;
+}
+
+message GetUserTagsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: User
+    object_privilege: PrivilegeSelectUser
+    object_name_index: 2
+  };
+
+  common.MsgBase base = 1;
+  string user_name = 2;
+}
+
+message GetUserTagsResponse {
+  common.Status status = 1;
+  map<string, string> tags = 2;
+}
+
+message ListUsersWithTagRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: User
+    object_privilege: PrivilegeSelectUser
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  string tag_key = 2;
+  string tag_value = 3;
+}
+
+message ListUsersWithTagResponse {
+  common.Status status = 1;
+  repeated string user_names = 2;
+}
+
+// Row Policy Management
+message CreateRowPolicyRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeCreateOwnership
+    object_name_index: 3
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string policy_name = 4;
+  repeated RowPolicyAction actions = 5; // actions this policy controls
+  repeated string roles = 6;   // role names that this policy applies to
+  string using_expr = 7;       // expression for filtering data during queries
+  string check_expr = 8;       // expression for validating data during mutations
+  string description = 9;      // optional description
+}
+
+message DropRowPolicyRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeDropOwnership
+    object_name_index: 3
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string policy_name = 4;
+}
+
+message ListRowPoliciesRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeSelectOwnership
+    object_name_index: 3
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+}
+
+message RowPolicy {
+  string policy_name = 1;
+  repeated RowPolicyAction actions = 2;
+  repeated string roles = 3;
+  string using_expr = 4;
+  string check_expr = 5;
+  string description = 6;
+  int64 created_at = 7;
+}
+
+message ListRowPoliciesResponse {
+  common.Status status = 1;
+  repeated RowPolicy policies = 2;
+  string db_name = 3;
+  string collection_name = 4;
 }
