@@ -997,6 +997,8 @@ message SearchRequest {
   repeated string partition_names = 4; // must
   string dsl = 5; // must
   // serialized `PlaceholderGroup`
+  // when search_by_primary_keys is true, placeholder_group should contain primary key IDs (PlaceholderType.Int64 or PlaceholderType.VarChar)
+  // when search_by_primary_keys is false, placeholder_group should contain vectors for similarity search
   bytes placeholder_group = 6; // must
   common.DslType dsl_type = 7; // must
   repeated string output_fields = 8;
@@ -1007,7 +1009,7 @@ message SearchRequest {
   bool not_return_all_meta = 13;
   common.ConsistencyLevel consistency_level = 14;
   bool use_default_consistency = 15;
-  bool search_by_primary_keys = 16;
+  bool search_by_primary_keys = 16; // when true, indicates placeholder_group contains IDs for search by primary keys
   repeated SubSearchRequest sub_reqs = 17;
   map<string, schema.TemplateValue> expr_template_values = 18;
   schema.FunctionScore function_score = 19;  

@@ -4797,6 +4797,8 @@ type SearchRequest struct {
 	PartitionNames []string          `protobuf:"bytes,4,rep,name=partition_names,json=partitionNames,proto3" json:"partition_names,omitempty"` // must
 	Dsl            string            `protobuf:"bytes,5,opt,name=dsl,proto3" json:"dsl,omitempty"`                                             // must
 	// serialized `PlaceholderGroup`
+	// when search_by_primary_keys is true, placeholder_group should contain primary key IDs (PlaceholderType.Int64 or PlaceholderType.VarChar)
+	// when search_by_primary_keys is false, placeholder_group should contain vectors for similarity search
 	PlaceholderGroup      []byte                             `protobuf:"bytes,6,opt,name=placeholder_group,json=placeholderGroup,proto3" json:"placeholder_group,omitempty"`        // must
 	DslType               commonpb.DslType                   `protobuf:"varint,7,opt,name=dsl_type,json=dslType,proto3,enum=milvus.proto.common.DslType" json:"dsl_type,omitempty"` // must
 	OutputFields          []string                           `protobuf:"bytes,8,rep,name=output_fields,json=outputFields,proto3" json:"output_fields,omitempty"`
@@ -4807,7 +4809,7 @@ type SearchRequest struct {
 	NotReturnAllMeta      bool                               `protobuf:"varint,13,opt,name=not_return_all_meta,json=notReturnAllMeta,proto3" json:"not_return_all_meta,omitempty"`
 	ConsistencyLevel      commonpb.ConsistencyLevel          `protobuf:"varint,14,opt,name=consistency_level,json=consistencyLevel,proto3,enum=milvus.proto.common.ConsistencyLevel" json:"consistency_level,omitempty"`
 	UseDefaultConsistency bool                               `protobuf:"varint,15,opt,name=use_default_consistency,json=useDefaultConsistency,proto3" json:"use_default_consistency,omitempty"`
-	SearchByPrimaryKeys   bool                               `protobuf:"varint,16,opt,name=search_by_primary_keys,json=searchByPrimaryKeys,proto3" json:"search_by_primary_keys,omitempty"`
+	SearchByPrimaryKeys   bool                               `protobuf:"varint,16,opt,name=search_by_primary_keys,json=searchByPrimaryKeys,proto3" json:"search_by_primary_keys,omitempty"` // when true, indicates placeholder_group contains IDs for search by primary keys
 	SubReqs               []*SubSearchRequest                `protobuf:"bytes,17,rep,name=sub_reqs,json=subReqs,proto3" json:"sub_reqs,omitempty"`
 	ExprTemplateValues    map[string]*schemapb.TemplateValue `protobuf:"bytes,18,rep,name=expr_template_values,json=exprTemplateValues,proto3" json:"expr_template_values,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	FunctionScore         *schemapb.FunctionScore            `protobuf:"bytes,19,opt,name=function_score,json=functionScore,proto3" json:"function_score,omitempty"`

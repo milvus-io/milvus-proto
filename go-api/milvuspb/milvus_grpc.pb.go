@@ -1183,7 +1183,7 @@ func (c *milvusServiceClient) ListRowPolicies(ctx context.Context, in *ListRowPo
 }
 
 // MilvusServiceServer is the server API for MilvusService service.
-// All implementations should embed UnimplementedMilvusServiceServer
+// All implementations must embed UnimplementedMilvusServiceServer
 // for forward compatibility
 type MilvusServiceServer interface {
 	CreateCollection(context.Context, *CreateCollectionRequest) (*commonpb.Status, error)
@@ -1299,9 +1299,10 @@ type MilvusServiceServer interface {
 	CreateRowPolicy(context.Context, *CreateRowPolicyRequest) (*commonpb.Status, error)
 	DropRowPolicy(context.Context, *DropRowPolicyRequest) (*commonpb.Status, error)
 	ListRowPolicies(context.Context, *ListRowPoliciesRequest) (*ListRowPoliciesResponse, error)
+	mustEmbedUnimplementedMilvusServiceServer()
 }
 
-// UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
+// UnimplementedMilvusServiceServer must be embedded to have forward compatible implementations.
 type UnimplementedMilvusServiceServer struct {
 }
 
@@ -1614,6 +1615,7 @@ func (UnimplementedMilvusServiceServer) DropRowPolicy(context.Context, *DropRowP
 func (UnimplementedMilvusServiceServer) ListRowPolicies(context.Context, *ListRowPoliciesRequest) (*ListRowPoliciesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRowPolicies not implemented")
 }
+func (UnimplementedMilvusServiceServer) mustEmbedUnimplementedMilvusServiceServer() {}
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to MilvusServiceServer will
@@ -3933,19 +3935,21 @@ func (c *proxyServiceClient) RegisterLink(ctx context.Context, in *RegisterLinkR
 }
 
 // ProxyServiceServer is the server API for ProxyService service.
-// All implementations should embed UnimplementedProxyServiceServer
+// All implementations must embed UnimplementedProxyServiceServer
 // for forward compatibility
 type ProxyServiceServer interface {
 	RegisterLink(context.Context, *RegisterLinkRequest) (*RegisterLinkResponse, error)
+	mustEmbedUnimplementedProxyServiceServer()
 }
 
-// UnimplementedProxyServiceServer should be embedded to have forward compatible implementations.
+// UnimplementedProxyServiceServer must be embedded to have forward compatible implementations.
 type UnimplementedProxyServiceServer struct {
 }
 
 func (UnimplementedProxyServiceServer) RegisterLink(context.Context, *RegisterLinkRequest) (*RegisterLinkResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterLink not implemented")
 }
+func (UnimplementedProxyServiceServer) mustEmbedUnimplementedProxyServiceServer() {}
 
 // UnsafeProxyServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to ProxyServiceServer will
