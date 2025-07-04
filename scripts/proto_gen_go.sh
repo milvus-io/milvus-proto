@@ -16,6 +16,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+ROOT_DIR="$( cd -P "$( dirname "$SOURCE" )/.." && pwd )"
+
+PROTO_DIR=$ROOT_DIR/pkg/proto
+PROTOC_BIN=$ROOT_DIR/cmake-build/protobuf/protobuf-build/protoc
+
 SCRIPTS_DIR=$(dirname "$0")
 PROTO_DIR=$SCRIPTS_DIR/../proto/
 PROGRAM=$(basename "$0")
@@ -47,7 +58,8 @@ mkdir -p ../go-api/msgpb
 mkdir -p ../go-api/federpb
 mkdir -p ../go-api/tokenizerpb
 
-echo "$(pwd)"
+echo "protoc path: $PROTOC_BIN"
+export protoc=$PROTOC_BIN
 
 $protoc --version
 
