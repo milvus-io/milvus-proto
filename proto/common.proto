@@ -321,6 +321,15 @@ enum MsgType {
     DescribeDatabase = 1805;
 
     AddCollectionField = 1900;
+
+    /* Snapshot */
+    CreateSnapshot = 2000;
+    DropSnapshot = 2001;
+    ListSnapshots = 2002;
+    DescribeSnapshot = 2003;
+    RestoreSnapshot = 2004;
+    GetRestoreSnapshotState = 2005;
+    ListRestoreSnapshotJobs = 2006;
 }
 
 message MsgBase {
@@ -472,6 +481,12 @@ enum ObjectPrivilege {
     PrivilegeAddCollectionFunction = 75;
     PrivilegeAlterCollectionFunction = 76;
     PrivilegeDropCollectionFunction = 77;
+
+    PrivilegeCreateSnapshot = 78;
+    PrivilegeDropSnapshot = 79;
+    PrivilegeDescribeSnapshot = 80;
+    PrivilegeListSnapshots = 81;
+    PrivilegeRestoreSnapshot = 82;
 }
 
 message PrivilegeExt {
