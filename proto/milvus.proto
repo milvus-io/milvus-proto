@@ -1159,6 +1159,7 @@ message PersistentSegmentInfo {
   common.SegmentState state = 5;
   common.SegmentLevel level = 6;
   bool is_sorted = 7;
+  int64 storage_version = 8;
 }
 
 message GetPersistentSegmentInfoRequest {
@@ -1186,6 +1187,7 @@ message QuerySegmentInfo {
   repeated int64 nodeIds = 10;
   common.SegmentLevel level = 11;
   bool is_sorted = 12;
+  int64 storage_version = 13;
 }
 
 message GetQuerySegmentInfoRequest {
