@@ -146,6 +146,13 @@ enum PlaceholderType {
     Int8Vector = 105;
     Int64 = 5;
     VarChar = 21;
+
+    EmbListBinaryVector = 300;
+    EmbListFloatVector = 301;
+    EmbListFloat16Vector = 302;
+    EmbListBFloat16Vector = 303;
+    EmbListSparseFloatVector = 304;
+    EmbListInt8Vector = 305;
 }
 
 message PlaceholderValue {
