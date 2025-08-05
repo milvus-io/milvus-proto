@@ -117,6 +117,9 @@ const (
 	MilvusService_ListPrivilegeGroups_FullMethodName         = "/milvus.proto.milvus.MilvusService/ListPrivilegeGroups"
 	MilvusService_OperatePrivilegeGroup_FullMethodName       = "/milvus.proto.milvus.MilvusService/OperatePrivilegeGroup"
 	MilvusService_RunAnalyzer_FullMethodName                 = "/milvus.proto.milvus.MilvusService/RunAnalyzer"
+	MilvusService_AddFileResource_FullMethodName             = "/milvus.proto.milvus.MilvusService/AddFileResource"
+	MilvusService_RemoveFileResource_FullMethodName          = "/milvus.proto.milvus.MilvusService/RemoveFileResource"
+	MilvusService_ListFileResources_FullMethodName           = "/milvus.proto.milvus.MilvusService/ListFileResources"
 	MilvusService_AddUserTags_FullMethodName                 = "/milvus.proto.milvus.MilvusService/AddUserTags"
 	MilvusService_DeleteUserTags_FullMethodName              = "/milvus.proto.milvus.MilvusService/DeleteUserTags"
 	MilvusService_GetUserTags_FullMethodName                 = "/milvus.proto.milvus.MilvusService/GetUserTags"
@@ -235,6 +238,9 @@ type MilvusServiceClient interface {
 	ListPrivilegeGroups(ctx context.Context, in *ListPrivilegeGroupsRequest, opts ...grpc.CallOption) (*ListPrivilegeGroupsResponse, error)
 	OperatePrivilegeGroup(ctx context.Context, in *OperatePrivilegeGroupRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	RunAnalyzer(ctx context.Context, in *RunAnalyzerRequest, opts ...grpc.CallOption) (*RunAnalyzerResponse, error)
+	AddFileResource(ctx context.Context, in *AddFileResourceRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	RemoveFileResource(ctx context.Context, in *RemoveFileResourceRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	ListFileResources(ctx context.Context, in *ListFileResourcesRequest, opts ...grpc.CallOption) (*ListFileResourcesResponse, error)
 	// Row Level Security (RLS) APIs
 	AddUserTags(ctx context.Context, in *AddUserTagsRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DeleteUserTags(ctx context.Context, in *DeleteUserTagsRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
@@ -1119,6 +1125,33 @@ func (c *milvusServiceClient) RunAnalyzer(ctx context.Context, in *RunAnalyzerRe
 	return out, nil
 }
 
+func (c *milvusServiceClient) AddFileResource(ctx context.Context, in *AddFileResourceRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_AddFileResource_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) RemoveFileResource(ctx context.Context, in *RemoveFileResourceRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_RemoveFileResource_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) ListFileResources(ctx context.Context, in *ListFileResourcesRequest, opts ...grpc.CallOption) (*ListFileResourcesResponse, error) {
+	out := new(ListFileResourcesResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ListFileResources_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *milvusServiceClient) AddUserTags(ctx context.Context, in *AddUserTagsRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
 	out := new(commonpb.Status)
 	err := c.cc.Invoke(ctx, MilvusService_AddUserTags_FullMethodName, in, out, opts...)
@@ -1291,6 +1324,9 @@ type MilvusServiceServer interface {
 	ListPrivilegeGroups(context.Context, *ListPrivilegeGroupsRequest) (*ListPrivilegeGroupsResponse, error)
 	OperatePrivilegeGroup(context.Context, *OperatePrivilegeGroupRequest) (*commonpb.Status, error)
 	RunAnalyzer(context.Context, *RunAnalyzerRequest) (*RunAnalyzerResponse, error)
+	AddFileResource(context.Context, *AddFileResourceRequest) (*commonpb.Status, error)
+	RemoveFileResource(context.Context, *RemoveFileResourceRequest) (*commonpb.Status, error)
+	ListFileResources(context.Context, *ListFileResourcesRequest) (*ListFileResourcesResponse, error)
 	// Row Level Security (RLS) APIs
 	AddUserTags(context.Context, *AddUserTagsRequest) (*commonpb.Status, error)
 	DeleteUserTags(context.Context, *DeleteUserTagsRequest) (*commonpb.Status, error)
@@ -1592,6 +1628,15 @@ func (UnimplementedMilvusServiceServer) OperatePrivilegeGroup(context.Context, *
 }
 func (UnimplementedMilvusServiceServer) RunAnalyzer(context.Context, *RunAnalyzerRequest) (*RunAnalyzerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RunAnalyzer not implemented")
+}
+func (UnimplementedMilvusServiceServer) AddFileResource(context.Context, *AddFileResourceRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddFileResource not implemented")
+}
+func (UnimplementedMilvusServiceServer) RemoveFileResource(context.Context, *RemoveFileResourceRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveFileResource not implemented")
+}
+func (UnimplementedMilvusServiceServer) ListFileResources(context.Context, *ListFileResourcesRequest) (*ListFileResourcesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFileResources not implemented")
 }
 func (UnimplementedMilvusServiceServer) AddUserTags(context.Context, *AddUserTagsRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddUserTags not implemented")
@@ -3354,6 +3399,60 @@ func _MilvusService_RunAnalyzer_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_AddFileResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddFileResourceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).AddFileResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_AddFileResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).AddFileResource(ctx, req.(*AddFileResourceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_RemoveFileResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveFileResourceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).RemoveFileResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_RemoveFileResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).RemoveFileResource(ctx, req.(*RemoveFileResourceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_ListFileResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFileResourcesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ListFileResources(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ListFileResources_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ListFileResources(ctx, req.(*ListFileResourcesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MilvusService_AddUserTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddUserTagsRequest)
 	if err := dec(in); err != nil {
@@ -3870,6 +3969,18 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RunAnalyzer",
 			Handler:    _MilvusService_RunAnalyzer_Handler,
+		},
+		{
+			MethodName: "AddFileResource",
+			Handler:    _MilvusService_AddFileResource_Handler,
+		},
+		{
+			MethodName: "RemoveFileResource",
+			Handler:    _MilvusService_RemoveFileResource_Handler,
+		},
+		{
+			MethodName: "ListFileResources",
+			Handler:    _MilvusService_ListFileResources_Handler,
 		},
 		{
 			MethodName: "AddUserTags",
