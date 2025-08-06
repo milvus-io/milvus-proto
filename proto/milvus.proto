@@ -150,6 +150,9 @@ service MilvusService {
   rpc OperatePrivilegeGroup(OperatePrivilegeGroupRequest) returns (common.Status) {}
 
   rpc RunAnalyzer(RunAnalyzerRequest) returns (RunAnalyzerResponse) {}
+  rpc AddFileResource(AddFileResourceRequest) returns (common.Status) {}
+  rpc RemoveFileResource(RemoveFileResourceRequest) returns (common.Status) {}
+  rpc ListFileResources(ListFileResourcesRequest) returns (ListFileResourcesResponse) {}
 
   // Row Level Security (RLS) APIs
   rpc AddUserTags(AddUserTagsRequest) returns (common.Status) {}
@@ -2175,6 +2178,49 @@ message AnalyzerResult {
 message RunAnalyzerResponse{
   common.Status status = 1;
   repeated AnalyzerResult results = 2;
+}
+
+message FileResourceInfo {
+  int64 id = 1;
+  string name = 2;
+  string path = 3;
+  common.FileResourceType type = 4;
+}
+
+message AddFileResourceRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeAddFileResource
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  string name = 2;
+  string path = 3;
+  common.FileResourceType type = 4;
+}
+
+message RemoveFileResourceRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeRemoveFileResource
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  string name = 2;
+}
+
+message ListFileResourcesRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeListFileResources
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+}
+
+message ListFileResourcesResponse {
+  common.Status status = 1;
+  repeated FileResourceInfo resources = 2;
 }
 
 // ===== Row Level Security (RLS) Messages =====
