@@ -947,6 +947,7 @@ message UpsertRequest {
   repeated uint32 hash_keys = 6;
   uint32 num_rows = 7;
   uint64 schema_timestamp = 8;
+  bool partial_update = 9;
 }
 
 message MutationResult {
