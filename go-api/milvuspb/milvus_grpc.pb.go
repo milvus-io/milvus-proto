@@ -27,6 +27,7 @@ const (
 	MilvusService_LoadCollection_FullMethodName              = "/milvus.proto.milvus.MilvusService/LoadCollection"
 	MilvusService_ReleaseCollection_FullMethodName           = "/milvus.proto.milvus.MilvusService/ReleaseCollection"
 	MilvusService_DescribeCollection_FullMethodName          = "/milvus.proto.milvus.MilvusService/DescribeCollection"
+	MilvusService_BatchDescribeCollection_FullMethodName     = "/milvus.proto.milvus.MilvusService/BatchDescribeCollection"
 	MilvusService_GetCollectionStatistics_FullMethodName     = "/milvus.proto.milvus.MilvusService/GetCollectionStatistics"
 	MilvusService_ShowCollections_FullMethodName             = "/milvus.proto.milvus.MilvusService/ShowCollections"
 	MilvusService_AlterCollection_FullMethodName             = "/milvus.proto.milvus.MilvusService/AlterCollection"
@@ -139,6 +140,7 @@ type MilvusServiceClient interface {
 	LoadCollection(ctx context.Context, in *LoadCollectionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	ReleaseCollection(ctx context.Context, in *ReleaseCollectionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DescribeCollection(ctx context.Context, in *DescribeCollectionRequest, opts ...grpc.CallOption) (*DescribeCollectionResponse, error)
+	BatchDescribeCollection(ctx context.Context, in *BatchDescribeCollectionRequest, opts ...grpc.CallOption) (*BatchDescribeCollectionResponse, error)
 	GetCollectionStatistics(ctx context.Context, in *GetCollectionStatisticsRequest, opts ...grpc.CallOption) (*GetCollectionStatisticsResponse, error)
 	ShowCollections(ctx context.Context, in *ShowCollectionsRequest, opts ...grpc.CallOption) (*ShowCollectionsResponse, error)
 	AlterCollection(ctx context.Context, in *AlterCollectionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
@@ -307,6 +309,15 @@ func (c *milvusServiceClient) ReleaseCollection(ctx context.Context, in *Release
 func (c *milvusServiceClient) DescribeCollection(ctx context.Context, in *DescribeCollectionRequest, opts ...grpc.CallOption) (*DescribeCollectionResponse, error) {
 	out := new(DescribeCollectionResponse)
 	err := c.cc.Invoke(ctx, MilvusService_DescribeCollection_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) BatchDescribeCollection(ctx context.Context, in *BatchDescribeCollectionRequest, opts ...grpc.CallOption) (*BatchDescribeCollectionResponse, error) {
+	out := new(BatchDescribeCollectionResponse)
+	err := c.cc.Invoke(ctx, MilvusService_BatchDescribeCollection_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1225,6 +1236,7 @@ type MilvusServiceServer interface {
 	LoadCollection(context.Context, *LoadCollectionRequest) (*commonpb.Status, error)
 	ReleaseCollection(context.Context, *ReleaseCollectionRequest) (*commonpb.Status, error)
 	DescribeCollection(context.Context, *DescribeCollectionRequest) (*DescribeCollectionResponse, error)
+	BatchDescribeCollection(context.Context, *BatchDescribeCollectionRequest) (*BatchDescribeCollectionResponse, error)
 	GetCollectionStatistics(context.Context, *GetCollectionStatisticsRequest) (*GetCollectionStatisticsResponse, error)
 	ShowCollections(context.Context, *ShowCollectionsRequest) (*ShowCollectionsResponse, error)
 	AlterCollection(context.Context, *AlterCollectionRequest) (*commonpb.Status, error)
@@ -1358,6 +1370,9 @@ func (UnimplementedMilvusServiceServer) ReleaseCollection(context.Context, *Rele
 }
 func (UnimplementedMilvusServiceServer) DescribeCollection(context.Context, *DescribeCollectionRequest) (*DescribeCollectionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DescribeCollection not implemented")
+}
+func (UnimplementedMilvusServiceServer) BatchDescribeCollection(context.Context, *BatchDescribeCollectionRequest) (*BatchDescribeCollectionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BatchDescribeCollection not implemented")
 }
 func (UnimplementedMilvusServiceServer) GetCollectionStatistics(context.Context, *GetCollectionStatisticsRequest) (*GetCollectionStatisticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCollectionStatistics not implemented")
@@ -1775,6 +1790,24 @@ func _MilvusService_DescribeCollection_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MilvusServiceServer).DescribeCollection(ctx, req.(*DescribeCollectionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_BatchDescribeCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchDescribeCollectionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).BatchDescribeCollection(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_BatchDescribeCollection_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).BatchDescribeCollection(ctx, req.(*BatchDescribeCollectionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3609,6 +3642,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DescribeCollection",
 			Handler:    _MilvusService_DescribeCollection_Handler,
+		},
+		{
+			MethodName: "BatchDescribeCollection",
+			Handler:    _MilvusService_BatchDescribeCollection_Handler,
 		},
 		{
 			MethodName: "GetCollectionStatistics",

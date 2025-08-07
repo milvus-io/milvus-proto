@@ -24,6 +24,7 @@ service MilvusService {
   rpc LoadCollection(LoadCollectionRequest) returns (common.Status) {}
   rpc ReleaseCollection(ReleaseCollectionRequest) returns (common.Status) {}
   rpc DescribeCollection(DescribeCollectionRequest) returns (DescribeCollectionResponse) {}
+  rpc BatchDescribeCollection(BatchDescribeCollectionRequest) returns (BatchDescribeCollectionResponse) {}
   rpc GetCollectionStatistics(GetCollectionStatisticsRequest) returns (GetCollectionStatisticsResponse) {}
   rpc ShowCollections(ShowCollectionsRequest) returns (ShowCollectionsResponse) {}
   rpc AlterCollection(AlterCollectionRequest) returns (common.Status) {}
