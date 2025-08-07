@@ -406,6 +406,27 @@ message DescribeCollectionResponse {
   string update_timestamp_str = 19;
 }
 
+
+message BatchDescribeCollectionRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDescribeCollection
+    object_name_index: -1
+  };
+  string db_name = 1;
+  // The collection name you want to describe, you can pass collection_name or collectionID
+  repeated string collection_name = 2;
+  // The collection ID you want to describe
+  repeated int64 collectionID = 3;
+}
+
+message BatchDescribeCollectionResponse {
+  // Contain error_code and reason
+  common.Status status = 1;
+  repeated DescribeCollectionResponse responses = 2;
+}
+
+
 /**
 * Load collection data into query nodes, then you can do vector search on this collection.
 */
