@@ -576,6 +576,7 @@ message ShowCollectionsResponse {
   repeated int64 inMemory_percentages = 6 [deprecated=true];
   // Indicate whether query service is available
   repeated bool query_service_available = 7;
+  repeated int32 shards_num = 8;
 }
 
 /*
