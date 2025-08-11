@@ -24,6 +24,7 @@ service MilvusService {
   rpc LoadCollection(LoadCollectionRequest) returns (common.Status) {}
   rpc ReleaseCollection(ReleaseCollectionRequest) returns (common.Status) {}
   rpc DescribeCollection(DescribeCollectionRequest) returns (DescribeCollectionResponse) {}
+  rpc BatchDescribeCollection(BatchDescribeCollectionRequest) returns (BatchDescribeCollectionResponse) {}
   rpc GetCollectionStatistics(GetCollectionStatisticsRequest) returns (GetCollectionStatisticsResponse) {}
   rpc ShowCollections(ShowCollectionsRequest) returns (ShowCollectionsResponse) {}
   rpc AlterCollection(AlterCollectionRequest) returns (common.Status) {}
@@ -150,6 +151,9 @@ service MilvusService {
   rpc OperatePrivilegeGroup(OperatePrivilegeGroupRequest) returns (common.Status) {}
 
   rpc RunAnalyzer(RunAnalyzerRequest) returns (RunAnalyzerResponse) {}
+  rpc AddFileResource(AddFileResourceRequest) returns (common.Status) {}
+  rpc RemoveFileResource(RemoveFileResourceRequest) returns (common.Status) {}
+  rpc ListFileResources(ListFileResourcesRequest) returns (ListFileResourcesResponse) {}
 
   // Row Level Security (RLS) APIs
   rpc AddUserTags(AddUserTagsRequest) returns (common.Status) {}
@@ -403,6 +407,27 @@ message DescribeCollectionResponse {
   string update_timestamp_str = 19;
 }
 
+
+message BatchDescribeCollectionRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDescribeCollection
+    object_name_index: -1
+  };
+  string db_name = 1;
+  // The collection name you want to describe, you can pass collection_name or collectionID
+  repeated string collection_name = 2;
+  // The collection ID you want to describe
+  repeated int64 collectionID = 3;
+}
+
+message BatchDescribeCollectionResponse {
+  // Contain error_code and reason
+  common.Status status = 1;
+  repeated DescribeCollectionResponse responses = 2;
+}
+
+
 /**
 * Load collection data into query nodes, then you can do vector search on this collection.
 */
@@ -552,6 +577,7 @@ message ShowCollectionsResponse {
   repeated int64 inMemory_percentages = 6 [deprecated=true];
   // Indicate whether query service is available
   repeated bool query_service_available = 7;
+  repeated int32 shards_num = 8;
 }
 
 /*
@@ -944,6 +970,7 @@ message UpsertRequest {
   repeated uint32 hash_keys = 6;
   uint32 num_rows = 7;
   uint64 schema_timestamp = 8;
+  bool partial_update = 9;
 }
 
 message MutationResult {
@@ -2175,6 +2202,49 @@ message AnalyzerResult {
 message RunAnalyzerResponse{
   common.Status status = 1;
   repeated AnalyzerResult results = 2;
+}
+
+message FileResourceInfo {
+  int64 id = 1;
+  string name = 2;
+  string path = 3;
+  common.FileResourceType type = 4;
+}
+
+message AddFileResourceRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeAddFileResource
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  string name = 2;
+  string path = 3;
+  common.FileResourceType type = 4;
+}
+
+message RemoveFileResourceRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeRemoveFileResource
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  string name = 2;
+}
+
+message ListFileResourcesRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeListFileResources
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+}
+
+message ListFileResourcesResponse {
+  common.Status status = 1;
+  repeated FileResourceInfo resources = 2;
 }
 
 // ===== Row Level Security (RLS) Messages =====
