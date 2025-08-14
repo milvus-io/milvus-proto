@@ -140,6 +140,7 @@ service MilvusService {
   rpc AlterDatabase(AlterDatabaseRequest) returns (common.Status) {}
   rpc DescribeDatabase(DescribeDatabaseRequest) returns (DescribeDatabaseResponse) {}
 
+  // Deprecated CDC API
   rpc ReplicateMessage(ReplicateMessageRequest) returns (ReplicateMessageResponse) {}
 
   rpc BackupRBAC(BackupRBACMetaRequest) returns (BackupRBACMetaResponse){}
@@ -164,6 +165,11 @@ service MilvusService {
   rpc CreateRowPolicy(CreateRowPolicyRequest) returns (common.Status) {}
   rpc DropRowPolicy(DropRowPolicyRequest) returns (common.Status) {}
   rpc ListRowPolicies(ListRowPoliciesRequest) returns (ListRowPoliciesResponse) {}
+
+  // CDC v2 APIs
+  rpc UpdateReplicateConfiguration(UpdateReplicateConfigurationRequest) returns (common.Status){}
+  rpc GetReplicateInfo(GetReplicateInfoRequest) returns (GetReplicateInfoResponse){}
+  rpc CreateReplicateStream(stream ReplicateRequest) returns (stream ReplicateResponse){}
 }
 
 message CreateAliasRequest {
@@ -2375,4 +2381,83 @@ message ListRowPoliciesResponse {
   repeated RowPolicy policies = 2;
   string db_name = 3;
   string collection_name = 4;
+}
+
+message UpdateReplicateConfigurationRequest {
+  ReplicateConfiguration replicate_configuration = 1;
+}
+
+// ReplicateConfiguration is the configuration that
+// describes the replication topology cross multiple cluster milvus.
+message ReplicateConfiguration {
+  repeated MilvusCluster clusters                      = 1;
+  repeated CrossClusterTopology cross_cluster_topology = 2;
+}
+
+// ConnectionParam defines the params to connect to the Milvus cluster.
+message ConnectionParam {
+  string uri   = 1;
+  string token = 2;
+}
+
+// MilvusCluster describes the Milvus cluster information, 
+// including pchannel mapping details.
+message MilvusCluster {
+  string clusterID                 = 1;
+  ConnectionParam connection_param = 2;
+  repeated string pchannels        = 3;
+}
+
+// CrossClusterTopology is the topology that 
+// describes the topology cross multiple cluster milvus.
+message CrossClusterTopology {
+  string source_clusterID = 1;
+  string target_clusterID = 2;
+}
+
+message GetReplicateInfoRequest {
+  string source_clusterID = 1;
+}
+
+message GetReplicateInfoResponse {
+  repeated ReplicateCheckpoint checkpoints = 1;
+}
+
+message MessageID {
+  string id               = 1;
+  common.WALName WAL_name = 2;
+}
+
+// ReplicateCheckpoint is the WAL replicate checkpoint in the target cluster.
+message ReplicateCheckpoint {
+  string source_channel_name    = 1;
+  string target_channel_name    = 2;
+  MessageID replicate_messageID = 3;
+}
+
+// ImmutableMessage is the message that can not be modified anymore.
+message ImmutableMessage {
+  MessageID id                   = 1; // message id
+  bytes payload                  = 2; // message body
+  map<string, string> properties = 3; // message properties
+}
+
+message ReplicateMessage {
+  ImmutableMessage message = 1; // replicate message to be sent.
+}
+
+message ReplicateRequest {
+  oneof request {
+    ReplicateMessage replicate_message = 1;
+  }
+}
+
+message ReplicateConfirmedMessageInfo {
+  uint64 confirmed_time_tick = 1; // the source time tick of the last confirmed message that persisted into target WAL. 
+}
+
+message ReplicateResponse {
+  oneof response {
+    ReplicateConfirmedMessageInfo replicate_confirmed_message_info = 1;
+  }
 }

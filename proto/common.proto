@@ -536,3 +536,11 @@ enum LoadPriority {
 enum FileResourceType {
   ANALYZER_DICTIONARY = 0;
 }
+
+enum WALName {
+  Unknown = 0;
+  RocksMQ = 1;
+  Pulsar = 2;
+  Kafka = 3;
+  WoodPecker = 4;
+}

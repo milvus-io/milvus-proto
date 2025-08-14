@@ -21,113 +21,116 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	MilvusService_CreateCollection_FullMethodName            = "/milvus.proto.milvus.MilvusService/CreateCollection"
-	MilvusService_DropCollection_FullMethodName              = "/milvus.proto.milvus.MilvusService/DropCollection"
-	MilvusService_HasCollection_FullMethodName               = "/milvus.proto.milvus.MilvusService/HasCollection"
-	MilvusService_LoadCollection_FullMethodName              = "/milvus.proto.milvus.MilvusService/LoadCollection"
-	MilvusService_ReleaseCollection_FullMethodName           = "/milvus.proto.milvus.MilvusService/ReleaseCollection"
-	MilvusService_DescribeCollection_FullMethodName          = "/milvus.proto.milvus.MilvusService/DescribeCollection"
-	MilvusService_BatchDescribeCollection_FullMethodName     = "/milvus.proto.milvus.MilvusService/BatchDescribeCollection"
-	MilvusService_GetCollectionStatistics_FullMethodName     = "/milvus.proto.milvus.MilvusService/GetCollectionStatistics"
-	MilvusService_ShowCollections_FullMethodName             = "/milvus.proto.milvus.MilvusService/ShowCollections"
-	MilvusService_AlterCollection_FullMethodName             = "/milvus.proto.milvus.MilvusService/AlterCollection"
-	MilvusService_AlterCollectionField_FullMethodName        = "/milvus.proto.milvus.MilvusService/AlterCollectionField"
-	MilvusService_CreatePartition_FullMethodName             = "/milvus.proto.milvus.MilvusService/CreatePartition"
-	MilvusService_DropPartition_FullMethodName               = "/milvus.proto.milvus.MilvusService/DropPartition"
-	MilvusService_HasPartition_FullMethodName                = "/milvus.proto.milvus.MilvusService/HasPartition"
-	MilvusService_LoadPartitions_FullMethodName              = "/milvus.proto.milvus.MilvusService/LoadPartitions"
-	MilvusService_ReleasePartitions_FullMethodName           = "/milvus.proto.milvus.MilvusService/ReleasePartitions"
-	MilvusService_GetPartitionStatistics_FullMethodName      = "/milvus.proto.milvus.MilvusService/GetPartitionStatistics"
-	MilvusService_ShowPartitions_FullMethodName              = "/milvus.proto.milvus.MilvusService/ShowPartitions"
-	MilvusService_GetLoadingProgress_FullMethodName          = "/milvus.proto.milvus.MilvusService/GetLoadingProgress"
-	MilvusService_GetLoadState_FullMethodName                = "/milvus.proto.milvus.MilvusService/GetLoadState"
-	MilvusService_CreateAlias_FullMethodName                 = "/milvus.proto.milvus.MilvusService/CreateAlias"
-	MilvusService_DropAlias_FullMethodName                   = "/milvus.proto.milvus.MilvusService/DropAlias"
-	MilvusService_AlterAlias_FullMethodName                  = "/milvus.proto.milvus.MilvusService/AlterAlias"
-	MilvusService_DescribeAlias_FullMethodName               = "/milvus.proto.milvus.MilvusService/DescribeAlias"
-	MilvusService_ListAliases_FullMethodName                 = "/milvus.proto.milvus.MilvusService/ListAliases"
-	MilvusService_CreateIndex_FullMethodName                 = "/milvus.proto.milvus.MilvusService/CreateIndex"
-	MilvusService_AlterIndex_FullMethodName                  = "/milvus.proto.milvus.MilvusService/AlterIndex"
-	MilvusService_DescribeIndex_FullMethodName               = "/milvus.proto.milvus.MilvusService/DescribeIndex"
-	MilvusService_GetIndexStatistics_FullMethodName          = "/milvus.proto.milvus.MilvusService/GetIndexStatistics"
-	MilvusService_GetIndexState_FullMethodName               = "/milvus.proto.milvus.MilvusService/GetIndexState"
-	MilvusService_GetIndexBuildProgress_FullMethodName       = "/milvus.proto.milvus.MilvusService/GetIndexBuildProgress"
-	MilvusService_DropIndex_FullMethodName                   = "/milvus.proto.milvus.MilvusService/DropIndex"
-	MilvusService_Insert_FullMethodName                      = "/milvus.proto.milvus.MilvusService/Insert"
-	MilvusService_Delete_FullMethodName                      = "/milvus.proto.milvus.MilvusService/Delete"
-	MilvusService_Upsert_FullMethodName                      = "/milvus.proto.milvus.MilvusService/Upsert"
-	MilvusService_Search_FullMethodName                      = "/milvus.proto.milvus.MilvusService/Search"
-	MilvusService_HybridSearch_FullMethodName                = "/milvus.proto.milvus.MilvusService/HybridSearch"
-	MilvusService_Flush_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Flush"
-	MilvusService_Query_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Query"
-	MilvusService_CalcDistance_FullMethodName                = "/milvus.proto.milvus.MilvusService/CalcDistance"
-	MilvusService_FlushAll_FullMethodName                    = "/milvus.proto.milvus.MilvusService/FlushAll"
-	MilvusService_AddCollectionField_FullMethodName          = "/milvus.proto.milvus.MilvusService/AddCollectionField"
-	MilvusService_GetFlushState_FullMethodName               = "/milvus.proto.milvus.MilvusService/GetFlushState"
-	MilvusService_GetFlushAllState_FullMethodName            = "/milvus.proto.milvus.MilvusService/GetFlushAllState"
-	MilvusService_GetPersistentSegmentInfo_FullMethodName    = "/milvus.proto.milvus.MilvusService/GetPersistentSegmentInfo"
-	MilvusService_GetQuerySegmentInfo_FullMethodName         = "/milvus.proto.milvus.MilvusService/GetQuerySegmentInfo"
-	MilvusService_GetReplicas_FullMethodName                 = "/milvus.proto.milvus.MilvusService/GetReplicas"
-	MilvusService_Dummy_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Dummy"
-	MilvusService_RegisterLink_FullMethodName                = "/milvus.proto.milvus.MilvusService/RegisterLink"
-	MilvusService_GetMetrics_FullMethodName                  = "/milvus.proto.milvus.MilvusService/GetMetrics"
-	MilvusService_GetComponentStates_FullMethodName          = "/milvus.proto.milvus.MilvusService/GetComponentStates"
-	MilvusService_LoadBalance_FullMethodName                 = "/milvus.proto.milvus.MilvusService/LoadBalance"
-	MilvusService_GetCompactionState_FullMethodName          = "/milvus.proto.milvus.MilvusService/GetCompactionState"
-	MilvusService_ManualCompaction_FullMethodName            = "/milvus.proto.milvus.MilvusService/ManualCompaction"
-	MilvusService_GetCompactionStateWithPlans_FullMethodName = "/milvus.proto.milvus.MilvusService/GetCompactionStateWithPlans"
-	MilvusService_Import_FullMethodName                      = "/milvus.proto.milvus.MilvusService/Import"
-	MilvusService_GetImportState_FullMethodName              = "/milvus.proto.milvus.MilvusService/GetImportState"
-	MilvusService_ListImportTasks_FullMethodName             = "/milvus.proto.milvus.MilvusService/ListImportTasks"
-	MilvusService_CreateCredential_FullMethodName            = "/milvus.proto.milvus.MilvusService/CreateCredential"
-	MilvusService_UpdateCredential_FullMethodName            = "/milvus.proto.milvus.MilvusService/UpdateCredential"
-	MilvusService_DeleteCredential_FullMethodName            = "/milvus.proto.milvus.MilvusService/DeleteCredential"
-	MilvusService_ListCredUsers_FullMethodName               = "/milvus.proto.milvus.MilvusService/ListCredUsers"
-	MilvusService_CreateRole_FullMethodName                  = "/milvus.proto.milvus.MilvusService/CreateRole"
-	MilvusService_DropRole_FullMethodName                    = "/milvus.proto.milvus.MilvusService/DropRole"
-	MilvusService_OperateUserRole_FullMethodName             = "/milvus.proto.milvus.MilvusService/OperateUserRole"
-	MilvusService_SelectRole_FullMethodName                  = "/milvus.proto.milvus.MilvusService/SelectRole"
-	MilvusService_SelectUser_FullMethodName                  = "/milvus.proto.milvus.MilvusService/SelectUser"
-	MilvusService_OperatePrivilege_FullMethodName            = "/milvus.proto.milvus.MilvusService/OperatePrivilege"
-	MilvusService_OperatePrivilegeV2_FullMethodName          = "/milvus.proto.milvus.MilvusService/OperatePrivilegeV2"
-	MilvusService_SelectGrant_FullMethodName                 = "/milvus.proto.milvus.MilvusService/SelectGrant"
-	MilvusService_GetVersion_FullMethodName                  = "/milvus.proto.milvus.MilvusService/GetVersion"
-	MilvusService_CheckHealth_FullMethodName                 = "/milvus.proto.milvus.MilvusService/CheckHealth"
-	MilvusService_CreateResourceGroup_FullMethodName         = "/milvus.proto.milvus.MilvusService/CreateResourceGroup"
-	MilvusService_DropResourceGroup_FullMethodName           = "/milvus.proto.milvus.MilvusService/DropResourceGroup"
-	MilvusService_UpdateResourceGroups_FullMethodName        = "/milvus.proto.milvus.MilvusService/UpdateResourceGroups"
-	MilvusService_TransferNode_FullMethodName                = "/milvus.proto.milvus.MilvusService/TransferNode"
-	MilvusService_TransferReplica_FullMethodName             = "/milvus.proto.milvus.MilvusService/TransferReplica"
-	MilvusService_ListResourceGroups_FullMethodName          = "/milvus.proto.milvus.MilvusService/ListResourceGroups"
-	MilvusService_DescribeResourceGroup_FullMethodName       = "/milvus.proto.milvus.MilvusService/DescribeResourceGroup"
-	MilvusService_RenameCollection_FullMethodName            = "/milvus.proto.milvus.MilvusService/RenameCollection"
-	MilvusService_ListIndexedSegment_FullMethodName          = "/milvus.proto.milvus.MilvusService/ListIndexedSegment"
-	MilvusService_DescribeSegmentIndexData_FullMethodName    = "/milvus.proto.milvus.MilvusService/DescribeSegmentIndexData"
-	MilvusService_Connect_FullMethodName                     = "/milvus.proto.milvus.MilvusService/Connect"
-	MilvusService_AllocTimestamp_FullMethodName              = "/milvus.proto.milvus.MilvusService/AllocTimestamp"
-	MilvusService_CreateDatabase_FullMethodName              = "/milvus.proto.milvus.MilvusService/CreateDatabase"
-	MilvusService_DropDatabase_FullMethodName                = "/milvus.proto.milvus.MilvusService/DropDatabase"
-	MilvusService_ListDatabases_FullMethodName               = "/milvus.proto.milvus.MilvusService/ListDatabases"
-	MilvusService_AlterDatabase_FullMethodName               = "/milvus.proto.milvus.MilvusService/AlterDatabase"
-	MilvusService_DescribeDatabase_FullMethodName            = "/milvus.proto.milvus.MilvusService/DescribeDatabase"
-	MilvusService_ReplicateMessage_FullMethodName            = "/milvus.proto.milvus.MilvusService/ReplicateMessage"
-	MilvusService_BackupRBAC_FullMethodName                  = "/milvus.proto.milvus.MilvusService/BackupRBAC"
-	MilvusService_RestoreRBAC_FullMethodName                 = "/milvus.proto.milvus.MilvusService/RestoreRBAC"
-	MilvusService_CreatePrivilegeGroup_FullMethodName        = "/milvus.proto.milvus.MilvusService/CreatePrivilegeGroup"
-	MilvusService_DropPrivilegeGroup_FullMethodName          = "/milvus.proto.milvus.MilvusService/DropPrivilegeGroup"
-	MilvusService_ListPrivilegeGroups_FullMethodName         = "/milvus.proto.milvus.MilvusService/ListPrivilegeGroups"
-	MilvusService_OperatePrivilegeGroup_FullMethodName       = "/milvus.proto.milvus.MilvusService/OperatePrivilegeGroup"
-	MilvusService_RunAnalyzer_FullMethodName                 = "/milvus.proto.milvus.MilvusService/RunAnalyzer"
-	MilvusService_AddFileResource_FullMethodName             = "/milvus.proto.milvus.MilvusService/AddFileResource"
-	MilvusService_RemoveFileResource_FullMethodName          = "/milvus.proto.milvus.MilvusService/RemoveFileResource"
-	MilvusService_ListFileResources_FullMethodName           = "/milvus.proto.milvus.MilvusService/ListFileResources"
-	MilvusService_AddUserTags_FullMethodName                 = "/milvus.proto.milvus.MilvusService/AddUserTags"
-	MilvusService_DeleteUserTags_FullMethodName              = "/milvus.proto.milvus.MilvusService/DeleteUserTags"
-	MilvusService_GetUserTags_FullMethodName                 = "/milvus.proto.milvus.MilvusService/GetUserTags"
-	MilvusService_ListUsersWithTag_FullMethodName            = "/milvus.proto.milvus.MilvusService/ListUsersWithTag"
-	MilvusService_CreateRowPolicy_FullMethodName             = "/milvus.proto.milvus.MilvusService/CreateRowPolicy"
-	MilvusService_DropRowPolicy_FullMethodName               = "/milvus.proto.milvus.MilvusService/DropRowPolicy"
-	MilvusService_ListRowPolicies_FullMethodName             = "/milvus.proto.milvus.MilvusService/ListRowPolicies"
+	MilvusService_CreateCollection_FullMethodName             = "/milvus.proto.milvus.MilvusService/CreateCollection"
+	MilvusService_DropCollection_FullMethodName               = "/milvus.proto.milvus.MilvusService/DropCollection"
+	MilvusService_HasCollection_FullMethodName                = "/milvus.proto.milvus.MilvusService/HasCollection"
+	MilvusService_LoadCollection_FullMethodName               = "/milvus.proto.milvus.MilvusService/LoadCollection"
+	MilvusService_ReleaseCollection_FullMethodName            = "/milvus.proto.milvus.MilvusService/ReleaseCollection"
+	MilvusService_DescribeCollection_FullMethodName           = "/milvus.proto.milvus.MilvusService/DescribeCollection"
+	MilvusService_BatchDescribeCollection_FullMethodName      = "/milvus.proto.milvus.MilvusService/BatchDescribeCollection"
+	MilvusService_GetCollectionStatistics_FullMethodName      = "/milvus.proto.milvus.MilvusService/GetCollectionStatistics"
+	MilvusService_ShowCollections_FullMethodName              = "/milvus.proto.milvus.MilvusService/ShowCollections"
+	MilvusService_AlterCollection_FullMethodName              = "/milvus.proto.milvus.MilvusService/AlterCollection"
+	MilvusService_AlterCollectionField_FullMethodName         = "/milvus.proto.milvus.MilvusService/AlterCollectionField"
+	MilvusService_CreatePartition_FullMethodName              = "/milvus.proto.milvus.MilvusService/CreatePartition"
+	MilvusService_DropPartition_FullMethodName                = "/milvus.proto.milvus.MilvusService/DropPartition"
+	MilvusService_HasPartition_FullMethodName                 = "/milvus.proto.milvus.MilvusService/HasPartition"
+	MilvusService_LoadPartitions_FullMethodName               = "/milvus.proto.milvus.MilvusService/LoadPartitions"
+	MilvusService_ReleasePartitions_FullMethodName            = "/milvus.proto.milvus.MilvusService/ReleasePartitions"
+	MilvusService_GetPartitionStatistics_FullMethodName       = "/milvus.proto.milvus.MilvusService/GetPartitionStatistics"
+	MilvusService_ShowPartitions_FullMethodName               = "/milvus.proto.milvus.MilvusService/ShowPartitions"
+	MilvusService_GetLoadingProgress_FullMethodName           = "/milvus.proto.milvus.MilvusService/GetLoadingProgress"
+	MilvusService_GetLoadState_FullMethodName                 = "/milvus.proto.milvus.MilvusService/GetLoadState"
+	MilvusService_CreateAlias_FullMethodName                  = "/milvus.proto.milvus.MilvusService/CreateAlias"
+	MilvusService_DropAlias_FullMethodName                    = "/milvus.proto.milvus.MilvusService/DropAlias"
+	MilvusService_AlterAlias_FullMethodName                   = "/milvus.proto.milvus.MilvusService/AlterAlias"
+	MilvusService_DescribeAlias_FullMethodName                = "/milvus.proto.milvus.MilvusService/DescribeAlias"
+	MilvusService_ListAliases_FullMethodName                  = "/milvus.proto.milvus.MilvusService/ListAliases"
+	MilvusService_CreateIndex_FullMethodName                  = "/milvus.proto.milvus.MilvusService/CreateIndex"
+	MilvusService_AlterIndex_FullMethodName                   = "/milvus.proto.milvus.MilvusService/AlterIndex"
+	MilvusService_DescribeIndex_FullMethodName                = "/milvus.proto.milvus.MilvusService/DescribeIndex"
+	MilvusService_GetIndexStatistics_FullMethodName           = "/milvus.proto.milvus.MilvusService/GetIndexStatistics"
+	MilvusService_GetIndexState_FullMethodName                = "/milvus.proto.milvus.MilvusService/GetIndexState"
+	MilvusService_GetIndexBuildProgress_FullMethodName        = "/milvus.proto.milvus.MilvusService/GetIndexBuildProgress"
+	MilvusService_DropIndex_FullMethodName                    = "/milvus.proto.milvus.MilvusService/DropIndex"
+	MilvusService_Insert_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Insert"
+	MilvusService_Delete_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Delete"
+	MilvusService_Upsert_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Upsert"
+	MilvusService_Search_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Search"
+	MilvusService_HybridSearch_FullMethodName                 = "/milvus.proto.milvus.MilvusService/HybridSearch"
+	MilvusService_Flush_FullMethodName                        = "/milvus.proto.milvus.MilvusService/Flush"
+	MilvusService_Query_FullMethodName                        = "/milvus.proto.milvus.MilvusService/Query"
+	MilvusService_CalcDistance_FullMethodName                 = "/milvus.proto.milvus.MilvusService/CalcDistance"
+	MilvusService_FlushAll_FullMethodName                     = "/milvus.proto.milvus.MilvusService/FlushAll"
+	MilvusService_AddCollectionField_FullMethodName           = "/milvus.proto.milvus.MilvusService/AddCollectionField"
+	MilvusService_GetFlushState_FullMethodName                = "/milvus.proto.milvus.MilvusService/GetFlushState"
+	MilvusService_GetFlushAllState_FullMethodName             = "/milvus.proto.milvus.MilvusService/GetFlushAllState"
+	MilvusService_GetPersistentSegmentInfo_FullMethodName     = "/milvus.proto.milvus.MilvusService/GetPersistentSegmentInfo"
+	MilvusService_GetQuerySegmentInfo_FullMethodName          = "/milvus.proto.milvus.MilvusService/GetQuerySegmentInfo"
+	MilvusService_GetReplicas_FullMethodName                  = "/milvus.proto.milvus.MilvusService/GetReplicas"
+	MilvusService_Dummy_FullMethodName                        = "/milvus.proto.milvus.MilvusService/Dummy"
+	MilvusService_RegisterLink_FullMethodName                 = "/milvus.proto.milvus.MilvusService/RegisterLink"
+	MilvusService_GetMetrics_FullMethodName                   = "/milvus.proto.milvus.MilvusService/GetMetrics"
+	MilvusService_GetComponentStates_FullMethodName           = "/milvus.proto.milvus.MilvusService/GetComponentStates"
+	MilvusService_LoadBalance_FullMethodName                  = "/milvus.proto.milvus.MilvusService/LoadBalance"
+	MilvusService_GetCompactionState_FullMethodName           = "/milvus.proto.milvus.MilvusService/GetCompactionState"
+	MilvusService_ManualCompaction_FullMethodName             = "/milvus.proto.milvus.MilvusService/ManualCompaction"
+	MilvusService_GetCompactionStateWithPlans_FullMethodName  = "/milvus.proto.milvus.MilvusService/GetCompactionStateWithPlans"
+	MilvusService_Import_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Import"
+	MilvusService_GetImportState_FullMethodName               = "/milvus.proto.milvus.MilvusService/GetImportState"
+	MilvusService_ListImportTasks_FullMethodName              = "/milvus.proto.milvus.MilvusService/ListImportTasks"
+	MilvusService_CreateCredential_FullMethodName             = "/milvus.proto.milvus.MilvusService/CreateCredential"
+	MilvusService_UpdateCredential_FullMethodName             = "/milvus.proto.milvus.MilvusService/UpdateCredential"
+	MilvusService_DeleteCredential_FullMethodName             = "/milvus.proto.milvus.MilvusService/DeleteCredential"
+	MilvusService_ListCredUsers_FullMethodName                = "/milvus.proto.milvus.MilvusService/ListCredUsers"
+	MilvusService_CreateRole_FullMethodName                   = "/milvus.proto.milvus.MilvusService/CreateRole"
+	MilvusService_DropRole_FullMethodName                     = "/milvus.proto.milvus.MilvusService/DropRole"
+	MilvusService_OperateUserRole_FullMethodName              = "/milvus.proto.milvus.MilvusService/OperateUserRole"
+	MilvusService_SelectRole_FullMethodName                   = "/milvus.proto.milvus.MilvusService/SelectRole"
+	MilvusService_SelectUser_FullMethodName                   = "/milvus.proto.milvus.MilvusService/SelectUser"
+	MilvusService_OperatePrivilege_FullMethodName             = "/milvus.proto.milvus.MilvusService/OperatePrivilege"
+	MilvusService_OperatePrivilegeV2_FullMethodName           = "/milvus.proto.milvus.MilvusService/OperatePrivilegeV2"
+	MilvusService_SelectGrant_FullMethodName                  = "/milvus.proto.milvus.MilvusService/SelectGrant"
+	MilvusService_GetVersion_FullMethodName                   = "/milvus.proto.milvus.MilvusService/GetVersion"
+	MilvusService_CheckHealth_FullMethodName                  = "/milvus.proto.milvus.MilvusService/CheckHealth"
+	MilvusService_CreateResourceGroup_FullMethodName          = "/milvus.proto.milvus.MilvusService/CreateResourceGroup"
+	MilvusService_DropResourceGroup_FullMethodName            = "/milvus.proto.milvus.MilvusService/DropResourceGroup"
+	MilvusService_UpdateResourceGroups_FullMethodName         = "/milvus.proto.milvus.MilvusService/UpdateResourceGroups"
+	MilvusService_TransferNode_FullMethodName                 = "/milvus.proto.milvus.MilvusService/TransferNode"
+	MilvusService_TransferReplica_FullMethodName              = "/milvus.proto.milvus.MilvusService/TransferReplica"
+	MilvusService_ListResourceGroups_FullMethodName           = "/milvus.proto.milvus.MilvusService/ListResourceGroups"
+	MilvusService_DescribeResourceGroup_FullMethodName        = "/milvus.proto.milvus.MilvusService/DescribeResourceGroup"
+	MilvusService_RenameCollection_FullMethodName             = "/milvus.proto.milvus.MilvusService/RenameCollection"
+	MilvusService_ListIndexedSegment_FullMethodName           = "/milvus.proto.milvus.MilvusService/ListIndexedSegment"
+	MilvusService_DescribeSegmentIndexData_FullMethodName     = "/milvus.proto.milvus.MilvusService/DescribeSegmentIndexData"
+	MilvusService_Connect_FullMethodName                      = "/milvus.proto.milvus.MilvusService/Connect"
+	MilvusService_AllocTimestamp_FullMethodName               = "/milvus.proto.milvus.MilvusService/AllocTimestamp"
+	MilvusService_CreateDatabase_FullMethodName               = "/milvus.proto.milvus.MilvusService/CreateDatabase"
+	MilvusService_DropDatabase_FullMethodName                 = "/milvus.proto.milvus.MilvusService/DropDatabase"
+	MilvusService_ListDatabases_FullMethodName                = "/milvus.proto.milvus.MilvusService/ListDatabases"
+	MilvusService_AlterDatabase_FullMethodName                = "/milvus.proto.milvus.MilvusService/AlterDatabase"
+	MilvusService_DescribeDatabase_FullMethodName             = "/milvus.proto.milvus.MilvusService/DescribeDatabase"
+	MilvusService_ReplicateMessage_FullMethodName             = "/milvus.proto.milvus.MilvusService/ReplicateMessage"
+	MilvusService_BackupRBAC_FullMethodName                   = "/milvus.proto.milvus.MilvusService/BackupRBAC"
+	MilvusService_RestoreRBAC_FullMethodName                  = "/milvus.proto.milvus.MilvusService/RestoreRBAC"
+	MilvusService_CreatePrivilegeGroup_FullMethodName         = "/milvus.proto.milvus.MilvusService/CreatePrivilegeGroup"
+	MilvusService_DropPrivilegeGroup_FullMethodName           = "/milvus.proto.milvus.MilvusService/DropPrivilegeGroup"
+	MilvusService_ListPrivilegeGroups_FullMethodName          = "/milvus.proto.milvus.MilvusService/ListPrivilegeGroups"
+	MilvusService_OperatePrivilegeGroup_FullMethodName        = "/milvus.proto.milvus.MilvusService/OperatePrivilegeGroup"
+	MilvusService_RunAnalyzer_FullMethodName                  = "/milvus.proto.milvus.MilvusService/RunAnalyzer"
+	MilvusService_AddFileResource_FullMethodName              = "/milvus.proto.milvus.MilvusService/AddFileResource"
+	MilvusService_RemoveFileResource_FullMethodName           = "/milvus.proto.milvus.MilvusService/RemoveFileResource"
+	MilvusService_ListFileResources_FullMethodName            = "/milvus.proto.milvus.MilvusService/ListFileResources"
+	MilvusService_AddUserTags_FullMethodName                  = "/milvus.proto.milvus.MilvusService/AddUserTags"
+	MilvusService_DeleteUserTags_FullMethodName               = "/milvus.proto.milvus.MilvusService/DeleteUserTags"
+	MilvusService_GetUserTags_FullMethodName                  = "/milvus.proto.milvus.MilvusService/GetUserTags"
+	MilvusService_ListUsersWithTag_FullMethodName             = "/milvus.proto.milvus.MilvusService/ListUsersWithTag"
+	MilvusService_CreateRowPolicy_FullMethodName              = "/milvus.proto.milvus.MilvusService/CreateRowPolicy"
+	MilvusService_DropRowPolicy_FullMethodName                = "/milvus.proto.milvus.MilvusService/DropRowPolicy"
+	MilvusService_ListRowPolicies_FullMethodName              = "/milvus.proto.milvus.MilvusService/ListRowPolicies"
+	MilvusService_UpdateReplicateConfiguration_FullMethodName = "/milvus.proto.milvus.MilvusService/UpdateReplicateConfiguration"
+	MilvusService_GetReplicateInfo_FullMethodName             = "/milvus.proto.milvus.MilvusService/GetReplicateInfo"
+	MilvusService_CreateReplicateStream_FullMethodName        = "/milvus.proto.milvus.MilvusService/CreateReplicateStream"
 )
 
 // MilvusServiceClient is the client API for MilvusService service.
@@ -232,6 +235,7 @@ type MilvusServiceClient interface {
 	ListDatabases(ctx context.Context, in *ListDatabasesRequest, opts ...grpc.CallOption) (*ListDatabasesResponse, error)
 	AlterDatabase(ctx context.Context, in *AlterDatabaseRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DescribeDatabase(ctx context.Context, in *DescribeDatabaseRequest, opts ...grpc.CallOption) (*DescribeDatabaseResponse, error)
+	// Deprecated CDC API
 	ReplicateMessage(ctx context.Context, in *ReplicateMessageRequest, opts ...grpc.CallOption) (*ReplicateMessageResponse, error)
 	BackupRBAC(ctx context.Context, in *BackupRBACMetaRequest, opts ...grpc.CallOption) (*BackupRBACMetaResponse, error)
 	RestoreRBAC(ctx context.Context, in *RestoreRBACMetaRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
@@ -251,6 +255,10 @@ type MilvusServiceClient interface {
 	CreateRowPolicy(ctx context.Context, in *CreateRowPolicyRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DropRowPolicy(ctx context.Context, in *DropRowPolicyRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	ListRowPolicies(ctx context.Context, in *ListRowPoliciesRequest, opts ...grpc.CallOption) (*ListRowPoliciesResponse, error)
+	// CDC v2 APIs
+	UpdateReplicateConfiguration(ctx context.Context, in *UpdateReplicateConfigurationRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	GetReplicateInfo(ctx context.Context, in *GetReplicateInfoRequest, opts ...grpc.CallOption) (*GetReplicateInfoResponse, error)
+	CreateReplicateStream(ctx context.Context, opts ...grpc.CallOption) (MilvusService_CreateReplicateStreamClient, error)
 }
 
 type milvusServiceClient struct {
@@ -1226,6 +1234,55 @@ func (c *milvusServiceClient) ListRowPolicies(ctx context.Context, in *ListRowPo
 	return out, nil
 }
 
+func (c *milvusServiceClient) UpdateReplicateConfiguration(ctx context.Context, in *UpdateReplicateConfigurationRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_UpdateReplicateConfiguration_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) GetReplicateInfo(ctx context.Context, in *GetReplicateInfoRequest, opts ...grpc.CallOption) (*GetReplicateInfoResponse, error) {
+	out := new(GetReplicateInfoResponse)
+	err := c.cc.Invoke(ctx, MilvusService_GetReplicateInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) CreateReplicateStream(ctx context.Context, opts ...grpc.CallOption) (MilvusService_CreateReplicateStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &MilvusService_ServiceDesc.Streams[0], MilvusService_CreateReplicateStream_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &milvusServiceCreateReplicateStreamClient{stream}
+	return x, nil
+}
+
+type MilvusService_CreateReplicateStreamClient interface {
+	Send(*ReplicateRequest) error
+	Recv() (*ReplicateResponse, error)
+	grpc.ClientStream
+}
+
+type milvusServiceCreateReplicateStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *milvusServiceCreateReplicateStreamClient) Send(m *ReplicateRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *milvusServiceCreateReplicateStreamClient) Recv() (*ReplicateResponse, error) {
+	m := new(ReplicateResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // MilvusServiceServer is the server API for MilvusService service.
 // All implementations should embed UnimplementedMilvusServiceServer
 // for forward compatibility
@@ -1328,6 +1385,7 @@ type MilvusServiceServer interface {
 	ListDatabases(context.Context, *ListDatabasesRequest) (*ListDatabasesResponse, error)
 	AlterDatabase(context.Context, *AlterDatabaseRequest) (*commonpb.Status, error)
 	DescribeDatabase(context.Context, *DescribeDatabaseRequest) (*DescribeDatabaseResponse, error)
+	// Deprecated CDC API
 	ReplicateMessage(context.Context, *ReplicateMessageRequest) (*ReplicateMessageResponse, error)
 	BackupRBAC(context.Context, *BackupRBACMetaRequest) (*BackupRBACMetaResponse, error)
 	RestoreRBAC(context.Context, *RestoreRBACMetaRequest) (*commonpb.Status, error)
@@ -1347,6 +1405,10 @@ type MilvusServiceServer interface {
 	CreateRowPolicy(context.Context, *CreateRowPolicyRequest) (*commonpb.Status, error)
 	DropRowPolicy(context.Context, *DropRowPolicyRequest) (*commonpb.Status, error)
 	ListRowPolicies(context.Context, *ListRowPoliciesRequest) (*ListRowPoliciesResponse, error)
+	// CDC v2 APIs
+	UpdateReplicateConfiguration(context.Context, *UpdateReplicateConfigurationRequest) (*commonpb.Status, error)
+	GetReplicateInfo(context.Context, *GetReplicateInfoRequest) (*GetReplicateInfoResponse, error)
+	CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -1673,6 +1735,15 @@ func (UnimplementedMilvusServiceServer) DropRowPolicy(context.Context, *DropRowP
 }
 func (UnimplementedMilvusServiceServer) ListRowPolicies(context.Context, *ListRowPoliciesRequest) (*ListRowPoliciesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRowPolicies not implemented")
+}
+func (UnimplementedMilvusServiceServer) UpdateReplicateConfiguration(context.Context, *UpdateReplicateConfigurationRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateReplicateConfiguration not implemented")
+}
+func (UnimplementedMilvusServiceServer) GetReplicateInfo(context.Context, *GetReplicateInfoRequest) (*GetReplicateInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReplicateInfo not implemented")
+}
+func (UnimplementedMilvusServiceServer) CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method CreateReplicateStream not implemented")
 }
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -3612,6 +3683,68 @@ func _MilvusService_ListRowPolicies_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_UpdateReplicateConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateReplicateConfigurationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).UpdateReplicateConfiguration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_UpdateReplicateConfiguration_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).UpdateReplicateConfiguration(ctx, req.(*UpdateReplicateConfigurationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_GetReplicateInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReplicateInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).GetReplicateInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_GetReplicateInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).GetReplicateInfo(ctx, req.(*GetReplicateInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_CreateReplicateStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(MilvusServiceServer).CreateReplicateStream(&milvusServiceCreateReplicateStreamServer{stream})
+}
+
+type MilvusService_CreateReplicateStreamServer interface {
+	Send(*ReplicateResponse) error
+	Recv() (*ReplicateRequest, error)
+	grpc.ServerStream
+}
+
+type milvusServiceCreateReplicateStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *milvusServiceCreateReplicateStreamServer) Send(m *ReplicateResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *milvusServiceCreateReplicateStreamServer) Recv() (*ReplicateRequest, error) {
+	m := new(ReplicateRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // MilvusService_ServiceDesc is the grpc.ServiceDesc for MilvusService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -4047,8 +4180,23 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ListRowPolicies",
 			Handler:    _MilvusService_ListRowPolicies_Handler,
 		},
+		{
+			MethodName: "UpdateReplicateConfiguration",
+			Handler:    _MilvusService_UpdateReplicateConfiguration_Handler,
+		},
+		{
+			MethodName: "GetReplicateInfo",
+			Handler:    _MilvusService_GetReplicateInfo_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "CreateReplicateStream",
+			Handler:       _MilvusService_CreateReplicateStream_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "milvus.proto",
 }
 
