@@ -126,7 +126,7 @@ message JSONArray { repeated bytes data = 1; }
 
 message GeometryArray { repeated bytes data = 1; }
 
-message GeometryWKTArray { repeated string data = 1; }
+message GeometryWktArray { repeated string data = 1; }
 
 message ValueField {
   oneof data {
@@ -154,7 +154,7 @@ message ScalarField {
     GeometryArray geometry_data = 10;
     // align with master
     // TimestamptzArray timestamptz_data = 11;
-    GeometryWKTArray geometry_wkt_data = 12;
+    GeometryWktArray geometry_wkt_data = 12;
   }
 }
 
