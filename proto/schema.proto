@@ -151,6 +151,8 @@ message GeometryArray { repeated bytes data = 1; }
 
 message TimestamptzArray { repeated int64 data = 1; }
 
+message GeometryWktArray { repeated string data = 1; }
+
 message ValueField {
   oneof data {
     bool bool_data = 1;
@@ -177,6 +179,7 @@ message ScalarField {
     JSONArray json_data = 9;
     GeometryArray geometry_data = 10;
     TimestamptzArray timestamptz_data = 11;
+    GeometryWktArray geometry_wkt_data = 12;
   }
 }
 
