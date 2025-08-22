@@ -1086,7 +1086,7 @@ func (x *GeometryArray) GetData() [][]byte {
 	return nil
 }
 
-type GeometryWKTArray struct {
+type GeometryWktArray struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1094,8 +1094,8 @@ type GeometryWKTArray struct {
 	Data []string `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
 }
 
-func (x *GeometryWKTArray) Reset() {
-	*x = GeometryWKTArray{}
+func (x *GeometryWktArray) Reset() {
+	*x = GeometryWktArray{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_schema_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1103,13 +1103,13 @@ func (x *GeometryWKTArray) Reset() {
 	}
 }
 
-func (x *GeometryWKTArray) String() string {
+func (x *GeometryWktArray) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GeometryWKTArray) ProtoMessage() {}
+func (*GeometryWktArray) ProtoMessage() {}
 
-func (x *GeometryWKTArray) ProtoReflect() protoreflect.Message {
+func (x *GeometryWktArray) ProtoReflect() protoreflect.Message {
 	mi := &file_schema_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1121,12 +1121,12 @@ func (x *GeometryWKTArray) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GeometryWKTArray.ProtoReflect.Descriptor instead.
-func (*GeometryWKTArray) Descriptor() ([]byte, []int) {
+// Deprecated: Use GeometryWktArray.ProtoReflect.Descriptor instead.
+func (*GeometryWktArray) Descriptor() ([]byte, []int) {
 	return file_schema_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *GeometryWKTArray) GetData() []string {
+func (x *GeometryWktArray) GetData() []string {
 	if x != nil {
 		return x.Data
 	}
@@ -1414,7 +1414,7 @@ func (x *ScalarField) GetGeometryData() *GeometryArray {
 	return nil
 }
 
-func (x *ScalarField) GetGeometryWktData() *GeometryWKTArray {
+func (x *ScalarField) GetGeometryWktData() *GeometryWktArray {
 	if x, ok := x.GetData().(*ScalarField_GeometryWktData); ok {
 		return x.GeometryWktData
 	}
@@ -1468,7 +1468,7 @@ type ScalarField_GeometryData struct {
 type ScalarField_GeometryWktData struct {
 	// align with master
 	// TimestamptzArray timestamptz_data = 11;
-	GeometryWktData *GeometryWKTArray `protobuf:"bytes,12,opt,name=geometry_wkt_data,json=geometryWktData,proto3,oneof"`
+	GeometryWktData *GeometryWktArray `protobuf:"bytes,12,opt,name=geometry_wkt_data,json=geometryWktData,proto3,oneof"`
 }
 
 func (*ScalarField_BoolData) isScalarField_Data() {}
@@ -2680,7 +2680,7 @@ var file_schema_proto_rawDesc = []byte{
 	0x61, 0x22, 0x23, 0x0a, 0x0d, 0x47, 0x65, 0x6f, 0x6d, 0x65, 0x74, 0x72, 0x79, 0x41, 0x72, 0x72,
 	0x61, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0c,
 	0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x26, 0x0a, 0x10, 0x47, 0x65, 0x6f, 0x6d, 0x65, 0x74,
-	0x72, 0x79, 0x57, 0x4b, 0x54, 0x41, 0x72, 0x72, 0x61, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61,
+	0x72, 0x79, 0x57, 0x6b, 0x74, 0x41, 0x72, 0x72, 0x61, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61,
 	0x74, 0x61, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0xf7,
 	0x01, 0x0a, 0x0a, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x12, 0x1d, 0x0a,
 	0x09, 0x62, 0x6f, 0x6f, 0x6c, 0x5f, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08,
@@ -2743,7 +2743,7 @@ var file_schema_proto_rawDesc = []byte{
 	0x67, 0x65, 0x6f, 0x6d, 0x65, 0x74, 0x72, 0x79, 0x5f, 0x77, 0x6b, 0x74, 0x5f, 0x64, 0x61, 0x74,
 	0x61, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x25, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2e, 0x47, 0x65,
-	0x6f, 0x6d, 0x65, 0x74, 0x72, 0x79, 0x57, 0x4b, 0x54, 0x41, 0x72, 0x72, 0x61, 0x79, 0x48, 0x00,
+	0x6f, 0x6d, 0x65, 0x74, 0x72, 0x79, 0x57, 0x6b, 0x74, 0x41, 0x72, 0x72, 0x61, 0x79, 0x48, 0x00,
 	0x52, 0x0f, 0x67, 0x65, 0x6f, 0x6d, 0x65, 0x74, 0x72, 0x79, 0x57, 0x6b, 0x74, 0x44, 0x61, 0x74,
 	0x61, 0x42, 0x06, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x40, 0x0a, 0x10, 0x53, 0x70, 0x61,
 	0x72, 0x73, 0x65, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x41, 0x72, 0x72, 0x61, 0x79, 0x12, 0x1a, 0x0a,
@@ -2979,7 +2979,7 @@ var file_schema_proto_goTypes = []interface{}{
 	(*ArrayArray)(nil),              // 13: milvus.proto.schema.ArrayArray
 	(*JSONArray)(nil),               // 14: milvus.proto.schema.JSONArray
 	(*GeometryArray)(nil),           // 15: milvus.proto.schema.GeometryArray
-	(*GeometryWKTArray)(nil),        // 16: milvus.proto.schema.GeometryWKTArray
+	(*GeometryWktArray)(nil),        // 16: milvus.proto.schema.GeometryWktArray
 	(*ValueField)(nil),              // 17: milvus.proto.schema.ValueField
 	(*ScalarField)(nil),             // 18: milvus.proto.schema.ScalarField
 	(*SparseFloatArray)(nil),        // 19: milvus.proto.schema.SparseFloatArray
@@ -3020,7 +3020,7 @@ var file_schema_proto_depIdxs = []int32{
 	13, // 20: milvus.proto.schema.ScalarField.array_data:type_name -> milvus.proto.schema.ArrayArray
 	14, // 21: milvus.proto.schema.ScalarField.json_data:type_name -> milvus.proto.schema.JSONArray
 	15, // 22: milvus.proto.schema.ScalarField.geometry_data:type_name -> milvus.proto.schema.GeometryArray
-	16, // 23: milvus.proto.schema.ScalarField.geometry_wkt_data:type_name -> milvus.proto.schema.GeometryWKTArray
+	16, // 23: milvus.proto.schema.ScalarField.geometry_wkt_data:type_name -> milvus.proto.schema.GeometryWktArray
 	9,  // 24: milvus.proto.schema.VectorField.float_vector:type_name -> milvus.proto.schema.FloatArray
 	19, // 25: milvus.proto.schema.VectorField.sparse_float_vector:type_name -> milvus.proto.schema.SparseFloatArray
 	0,  // 26: milvus.proto.schema.FieldData.type:type_name -> milvus.proto.schema.DataType
@@ -3213,7 +3213,7 @@ func file_schema_proto_init() {
 			}
 		}
 		file_schema_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GeometryWKTArray); i {
+			switch v := v.(*GeometryWktArray); i {
 			case 0:
 				return &v.state
 			case 1:
