@@ -2423,7 +2423,7 @@ message ConnectionParam {
 // MilvusCluster describes the Milvus cluster information, 
 // including pchannel mapping details.
 message MilvusCluster {
-  string clusterID                 = 1;
+  string cluster_id                = 1;
   ConnectionParam connection_param = 2;
   repeated string pchannels        = 3;
 }
@@ -2431,12 +2431,12 @@ message MilvusCluster {
 // CrossClusterTopology is the topology that 
 // describes the topology cross multiple cluster milvus.
 message CrossClusterTopology {
-  string source_clusterID = 1;
-  string target_clusterID = 2;
+  string source_cluster_id = 1;
+  string target_cluster_id = 2;
 }
 
 message GetReplicateInfoRequest {
-  string source_clusterID = 1;
+  string source_cluster_id = 1;
 }
 
 message GetReplicateInfoResponse {
@@ -2450,9 +2450,9 @@ message MessageID {
 
 // ReplicateCheckpoint is the WAL replicate checkpoint in the target cluster.
 message ReplicateCheckpoint {
-  string source_channel_name    = 1;
-  string target_channel_name    = 2;
-  MessageID replicate_messageID = 3;
+  string source_channel_name     = 1;
+  string target_channel_name     = 2;
+  MessageID replicate_message_id = 3;
 }
 
 // ImmutableMessage is the message that can not be modified anymore.
