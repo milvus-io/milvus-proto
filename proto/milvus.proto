@@ -167,8 +167,28 @@ service MilvusService {
   rpc ListRowPolicies(ListRowPoliciesRequest) returns (ListRowPoliciesResponse) {}
 
   // CDC v2 APIs
+  // UpdateReplicateConfiguration applies a full replacement of the current
+  // replication configuration across Milvus clusters.
+  //
+  // Semantics:
+  //   - The provided ReplicateConfiguration completely replaces any existing
+  //     configuration persisted in the metadata store.
+  //   - Passing an empty ReplicateConfiguration is treated as a "clear"
+  //     operation, effectively removing all replication configuration.
+  //   - The RPC is expected to be idempotent: submitting the same configuration
+  //     multiple times must not cause side effects.
   rpc UpdateReplicateConfiguration(UpdateReplicateConfigurationRequest) returns (common.Status){}
+  //
+  // GetReplicateInfo retrieves replication-related metadata from a target Milvus cluster.
   rpc GetReplicateInfo(GetReplicateInfoRequest) returns (GetReplicateInfoResponse){}
+  //
+  // CreateReplicateStream establishes a replication stream on the target Milvus cluster.
+  //
+  // Semantics:
+  //   - Sets up a continuous data stream that receives replicated messages
+  //     (DDL, insert, delete, etc.) from the source cluster via CDC.
+  //   - Once established, the target cluster persists incoming messages into
+  //     its WAL (Write-Ahead Log) ensuring durability and consistency.
   rpc CreateReplicateStream(stream ReplicateRequest) returns (stream ReplicateResponse){}
 }
 
@@ -2443,7 +2463,8 @@ message ImmutableMessage {
 }
 
 message ReplicateMessage {
-  ImmutableMessage message = 1; // replicate message to be sent.
+  string source_cluster_id = 1; // the cluster id of source cluster
+  ImmutableMessage message = 2; // replicate message to be sent
 }
 
 message ReplicateRequest {

@@ -256,8 +256,26 @@ type MilvusServiceClient interface {
 	DropRowPolicy(ctx context.Context, in *DropRowPolicyRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	ListRowPolicies(ctx context.Context, in *ListRowPoliciesRequest, opts ...grpc.CallOption) (*ListRowPoliciesResponse, error)
 	// CDC v2 APIs
+	// UpdateReplicateConfiguration applies a full replacement of the current
+	// replication configuration across Milvus clusters.
+	//
+	// Semantics:
+	//   - The provided ReplicateConfiguration completely replaces any existing
+	//     configuration persisted in the metadata store.
+	//   - Passing an empty ReplicateConfiguration is treated as a "clear"
+	//     operation, effectively removing all replication configuration.
+	//   - The RPC is expected to be idempotent: submitting the same configuration
+	//     multiple times must not cause side effects.
 	UpdateReplicateConfiguration(ctx context.Context, in *UpdateReplicateConfigurationRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	// GetReplicateInfo retrieves replication-related metadata from a target Milvus cluster.
 	GetReplicateInfo(ctx context.Context, in *GetReplicateInfoRequest, opts ...grpc.CallOption) (*GetReplicateInfoResponse, error)
+	// CreateReplicateStream establishes a replication stream on the target Milvus cluster.
+	//
+	// Semantics:
+	//   - Sets up a continuous data stream that receives replicated messages
+	//     (DDL, insert, delete, etc.) from the source cluster via CDC.
+	//   - Once established, the target cluster persists incoming messages into
+	//     its WAL (Write-Ahead Log) ensuring durability and consistency.
 	CreateReplicateStream(ctx context.Context, opts ...grpc.CallOption) (MilvusService_CreateReplicateStreamClient, error)
 }
 
@@ -1406,8 +1424,26 @@ type MilvusServiceServer interface {
 	DropRowPolicy(context.Context, *DropRowPolicyRequest) (*commonpb.Status, error)
 	ListRowPolicies(context.Context, *ListRowPoliciesRequest) (*ListRowPoliciesResponse, error)
 	// CDC v2 APIs
+	// UpdateReplicateConfiguration applies a full replacement of the current
+	// replication configuration across Milvus clusters.
+	//
+	// Semantics:
+	//   - The provided ReplicateConfiguration completely replaces any existing
+	//     configuration persisted in the metadata store.
+	//   - Passing an empty ReplicateConfiguration is treated as a "clear"
+	//     operation, effectively removing all replication configuration.
+	//   - The RPC is expected to be idempotent: submitting the same configuration
+	//     multiple times must not cause side effects.
 	UpdateReplicateConfiguration(context.Context, *UpdateReplicateConfigurationRequest) (*commonpb.Status, error)
+	// GetReplicateInfo retrieves replication-related metadata from a target Milvus cluster.
 	GetReplicateInfo(context.Context, *GetReplicateInfoRequest) (*GetReplicateInfoResponse, error)
+	// CreateReplicateStream establishes a replication stream on the target Milvus cluster.
+	//
+	// Semantics:
+	//   - Sets up a continuous data stream that receives replicated messages
+	//     (DDL, insert, delete, etc.) from the source cluster via CDC.
+	//   - Once established, the target cluster persists incoming messages into
+	//     its WAL (Write-Ahead Log) ensuring durability and consistency.
 	CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error
 }
 
