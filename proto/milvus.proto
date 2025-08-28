@@ -2412,14 +2412,7 @@ message GetReplicateInfoRequest {
 }
 
 message GetReplicateInfoResponse {
-  repeated ReplicateCheckpoint checkpoints = 1;
-}
-
-// ReplicateCheckpoint is the WAL replicate checkpoint in the target cluster.
-message ReplicateCheckpoint {
-  string source_channel_name     = 1;
-  string target_channel_name     = 2;
-  common.MessageID replicate_message_id = 3;
+  repeated common.ReplicateCheckpoint checkpoints = 1;
 }
 
 message ReplicateMessage {
