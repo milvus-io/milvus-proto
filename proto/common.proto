@@ -543,6 +543,7 @@ enum WALName {
   Pulsar = 2;
   Kafka = 3;
   WoodPecker = 4;
+  Test = 999;
 }
 
 // ReplicateConfiguration is the configuration that
@@ -584,3 +585,15 @@ message ImmutableMessage {
   bytes payload                  = 2; // message body
   map<string, string> properties = 3; // message properties
 }
+
+// ReplicateCheckpoint is the WAL replicate checkpoint of source cluster.
+// It will be persisted in the target cluster metadata.
+// When a replication started, we will get the replicate checkpoint from target cluster metadata.
+// And use it to continue the replication at source cluster.
+message ReplicateCheckpoint {
+  string cluster_id = 1; // the cluster id of source cluster
+  string pchannel = 2;   // the pchannel of source cluster
+  common.MessageID message_id = 3; // the last confirmed message id of the last replicated message
+  uint64 time_tick = 4; // the time tick of the last replicated message
+}
+
