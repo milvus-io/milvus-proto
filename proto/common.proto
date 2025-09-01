@@ -536,3 +536,64 @@ enum LoadPriority {
 enum FileResourceType {
   ANALYZER_DICTIONARY = 0;
 }
+
+enum WALName {
+  Unknown = 0;
+  RocksMQ = 1;
+  Pulsar = 2;
+  Kafka = 3;
+  WoodPecker = 4;
+  Test = 999;
+}
+
+// ReplicateConfiguration is the configuration that
+// describes the replication topology cross multiple cluster milvus.
+message ReplicateConfiguration {
+  repeated MilvusCluster clusters                      = 1;
+  repeated CrossClusterTopology cross_cluster_topology = 2;
+}
+
+// ConnectionParam defines the params to connect to the Milvus cluster.
+message ConnectionParam {
+  string uri   = 1;
+  string token = 2;
+}
+
+// MilvusCluster describes the Milvus cluster information, 
+// including pchannel mapping details.
+message MilvusCluster {
+  string cluster_id                = 1;
+  ConnectionParam connection_param = 2;
+  repeated string pchannels        = 3;
+}
+
+// CrossClusterTopology is the topology that 
+// describes the topology cross multiple cluster milvus.
+message CrossClusterTopology {
+  string source_cluster_id = 1;
+  string target_cluster_id = 2;
+}
+
+message MessageID {
+  string id               = 1;
+  common.WALName WAL_name = 2;
+}
+
+// ImmutableMessage is the message that can not be modified anymore.
+message ImmutableMessage {
+  MessageID id                   = 1; // message id
+  bytes payload                  = 2; // message body
+  map<string, string> properties = 3; // message properties
+}
+
+// ReplicateCheckpoint is the WAL replicate checkpoint of source cluster.
+// It will be persisted in the target cluster metadata.
+// When a replication started, we will get the replicate checkpoint from target cluster metadata.
+// And use it to continue the replication at source cluster.
+message ReplicateCheckpoint {
+  string cluster_id = 1; // the cluster id of source cluster
+  string pchannel = 2;   // the pchannel of source cluster
+  common.MessageID message_id = 3; // the last confirmed message id of the last replicated message
+  uint64 time_tick = 4; // the time tick of the last replicated message
+}
+

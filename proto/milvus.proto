@@ -140,6 +140,7 @@ service MilvusService {
   rpc AlterDatabase(AlterDatabaseRequest) returns (common.Status) {}
   rpc DescribeDatabase(DescribeDatabaseRequest) returns (DescribeDatabaseResponse) {}
 
+  // Deprecated CDC API
   rpc ReplicateMessage(ReplicateMessageRequest) returns (ReplicateMessageResponse) {}
 
   rpc BackupRBAC(BackupRBACMetaRequest) returns (BackupRBACMetaResponse){}
@@ -164,6 +165,31 @@ service MilvusService {
   rpc CreateRowPolicy(CreateRowPolicyRequest) returns (common.Status) {}
   rpc DropRowPolicy(DropRowPolicyRequest) returns (common.Status) {}
   rpc ListRowPolicies(ListRowPoliciesRequest) returns (ListRowPoliciesResponse) {}
+
+  // CDC v2 APIs
+  // UpdateReplicateConfiguration applies a full replacement of the current
+  // replication configuration across Milvus clusters.
+  //
+  // Semantics:
+  //   - The provided ReplicateConfiguration completely replaces any existing
+  //     configuration persisted in the metadata store.
+  //   - Passing an empty ReplicateConfiguration is treated as a "clear"
+  //     operation, effectively removing all replication configuration.
+  //   - The RPC is expected to be idempotent: submitting the same configuration
+  //     multiple times must not cause side effects.
+  rpc UpdateReplicateConfiguration(UpdateReplicateConfigurationRequest) returns (common.Status){}
+  //
+  // GetReplicateInfo retrieves replication-related metadata from a target Milvus cluster.
+  rpc GetReplicateInfo(GetReplicateInfoRequest) returns (GetReplicateInfoResponse){}
+  //
+  // CreateReplicateStream establishes a replication stream on the target Milvus cluster.
+  //
+  // Semantics:
+  //   - Sets up a continuous data stream that receives replicated messages
+  //     (DDL, insert, delete, etc.) from the source cluster via CDC.
+  //   - Once established, the target cluster persists incoming messages into
+  //     its WAL (Write-Ahead Log) ensuring durability and consistency.
+  rpc CreateReplicateStream(stream ReplicateRequest) returns (stream ReplicateResponse){}
 }
 
 message CreateAliasRequest {
@@ -2375,4 +2401,37 @@ message ListRowPoliciesResponse {
   repeated RowPolicy policies = 2;
   string db_name = 3;
   string collection_name = 4;
+}
+
+message UpdateReplicateConfigurationRequest {
+  common.ReplicateConfiguration replicate_configuration = 1;
+}
+
+message GetReplicateInfoRequest {
+  string source_cluster_id = 1;
+}
+
+message GetReplicateInfoResponse {
+  repeated common.ReplicateCheckpoint checkpoints = 1;
+}
+
+message ReplicateMessage {
+  string source_cluster_id = 1; // the cluster id of source cluster
+  common.ImmutableMessage message = 2; // replicate message to be sent
+}
+
+message ReplicateRequest {
+  oneof request {
+    ReplicateMessage replicate_message = 1;
+  }
+}
+
+message ReplicateConfirmedMessageInfo {
+  uint64 confirmed_time_tick = 1; // the source time tick of the last confirmed message that persisted into target WAL. 
+}
+
+message ReplicateResponse {
+  oneof response {
+    ReplicateConfirmedMessageInfo replicate_confirmed_message_info = 1;
+  }
 }
