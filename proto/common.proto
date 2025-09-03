@@ -193,6 +193,9 @@ enum MsgType {
     DescribeAlias = 113;
     ListAliases = 114;
     AlterCollectionField = 115;
+    AddCollectionFunction = 116;
+    AlterCollectionFunction = 117;
+    DropCollectionFunction = 118;
 
     /* DEFINITION REQUESTS: PARTITION */
     CreatePartition = 200;
@@ -466,6 +469,9 @@ enum ObjectPrivilege {
     PrivilegeAddFileResource = 72;
     PrivilegeRemoveFileResource = 73;
     PrivilegeListFileResources = 74;
+    PrivilegeAddCollectionFunction = 75;
+    PrivilegeAlterCollectionFunction = 76;
+    PrivilegeDropCollectionFunction = 77;
 }
 
 message PrivilegeExt {
