@@ -1038,6 +1038,7 @@ message SubSearchRequest {
   repeated common.KeyValuePair search_params = 4; // must
   int64 nq = 5;
   map<string, schema.TemplateValue> expr_template_values = 6;
+  optional string namespace = 7;
 }
 
 message SearchRequest {
@@ -1066,6 +1067,7 @@ message SearchRequest {
   repeated SubSearchRequest sub_reqs = 17;
   map<string, schema.TemplateValue> expr_template_values = 18;
   schema.FunctionScore function_score = 19;  
+  optional string namespace = 20;
 }
 
 message Hits {
@@ -1100,6 +1102,7 @@ message HybridSearchRequest {
   common.ConsistencyLevel consistency_level = 11;
   bool use_default_consistency = 12;
   schema.FunctionScore function_score = 13;  
+  optional string namespace = 14;
 }
 
 message FlushRequest {
@@ -1142,6 +1145,7 @@ message QueryRequest {
   common.ConsistencyLevel consistency_level = 11;
   bool use_default_consistency = 12;
   map<string, schema.TemplateValue> expr_template_values = 13;
+  optional string namespace = 14;
 }
 
 message QueryResults {
