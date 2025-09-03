@@ -966,10 +966,7 @@ message InsertRequest {
   repeated uint32 hash_keys = 6;
   uint32 num_rows = 7;
   uint64 schema_timestamp = 8;
-  oneof namespace {
-    string namespace_str = 9;
-    int64 namespace_int = 10;
-  }
+  optional string namespace = 9;
 }
 
 message AddCollectionFieldRequest {
@@ -1001,6 +998,7 @@ message UpsertRequest {
   uint32 num_rows = 7;
   uint64 schema_timestamp = 8;
   bool partial_update = 9;
+  optional string namespace = 10;
 }
 
 message MutationResult {
