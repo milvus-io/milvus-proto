@@ -318,6 +318,7 @@ enum MsgType {
     DescribeDatabase = 1805;
 
     AddCollectionField = 1900;
+    PutCollection = 1901;
 }
 
 message MsgBase {
