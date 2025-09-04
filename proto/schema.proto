@@ -253,6 +253,8 @@ message SearchResultData {
   optional SearchIteratorV2Results search_iterator_v2_results = 11;
   repeated float recalls = 12;
   string primary_field_name = 13;
+  int64 scanned_remote_bytes = 14;  // scanned bytes from remote storage
+  int64 scanned_total_bytes = 15;   // scanned bytes from remote storage and local cache
 }
 
 // vector field clustering info
