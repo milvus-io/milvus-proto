@@ -1252,8 +1252,8 @@ message FlushCollectionResult {
   int64 seal_time = 4;
   // Flush timestamp (hybrid timestamp for getting flush state)
   uint64 flush_ts = 5;
-  // Channel checkpoint position
-  msg.MsgPosition channel_cp = 6;
+  // channel name to checkpoint position
+  map<string, msg.MsgPosition> channel_cps = 6;
 }
 
 message PersistentSegmentInfo {
