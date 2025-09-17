@@ -1380,6 +1380,7 @@ message ManualCompactionRequest {
   int64 partition_id = 6;
   string channel = 7;
   repeated int64 segment_ids = 8;
+  bool l0Compaction = 9;
 }
 
 message ManualCompactionResponse {
