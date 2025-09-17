@@ -1108,6 +1108,16 @@ message CalcDistanceResults {
   }
 }
 
+// Specific collection to flush with database context
+// This message allows targeting specific collections within a database for flush operations
+message FlushAllTarget {
+  // Database name to target for flush operation
+  string db_name = 1;
+  // Collection names within this database to flush
+  // If empty, flush all collections in this database
+  repeated string collection_names = 2;
+}
+
 message FlushAllRequest {
   option (common.privilege_ext_obj) = {
     object_type: Global
@@ -1115,12 +1125,48 @@ message FlushAllRequest {
     object_name_index: -1
   };
   common.MsgBase base = 1;
-  string db_name = 2;
+  
+  // Deprecated: use flush_targets instead for more flexible targeting
+  string db_name = 2 [deprecated = true];
+  
+  // List of specific databases and collections to flush
+  // Allows targeting multiple databases and specific collections within each database
+  repeated FlushAllTarget flush_targets = 3;
 }
 
 message FlushAllResponse {
   common.Status status = 1;
   uint64 flush_all_ts = 2;
+  
+  // Detailed flush results for each flush_target
+  // Contains per-collection flush information including segment IDs and timestamps
+  repeated FlushAllResult flush_results = 3;
+}
+
+// Flush result for a single flush target
+message FlushAllResult {
+  // Database name containing the collections
+  string db_name = 1;
+  
+  // List of collections that were actually processed for this target
+  // If the target had empty collection_names (flush all), this shows all collections in the database
+  // If the target specified collection_names, this shows only those collections
+  repeated FlushCollectionResult collection_results = 2;
+}
+
+message FlushCollectionResult {
+  // Collection name
+  string collection_name = 1;
+  // Segment IDs
+  schema.LongArray segment_ids = 2;
+  // Segment IDs that were actually flushed
+  schema.LongArray flush_segment_ids = 3;
+  // Seal time (physical time for backup tools)
+  int64 seal_time = 4;
+  // Flush timestamp (hybrid timestamp for getting flush state)
+  uint64 flush_ts = 5;
+  // channel name to checkpoint position
+  map<string, msg.MsgPosition> channel_cps = 6;
 }
 
 message PersistentSegmentInfo {
@@ -1301,12 +1347,32 @@ message GetFlushStateResponse {
 message GetFlushAllStateRequest {
   common.MsgBase base = 1;
   uint64 flush_all_ts = 2;
-  string db_name = 3;
+  
+  // Deprecated: use flush_targets instead for more flexible targeting
+  string db_name = 3 [deprecated = true];
+  
+  // List of specific databases and collections to check flush state
+  // Allows checking flush state for multiple databases and specific collections
+  repeated FlushAllTarget flush_targets = 4;
 }
 
 message GetFlushAllStateResponse {
   common.Status status = 1;
+  // Overall flush state: true if all requested databases/collections are flushed
+  // This is a summary field indicating whether all targeted resources have completed flushing
   bool flushed = 2;
+  
+  // Detailed flush state for each database
+  // Provides per-database and per-collection flush status information
+  repeated FlushAllState flush_states = 3;
+}
+
+message FlushAllState {
+  // Database name for this flush state report
+  string db_name = 1;
+  // Collection-level flush state mapping
+  // Key: collection name, Value: true if collection is fully flushed
+  map<string, bool> collection_flush_states = 2;
 }
 
 message ImportRequest {
