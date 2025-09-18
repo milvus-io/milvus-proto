@@ -43,7 +43,8 @@ enum DataType {
   Int8Vector = 105;
   ArrayOfVector = 106;
 
-  ArrayOfStruct = 200;
+  ArrayOfStruct = 200;  // internal types, not used in user interface
+  Struct = 201;
 }
 
 enum FunctionType{
