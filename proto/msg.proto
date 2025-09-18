@@ -28,6 +28,7 @@ message InsertRequest {
   repeated schema.FieldData fields_data = 13;
   uint64 num_rows = 14;
   InsertDataVersion version = 15;
+  optional string namespace = 16;
 }
 
 message DeleteRequest {
