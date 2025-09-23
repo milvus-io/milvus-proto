@@ -205,6 +205,7 @@ service MilvusService {
   rpc RestoreSnapshot(RestoreSnapshotRequest) returns (RestoreSnapshotResponse) {}
   rpc GetRestoreSnapshotState(GetRestoreSnapshotStateRequest) returns (GetRestoreSnapshotStateResponse) {}
   rpc ListRestoreSnapshotJobs(ListRestoreSnapshotJobsRequest) returns (ListRestoreSnapshotJobsResponse) {}
+  rpc AlterCollectionSchema(AlterCollectionSchemaRequest) returns (AlterCollectionSchemaResponse) {}
 }
 
 message CreateAliasRequest {
@@ -2741,4 +2742,55 @@ message ListRestoreSnapshotJobsRequest {
 message ListRestoreSnapshotJobsResponse {
   common.Status status = 1;
   repeated RestoreSnapshotInfo jobs = 2;
+}
+
+message AlterCollectionSchemaRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeAlterCollectionSchema
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  int64  collectionID = 4;
+  
+  // The serialized `schema.FieldSchema`
+  message FieldInfo {
+    schema.FieldSchema field_schema = 1;
+    // Version before 2.0.2 doesn't contain index_name, we use default index name.
+    string index_name = 2;
+    // Support keys: index_type,metric_type, params. Different index_type may has different params.
+    repeated common.KeyValuePair extra_params = 3;
+  }
+  
+  // Add fields and functions request
+  message AddRequest {
+    repeated FieldInfo field_infos = 1;
+    repeated schema.FunctionSchema func_schema = 2;
+    bool do_physical_backfill = 3;
+  }
+  
+  // Drop field request
+  message DropRequest {
+    oneof field_identifier {
+      string field_name = 1;
+      int64 field_id = 2;
+    }
+  }
+  
+  // Action to perform on the collection schema
+  message Action {
+    oneof op {
+      AddRequest add_request = 1;
+      DropRequest drop_request = 2;
+    }
+  }
+  
+  Action action = 5;
+}
+
+message AlterCollectionSchemaResponse {
+  common.Status alter_status = 1;
+  common.Status index_status = 2;
 }
