@@ -267,7 +267,7 @@ type MilvusServiceClient interface {
 	//   - The RPC is expected to be idempotent: submitting the same configuration
 	//     multiple times must not cause side effects.
 	UpdateReplicateConfiguration(ctx context.Context, in *UpdateReplicateConfigurationRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
-	// GetReplicateInfo retrieves replication-related metadata from a target Milvus cluster.
+	// GetReplicateInfo retrieves replication-related metadata of specified channel from a target Milvus cluster.
 	GetReplicateInfo(ctx context.Context, in *GetReplicateInfoRequest, opts ...grpc.CallOption) (*GetReplicateInfoResponse, error)
 	// CreateReplicateStream establishes a replication stream on the target Milvus cluster.
 	//
@@ -1435,7 +1435,7 @@ type MilvusServiceServer interface {
 	//   - The RPC is expected to be idempotent: submitting the same configuration
 	//     multiple times must not cause side effects.
 	UpdateReplicateConfiguration(context.Context, *UpdateReplicateConfigurationRequest) (*commonpb.Status, error)
-	// GetReplicateInfo retrieves replication-related metadata from a target Milvus cluster.
+	// GetReplicateInfo retrieves replication-related metadata of specified channel from a target Milvus cluster.
 	GetReplicateInfo(context.Context, *GetReplicateInfoRequest) (*GetReplicateInfoResponse, error)
 	// CreateReplicateStream establishes a replication stream on the target Milvus cluster.
 	//
