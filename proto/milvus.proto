@@ -179,7 +179,7 @@ service MilvusService {
   //     multiple times must not cause side effects.
   rpc UpdateReplicateConfiguration(UpdateReplicateConfigurationRequest) returns (common.Status){}
   //
-  // GetReplicateInfo retrieves replication-related metadata from a target Milvus cluster.
+  // GetReplicateInfo retrieves replication-related metadata of specified channel from a target Milvus cluster.
   rpc GetReplicateInfo(GetReplicateInfoRequest) returns (GetReplicateInfoResponse){}
   //
   // CreateReplicateStream establishes a replication stream on the target Milvus cluster.
@@ -2482,10 +2482,11 @@ message UpdateReplicateConfigurationRequest {
 
 message GetReplicateInfoRequest {
   string source_cluster_id = 1;
+  string target_pchannel   = 2;
 }
 
 message GetReplicateInfoResponse {
-  repeated common.ReplicateCheckpoint checkpoints = 1;
+  common.ReplicateCheckpoint checkpoint = 1;
 }
 
 message ReplicateMessage {
