@@ -2482,7 +2482,7 @@ message UpdateReplicateConfigurationRequest {
 
 message GetReplicateInfoRequest {
   string source_cluster_id = 1;
-  string pchannel          = 2;
+  string target_pchannel   = 2;
 }
 
 message GetReplicateInfoResponse {
