@@ -603,3 +603,7 @@ message ReplicateCheckpoint {
   uint64 time_tick = 4; // the time tick of the last replicated message
 }
 
+message HighlightResult {        
+  repeated int64 offsets = 1;
+}
+
