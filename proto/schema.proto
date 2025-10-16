@@ -254,6 +254,7 @@ message SearchResultData {
   optional SearchIteratorV2Results search_iterator_v2_results = 11;
   repeated float recalls = 12;
   string primary_field_name = 13;
+  repeated common.HighlightResult highlight = 14;
 }
 
 // vector field clustering info
