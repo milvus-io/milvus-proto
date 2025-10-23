@@ -612,3 +612,12 @@ message HighlightResult {
   repeated HighlightData datas = 2;
 }
 
+enum HighlightType {
+    Lexical = 0;
+    Semantic = 1;
+}
+
+message Highlighter {
+    HighlightType type = 1;
+    repeated KeyValuePair params = 2;
+}
