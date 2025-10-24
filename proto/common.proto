@@ -604,3 +604,21 @@ message ReplicateCheckpoint {
   uint64 time_tick = 4; // the time tick of the last replicated message
 }
 
+message HighlightData {        
+  repeated string fragments = 1;
+}
+
+message HighlightResult {        
+  string field_name = 1;
+  repeated HighlightData datas = 2;
+}
+
+enum HighlightType {
+    Lexical = 0;
+    Semantic = 1;
+}
+
+message Highlighter {
+    HighlightType type = 1;
+    repeated KeyValuePair params = 2;
+}

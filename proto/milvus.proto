@@ -1111,6 +1111,7 @@ message SearchRequest {
   map<string, schema.TemplateValue> expr_template_values = 18;
   schema.FunctionScore function_score = 19;  
   optional string namespace = 20;
+  common.Highlighter highlighter = 21;
 }
 
 message Hits {
