@@ -1618,49 +1618,6 @@ func (LoadPriority) EnumDescriptor() ([]byte, []int) {
 	return file_common_proto_rawDescGZIP(), []int{14}
 }
 
-type FileResourceType int32
-
-const (
-	FileResourceType_ANALYZER_DICTIONARY FileResourceType = 0
-)
-
-// Enum value maps for FileResourceType.
-var (
-	FileResourceType_name = map[int32]string{
-		0: "ANALYZER_DICTIONARY",
-	}
-	FileResourceType_value = map[string]int32{
-		"ANALYZER_DICTIONARY": 0,
-	}
-)
-
-func (x FileResourceType) Enum() *FileResourceType {
-	p := new(FileResourceType)
-	*p = x
-	return p
-}
-
-func (x FileResourceType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (FileResourceType) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_proto_enumTypes[15].Descriptor()
-}
-
-func (FileResourceType) Type() protoreflect.EnumType {
-	return &file_common_proto_enumTypes[15]
-}
-
-func (x FileResourceType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use FileResourceType.Descriptor instead.
-func (FileResourceType) EnumDescriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{15}
-}
-
 type WALName int32
 
 const (
@@ -1703,11 +1660,11 @@ func (x WALName) String() string {
 }
 
 func (WALName) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_proto_enumTypes[16].Descriptor()
+	return file_common_proto_enumTypes[15].Descriptor()
 }
 
 func (WALName) Type() protoreflect.EnumType {
-	return &file_common_proto_enumTypes[16]
+	return &file_common_proto_enumTypes[15]
 }
 
 func (x WALName) Number() protoreflect.EnumNumber {
@@ -1716,7 +1673,7 @@ func (x WALName) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use WALName.Descriptor instead.
 func (WALName) EnumDescriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{16}
+	return file_common_proto_rawDescGZIP(), []int{15}
 }
 
 type HighlightType int32
@@ -1749,11 +1706,11 @@ func (x HighlightType) String() string {
 }
 
 func (HighlightType) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_proto_enumTypes[17].Descriptor()
+	return file_common_proto_enumTypes[16].Descriptor()
 }
 
 func (HighlightType) Type() protoreflect.EnumType {
-	return &file_common_proto_enumTypes[17]
+	return &file_common_proto_enumTypes[16]
 }
 
 func (x HighlightType) Number() protoreflect.EnumNumber {
@@ -1762,7 +1719,7 @@ func (x HighlightType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use HighlightType.Descriptor instead.
 func (HighlightType) EnumDescriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{17}
+	return file_common_proto_rawDescGZIP(), []int{16}
 }
 
 type Status struct {
@@ -4125,32 +4082,30 @@ var file_common_proto_rawDesc = []byte{
 	0x13, 0x0a, 0x0f, 0x4c, 0x6f, 0x61, 0x64, 0x53, 0x74, 0x61, 0x74, 0x65, 0x4c, 0x6f, 0x61, 0x64,
 	0x65, 0x64, 0x10, 0x03, 0x2a, 0x21, 0x0a, 0x0c, 0x4c, 0x6f, 0x61, 0x64, 0x50, 0x72, 0x69, 0x6f,
 	0x72, 0x69, 0x74, 0x79, 0x12, 0x08, 0x0a, 0x04, 0x48, 0x49, 0x47, 0x48, 0x10, 0x00, 0x12, 0x07,
-	0x0a, 0x03, 0x4c, 0x4f, 0x57, 0x10, 0x01, 0x2a, 0x2b, 0x0a, 0x10, 0x46, 0x69, 0x6c, 0x65, 0x52,
-	0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x54, 0x79, 0x70, 0x65, 0x12, 0x17, 0x0a, 0x13, 0x41,
-	0x4e, 0x41, 0x4c, 0x59, 0x5a, 0x45, 0x52, 0x5f, 0x44, 0x49, 0x43, 0x54, 0x49, 0x4f, 0x4e, 0x41,
-	0x52, 0x59, 0x10, 0x00, 0x2a, 0x55, 0x0a, 0x07, 0x57, 0x41, 0x4c, 0x4e, 0x61, 0x6d, 0x65, 0x12,
-	0x0b, 0x0a, 0x07, 0x55, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x6e, 0x10, 0x00, 0x12, 0x0b, 0x0a, 0x07,
-	0x52, 0x6f, 0x63, 0x6b, 0x73, 0x4d, 0x51, 0x10, 0x01, 0x12, 0x0a, 0x0a, 0x06, 0x50, 0x75, 0x6c,
-	0x73, 0x61, 0x72, 0x10, 0x02, 0x12, 0x09, 0x0a, 0x05, 0x4b, 0x61, 0x66, 0x6b, 0x61, 0x10, 0x03,
-	0x12, 0x0e, 0x0a, 0x0a, 0x57, 0x6f, 0x6f, 0x64, 0x50, 0x65, 0x63, 0x6b, 0x65, 0x72, 0x10, 0x04,
-	0x12, 0x09, 0x0a, 0x04, 0x54, 0x65, 0x73, 0x74, 0x10, 0xe7, 0x07, 0x2a, 0x2a, 0x0a, 0x0d, 0x48,
-	0x69, 0x67, 0x68, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0b, 0x0a, 0x07,
-	0x4c, 0x65, 0x78, 0x69, 0x63, 0x61, 0x6c, 0x10, 0x00, 0x12, 0x0c, 0x0a, 0x08, 0x53, 0x65, 0x6d,
-	0x61, 0x6e, 0x74, 0x69, 0x63, 0x10, 0x01, 0x3a, 0x6f, 0x0a, 0x11, 0x70, 0x72, 0x69, 0x76, 0x69,
-	0x6c, 0x65, 0x67, 0x65, 0x5f, 0x65, 0x78, 0x74, 0x5f, 0x6f, 0x62, 0x6a, 0x12, 0x1f, 0x2e, 0x67,
-	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x4d,
-	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0xe9, 0x07,
-	0x20, 0x01, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x50, 0x72, 0x69, 0x76, 0x69,
-	0x6c, 0x65, 0x67, 0x65, 0x45, 0x78, 0x74, 0x52, 0x0f, 0x70, 0x72, 0x69, 0x76, 0x69, 0x6c, 0x65,
-	0x67, 0x65, 0x45, 0x78, 0x74, 0x4f, 0x62, 0x6a, 0x42, 0x6d, 0x0a, 0x0e, 0x69, 0x6f, 0x2e, 0x6d,
-	0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x42, 0x0b, 0x43, 0x6f, 0x6d, 0x6d,
-	0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75,
-	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x69, 0x6f, 0x2f,
-	0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2d,
-	0x61, 0x70, 0x69, 0x2f, 0x76, 0x32, 0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x70, 0x62, 0xa0,
-	0x01, 0x01, 0xaa, 0x02, 0x12, 0x4d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x43, 0x6c, 0x69, 0x65,
-	0x6e, 0x74, 0x2e, 0x47, 0x72, 0x70, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x0a, 0x03, 0x4c, 0x4f, 0x57, 0x10, 0x01, 0x2a, 0x55, 0x0a, 0x07, 0x57, 0x41, 0x4c, 0x4e, 0x61,
+	0x6d, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x6e, 0x10, 0x00, 0x12,
+	0x0b, 0x0a, 0x07, 0x52, 0x6f, 0x63, 0x6b, 0x73, 0x4d, 0x51, 0x10, 0x01, 0x12, 0x0a, 0x0a, 0x06,
+	0x50, 0x75, 0x6c, 0x73, 0x61, 0x72, 0x10, 0x02, 0x12, 0x09, 0x0a, 0x05, 0x4b, 0x61, 0x66, 0x6b,
+	0x61, 0x10, 0x03, 0x12, 0x0e, 0x0a, 0x0a, 0x57, 0x6f, 0x6f, 0x64, 0x50, 0x65, 0x63, 0x6b, 0x65,
+	0x72, 0x10, 0x04, 0x12, 0x09, 0x0a, 0x04, 0x54, 0x65, 0x73, 0x74, 0x10, 0xe7, 0x07, 0x2a, 0x2a,
+	0x0a, 0x0d, 0x48, 0x69, 0x67, 0x68, 0x6c, 0x69, 0x67, 0x68, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12,
+	0x0b, 0x0a, 0x07, 0x4c, 0x65, 0x78, 0x69, 0x63, 0x61, 0x6c, 0x10, 0x00, 0x12, 0x0c, 0x0a, 0x08,
+	0x53, 0x65, 0x6d, 0x61, 0x6e, 0x74, 0x69, 0x63, 0x10, 0x01, 0x3a, 0x6f, 0x0a, 0x11, 0x70, 0x72,
+	0x69, 0x76, 0x69, 0x6c, 0x65, 0x67, 0x65, 0x5f, 0x65, 0x78, 0x74, 0x5f, 0x6f, 0x62, 0x6a, 0x12,
+	0x1f, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
+	0x66, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73,
+	0x18, 0xe9, 0x07, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73,
+	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x50, 0x72,
+	0x69, 0x76, 0x69, 0x6c, 0x65, 0x67, 0x65, 0x45, 0x78, 0x74, 0x52, 0x0f, 0x70, 0x72, 0x69, 0x76,
+	0x69, 0x6c, 0x65, 0x67, 0x65, 0x45, 0x78, 0x74, 0x4f, 0x62, 0x6a, 0x42, 0x6d, 0x0a, 0x0e, 0x69,
+	0x6f, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x42, 0x0b, 0x43,
+	0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x67, 0x69,
+	0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d,
+	0x69, 0x6f, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
+	0x67, 0x6f, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x32, 0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e,
+	0x70, 0x62, 0xa0, 0x01, 0x01, 0xaa, 0x02, 0x12, 0x4d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x43,
+	0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2e, 0x47, 0x72, 0x70, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -4165,7 +4120,7 @@ func file_common_proto_rawDescGZIP() []byte {
 	return file_common_proto_rawDescData
 }
 
-var file_common_proto_enumTypes = make([]protoimpl.EnumInfo, 18)
+var file_common_proto_enumTypes = make([]protoimpl.EnumInfo, 17)
 var file_common_proto_msgTypes = make([]protoimpl.MessageInfo, 31)
 var file_common_proto_goTypes = []interface{}{
 	(ErrorCode)(0),                      // 0: milvus.proto.common.ErrorCode
@@ -4183,68 +4138,67 @@ var file_common_proto_goTypes = []interface{}{
 	(StateCode)(0),                      // 12: milvus.proto.common.StateCode
 	(LoadState)(0),                      // 13: milvus.proto.common.LoadState
 	(LoadPriority)(0),                   // 14: milvus.proto.common.LoadPriority
-	(FileResourceType)(0),               // 15: milvus.proto.common.FileResourceType
-	(WALName)(0),                        // 16: milvus.proto.common.WALName
-	(HighlightType)(0),                  // 17: milvus.proto.common.HighlightType
-	(*Status)(nil),                      // 18: milvus.proto.common.Status
-	(*KeyValuePair)(nil),                // 19: milvus.proto.common.KeyValuePair
-	(*KeyDataPair)(nil),                 // 20: milvus.proto.common.KeyDataPair
-	(*Blob)(nil),                        // 21: milvus.proto.common.Blob
-	(*PlaceholderValue)(nil),            // 22: milvus.proto.common.PlaceholderValue
-	(*PlaceholderGroup)(nil),            // 23: milvus.proto.common.PlaceholderGroup
-	(*Address)(nil),                     // 24: milvus.proto.common.Address
-	(*MsgBase)(nil),                     // 25: milvus.proto.common.MsgBase
-	(*ReplicateInfo)(nil),               // 26: milvus.proto.common.ReplicateInfo
-	(*MsgHeader)(nil),                   // 27: milvus.proto.common.MsgHeader
-	(*DMLMsgHeader)(nil),                // 28: milvus.proto.common.DMLMsgHeader
-	(*PrivilegeExt)(nil),                // 29: milvus.proto.common.PrivilegeExt
-	(*SegmentStats)(nil),                // 30: milvus.proto.common.SegmentStats
-	(*ClientInfo)(nil),                  // 31: milvus.proto.common.ClientInfo
-	(*ServerInfo)(nil),                  // 32: milvus.proto.common.ServerInfo
-	(*NodeInfo)(nil),                    // 33: milvus.proto.common.NodeInfo
-	(*ReplicateConfiguration)(nil),      // 34: milvus.proto.common.ReplicateConfiguration
-	(*ConnectionParam)(nil),             // 35: milvus.proto.common.ConnectionParam
-	(*MilvusCluster)(nil),               // 36: milvus.proto.common.MilvusCluster
-	(*CrossClusterTopology)(nil),        // 37: milvus.proto.common.CrossClusterTopology
-	(*MessageID)(nil),                   // 38: milvus.proto.common.MessageID
-	(*ImmutableMessage)(nil),            // 39: milvus.proto.common.ImmutableMessage
-	(*ReplicateCheckpoint)(nil),         // 40: milvus.proto.common.ReplicateCheckpoint
-	(*HighlightData)(nil),               // 41: milvus.proto.common.HighlightData
-	(*HighlightResult)(nil),             // 42: milvus.proto.common.HighlightResult
-	(*Highlighter)(nil),                 // 43: milvus.proto.common.Highlighter
-	nil,                                 // 44: milvus.proto.common.Status.ExtraInfoEntry
-	nil,                                 // 45: milvus.proto.common.MsgBase.PropertiesEntry
-	nil,                                 // 46: milvus.proto.common.ClientInfo.ReservedEntry
-	nil,                                 // 47: milvus.proto.common.ServerInfo.ReservedEntry
-	nil,                                 // 48: milvus.proto.common.ImmutableMessage.PropertiesEntry
-	(*descriptorpb.MessageOptions)(nil), // 49: google.protobuf.MessageOptions
+	(WALName)(0),                        // 15: milvus.proto.common.WALName
+	(HighlightType)(0),                  // 16: milvus.proto.common.HighlightType
+	(*Status)(nil),                      // 17: milvus.proto.common.Status
+	(*KeyValuePair)(nil),                // 18: milvus.proto.common.KeyValuePair
+	(*KeyDataPair)(nil),                 // 19: milvus.proto.common.KeyDataPair
+	(*Blob)(nil),                        // 20: milvus.proto.common.Blob
+	(*PlaceholderValue)(nil),            // 21: milvus.proto.common.PlaceholderValue
+	(*PlaceholderGroup)(nil),            // 22: milvus.proto.common.PlaceholderGroup
+	(*Address)(nil),                     // 23: milvus.proto.common.Address
+	(*MsgBase)(nil),                     // 24: milvus.proto.common.MsgBase
+	(*ReplicateInfo)(nil),               // 25: milvus.proto.common.ReplicateInfo
+	(*MsgHeader)(nil),                   // 26: milvus.proto.common.MsgHeader
+	(*DMLMsgHeader)(nil),                // 27: milvus.proto.common.DMLMsgHeader
+	(*PrivilegeExt)(nil),                // 28: milvus.proto.common.PrivilegeExt
+	(*SegmentStats)(nil),                // 29: milvus.proto.common.SegmentStats
+	(*ClientInfo)(nil),                  // 30: milvus.proto.common.ClientInfo
+	(*ServerInfo)(nil),                  // 31: milvus.proto.common.ServerInfo
+	(*NodeInfo)(nil),                    // 32: milvus.proto.common.NodeInfo
+	(*ReplicateConfiguration)(nil),      // 33: milvus.proto.common.ReplicateConfiguration
+	(*ConnectionParam)(nil),             // 34: milvus.proto.common.ConnectionParam
+	(*MilvusCluster)(nil),               // 35: milvus.proto.common.MilvusCluster
+	(*CrossClusterTopology)(nil),        // 36: milvus.proto.common.CrossClusterTopology
+	(*MessageID)(nil),                   // 37: milvus.proto.common.MessageID
+	(*ImmutableMessage)(nil),            // 38: milvus.proto.common.ImmutableMessage
+	(*ReplicateCheckpoint)(nil),         // 39: milvus.proto.common.ReplicateCheckpoint
+	(*HighlightData)(nil),               // 40: milvus.proto.common.HighlightData
+	(*HighlightResult)(nil),             // 41: milvus.proto.common.HighlightResult
+	(*Highlighter)(nil),                 // 42: milvus.proto.common.Highlighter
+	nil,                                 // 43: milvus.proto.common.Status.ExtraInfoEntry
+	nil,                                 // 44: milvus.proto.common.MsgBase.PropertiesEntry
+	nil,                                 // 45: milvus.proto.common.ClientInfo.ReservedEntry
+	nil,                                 // 46: milvus.proto.common.ServerInfo.ReservedEntry
+	nil,                                 // 47: milvus.proto.common.ImmutableMessage.PropertiesEntry
+	(*descriptorpb.MessageOptions)(nil), // 48: google.protobuf.MessageOptions
 }
 var file_common_proto_depIdxs = []int32{
 	0,  // 0: milvus.proto.common.Status.error_code:type_name -> milvus.proto.common.ErrorCode
-	44, // 1: milvus.proto.common.Status.extra_info:type_name -> milvus.proto.common.Status.ExtraInfoEntry
+	43, // 1: milvus.proto.common.Status.extra_info:type_name -> milvus.proto.common.Status.ExtraInfoEntry
 	4,  // 2: milvus.proto.common.PlaceholderValue.type:type_name -> milvus.proto.common.PlaceholderType
-	22, // 3: milvus.proto.common.PlaceholderGroup.placeholders:type_name -> milvus.proto.common.PlaceholderValue
+	21, // 3: milvus.proto.common.PlaceholderGroup.placeholders:type_name -> milvus.proto.common.PlaceholderValue
 	5,  // 4: milvus.proto.common.MsgBase.msg_type:type_name -> milvus.proto.common.MsgType
-	45, // 5: milvus.proto.common.MsgBase.properties:type_name -> milvus.proto.common.MsgBase.PropertiesEntry
-	26, // 6: milvus.proto.common.MsgBase.replicateInfo:type_name -> milvus.proto.common.ReplicateInfo
-	25, // 7: milvus.proto.common.MsgHeader.base:type_name -> milvus.proto.common.MsgBase
-	25, // 8: milvus.proto.common.DMLMsgHeader.base:type_name -> milvus.proto.common.MsgBase
+	44, // 5: milvus.proto.common.MsgBase.properties:type_name -> milvus.proto.common.MsgBase.PropertiesEntry
+	25, // 6: milvus.proto.common.MsgBase.replicateInfo:type_name -> milvus.proto.common.ReplicateInfo
+	24, // 7: milvus.proto.common.MsgHeader.base:type_name -> milvus.proto.common.MsgBase
+	24, // 8: milvus.proto.common.DMLMsgHeader.base:type_name -> milvus.proto.common.MsgBase
 	10, // 9: milvus.proto.common.PrivilegeExt.object_type:type_name -> milvus.proto.common.ObjectType
 	11, // 10: milvus.proto.common.PrivilegeExt.object_privilege:type_name -> milvus.proto.common.ObjectPrivilege
-	46, // 11: milvus.proto.common.ClientInfo.reserved:type_name -> milvus.proto.common.ClientInfo.ReservedEntry
-	47, // 12: milvus.proto.common.ServerInfo.reserved:type_name -> milvus.proto.common.ServerInfo.ReservedEntry
-	36, // 13: milvus.proto.common.ReplicateConfiguration.clusters:type_name -> milvus.proto.common.MilvusCluster
-	37, // 14: milvus.proto.common.ReplicateConfiguration.cross_cluster_topology:type_name -> milvus.proto.common.CrossClusterTopology
-	35, // 15: milvus.proto.common.MilvusCluster.connection_param:type_name -> milvus.proto.common.ConnectionParam
-	16, // 16: milvus.proto.common.MessageID.WAL_name:type_name -> milvus.proto.common.WALName
-	38, // 17: milvus.proto.common.ImmutableMessage.id:type_name -> milvus.proto.common.MessageID
-	48, // 18: milvus.proto.common.ImmutableMessage.properties:type_name -> milvus.proto.common.ImmutableMessage.PropertiesEntry
-	38, // 19: milvus.proto.common.ReplicateCheckpoint.message_id:type_name -> milvus.proto.common.MessageID
-	41, // 20: milvus.proto.common.HighlightResult.datas:type_name -> milvus.proto.common.HighlightData
-	17, // 21: milvus.proto.common.Highlighter.type:type_name -> milvus.proto.common.HighlightType
-	19, // 22: milvus.proto.common.Highlighter.params:type_name -> milvus.proto.common.KeyValuePair
-	49, // 23: milvus.proto.common.privilege_ext_obj:extendee -> google.protobuf.MessageOptions
-	29, // 24: milvus.proto.common.privilege_ext_obj:type_name -> milvus.proto.common.PrivilegeExt
+	45, // 11: milvus.proto.common.ClientInfo.reserved:type_name -> milvus.proto.common.ClientInfo.ReservedEntry
+	46, // 12: milvus.proto.common.ServerInfo.reserved:type_name -> milvus.proto.common.ServerInfo.ReservedEntry
+	35, // 13: milvus.proto.common.ReplicateConfiguration.clusters:type_name -> milvus.proto.common.MilvusCluster
+	36, // 14: milvus.proto.common.ReplicateConfiguration.cross_cluster_topology:type_name -> milvus.proto.common.CrossClusterTopology
+	34, // 15: milvus.proto.common.MilvusCluster.connection_param:type_name -> milvus.proto.common.ConnectionParam
+	15, // 16: milvus.proto.common.MessageID.WAL_name:type_name -> milvus.proto.common.WALName
+	37, // 17: milvus.proto.common.ImmutableMessage.id:type_name -> milvus.proto.common.MessageID
+	47, // 18: milvus.proto.common.ImmutableMessage.properties:type_name -> milvus.proto.common.ImmutableMessage.PropertiesEntry
+	37, // 19: milvus.proto.common.ReplicateCheckpoint.message_id:type_name -> milvus.proto.common.MessageID
+	40, // 20: milvus.proto.common.HighlightResult.datas:type_name -> milvus.proto.common.HighlightData
+	16, // 21: milvus.proto.common.Highlighter.type:type_name -> milvus.proto.common.HighlightType
+	18, // 22: milvus.proto.common.Highlighter.params:type_name -> milvus.proto.common.KeyValuePair
+	48, // 23: milvus.proto.common.privilege_ext_obj:extendee -> google.protobuf.MessageOptions
+	28, // 24: milvus.proto.common.privilege_ext_obj:type_name -> milvus.proto.common.PrivilegeExt
 	25, // [25:25] is the sub-list for method output_type
 	25, // [25:25] is the sub-list for method input_type
 	24, // [24:25] is the sub-list for extension type_name
@@ -4576,7 +4530,7 @@ func file_common_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_common_proto_rawDesc,
-			NumEnums:      18,
+			NumEnums:      17,
 			NumMessages:   31,
 			NumExtensions: 1,
 			NumServices:   0,
