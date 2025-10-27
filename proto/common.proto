@@ -472,6 +472,7 @@ enum ObjectPrivilege {
     PrivilegeAddCollectionFunction = 75;
     PrivilegeAlterCollectionFunction = 76;
     PrivilegeDropCollectionFunction = 77;
+    PrivilegeUpdateReplicateConfiguration = 78;
 }
 
 message PrivilegeExt {
