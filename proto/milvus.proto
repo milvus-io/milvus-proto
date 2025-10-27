@@ -2350,7 +2350,6 @@ message FileResourceInfo {
   int64 id = 1;
   string name = 2;
   string path = 3;
-  common.FileResourceType type = 4;
 }
 
 message AddFileResourceRequest {
@@ -2362,7 +2361,6 @@ message AddFileResourceRequest {
   common.MsgBase base = 1;
   string name = 2;
   string path = 3;
-  common.FileResourceType type = 4;
 }
 
 message RemoveFileResourceRequest {

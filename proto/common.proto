@@ -543,10 +543,6 @@ enum LoadPriority {
     LOW = 1;
 }
 
-enum FileResourceType {
-  ANALYZER_DICTIONARY = 0;
-}
-
 enum WALName {
   Unknown = 0;
   RocksMQ = 1;
