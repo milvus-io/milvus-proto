@@ -122,7 +122,7 @@ message StructArrayFieldSchema {
   string name = 2;
   string description = 3;
   repeated FieldSchema fields = 4;
-  repeated common.KeyValuePair properties = 5;
+  repeated common.KeyValuePair type_params = 5;
 
   // TODO: STRUCT type may also need to support Function in the future
 }
