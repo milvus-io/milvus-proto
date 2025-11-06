@@ -1424,6 +1424,7 @@ message ManualCompactionRequest {
   string channel = 7;
   repeated int64 segment_ids = 8;
   bool l0Compaction = 9;
+  int64 target_size= 10;
 }
 
 message ManualCompactionResponse {
