@@ -318,6 +318,9 @@ enum MsgType {
     DescribeDatabase = 1805;
 
     AddCollectionField = 1900;
+
+    /* WAL group */
+    AlterWAL = 2000;
 }
 
 message MsgBase {
