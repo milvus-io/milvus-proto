@@ -57,6 +57,8 @@ mkdir -p ../go-api/milvuspb
 mkdir -p ../go-api/msgpb
 mkdir -p ../go-api/federpb
 mkdir -p ../go-api/tokenizerpb
+mkdir -p ../go-api/snapshotpb
+mkdir -p ../go-api/rgpb
 
 echo "protoc path: $PROTOC_BIN"
 export protoc=$PROTOC_BIN
@@ -104,5 +106,4 @@ $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
     --go_out=paths=source_relative:./../go-api/tokenizerpb \
     --go-grpc_out=require_unimplemented_servers=false,paths=source_relative:./../go-api/tokenizerpb tokenizer.proto
-
 popd
