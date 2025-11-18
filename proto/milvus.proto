@@ -302,6 +302,8 @@ message CreateCollectionRequest {
   common.ConsistencyLevel consistency_level = 6;
   repeated common.KeyValuePair properties = 7;
   int64 num_partitions = 8; // num of default physical partitions, only used in partition key mode and changes are not supported
+  string external_source = 9;
+  string external_spec = 10;
 }
 
 /**

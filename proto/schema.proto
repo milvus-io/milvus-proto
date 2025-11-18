@@ -82,6 +82,7 @@ message FieldSchema {
   bool is_clustering_key = 14;
   bool nullable = 15; // enable set null as field value
   bool is_function_output =16;
+  string external_field = 17; // external field name 
 }
 
 message FunctionSchema {
@@ -118,6 +119,7 @@ message CollectionSchema {
   int32 version = 10; // The version of current collection schema updates, increment every time the schema content is updating, 
                       // 0 when the collection is created or the collection schema is updated before 2.6.5.
                       // the name dbName and description take no effect to it.
+  bool external = 11;
 }
 
 message StructArrayFieldSchema {
