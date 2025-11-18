@@ -69,6 +69,8 @@ message CreateCollectionRequest {
   repeated int64 partitionIDs = 11;
   repeated string partitionNames = 12;
   schema.CollectionSchema collection_schema = 13;
+  string external_source = 14;
+  string external_spec = 15;
 }
 
 message DropCollectionRequest {
