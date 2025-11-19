@@ -472,9 +472,6 @@ enum ObjectPrivilege {
     PrivilegeAddFileResource = 72;
     PrivilegeRemoveFileResource = 73;
     PrivilegeListFileResources = 74;
-    PrivilegeAddCollectionFunction = 75;
-    PrivilegeAlterCollectionFunction = 76;
-    PrivilegeDropCollectionFunction = 77;
     PrivilegeUpdateReplicateConfiguration = 78;
 }
 
