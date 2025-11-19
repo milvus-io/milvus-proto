@@ -119,7 +119,8 @@ message CollectionSchema {
   int32 version = 10; // The version of current collection schema updates, increment every time the schema content is updating, 
                       // 0 when the collection is created or the collection schema is updated before 2.6.5.
                       // the name dbName and description take no effect to it.
-  bool external = 11;
+  string external_source = 11;
+  string external_spec = 12;
 }
 
 message StructArrayFieldSchema {
