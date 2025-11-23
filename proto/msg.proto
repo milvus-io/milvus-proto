@@ -52,6 +52,7 @@ message MsgPosition {
   bytes msgID = 2;
   string msgGroup = 3;
   uint64 timestamp = 4;
+  common.WALName WAL_name = 5;
 }
 
 message CreateCollectionRequest {
