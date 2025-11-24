@@ -262,6 +262,7 @@ message SearchResultData {
   repeated float recalls = 12;
   string primary_field_name = 13;
   repeated common.HighlightResult highlight_results = 14;
+  LongArray element_indices = 15;
 }
 
 // vector field clustering info
