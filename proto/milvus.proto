@@ -1241,6 +1241,7 @@ message CalcDistanceResults {
   }
 }
 
+// Deprecated, FlushAll semantics changed to flushing the entire cluster.
 // Specific collection to flush with database context
 // This message allows targeting specific collections within a database for flush operations
 message FlushAllTarget {
@@ -1259,23 +1260,18 @@ message FlushAllRequest {
   };
   common.MsgBase base = 1;
   
-  // Deprecated: use flush_targets instead for more flexible targeting
-  string db_name = 2 [deprecated = true];
-  
-  // List of specific databases and collections to flush
-  // Allows targeting multiple databases and specific collections within each database
-  repeated FlushAllTarget flush_targets = 3;
+  string db_name                        = 2 [deprecated = true];
+  repeated FlushAllTarget flush_targets = 3 [deprecated = true];
 }
 
 message FlushAllResponse {
-  common.Status status = 1;
-  uint64 flush_all_ts = 2;
-  
-  // Detailed flush results for each flush_target
-  // Contains per-collection flush information including segment IDs and timestamps
-  repeated FlushAllResult flush_results = 3;
+  common.Status status                  = 1;
+  uint64 flush_all_ts                   = 2 [deprecated = true];
+  repeated FlushAllResult flush_results = 3 [deprecated = true];
+  map<string, uint64> flush_all_tss     = 4;
 }
 
+// Deprecated
 // Flush result for a single flush target
 message FlushAllResult {
   // Database name containing the collections
@@ -1482,28 +1478,24 @@ message GetFlushStateResponse {
 }
 
 message GetFlushAllStateRequest {
-  common.MsgBase base = 1;
-  uint64 flush_all_ts = 2;
-  
-  // Deprecated: use flush_targets instead for more flexible targeting
-  string db_name = 3 [deprecated = true];
-  
-  // List of specific databases and collections to check flush state
-  // Allows checking flush state for multiple databases and specific collections
-  repeated FlushAllTarget flush_targets = 4;
+  common.MsgBase base                   = 1;
+  uint64 flush_all_ts                   = 2 [deprecated = true];
+  string db_name                        = 3 [deprecated = true];
+  repeated FlushAllTarget flush_targets = 4 [deprecated = true];
+  map<string, uint64> flush_all_tss     = 5;
 }
 
 message GetFlushAllStateResponse {
   common.Status status = 1;
-  // Overall flush state: true if all requested databases/collections are flushed
-  // This is a summary field indicating whether all targeted resources have completed flushing
+  // True if all data in the cluster are flushed
   bool flushed = 2;
   
   // Detailed flush state for each database
   // Provides per-database and per-collection flush status information
-  repeated FlushAllState flush_states = 3;
+  repeated FlushAllState flush_states = 3 [deprecated = true];
 }
 
+// Deprecated
 message FlushAllState {
   // Database name for this flush state report
   string db_name = 1;
