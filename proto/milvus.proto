@@ -1268,7 +1268,7 @@ message FlushAllResponse {
   common.Status status                  = 1;
   uint64 flush_all_ts                   = 2 [deprecated = true];
   repeated FlushAllResult flush_results = 3 [deprecated = true];
-  map<string, uint64> flush_all_tss     = 4;
+  map<string, uint64> flush_all_tss     = 4; // pchannel -> flush all ts
 }
 
 // Deprecated
@@ -1482,7 +1482,7 @@ message GetFlushAllStateRequest {
   uint64 flush_all_ts                   = 2 [deprecated = true];
   string db_name                        = 3 [deprecated = true];
   repeated FlushAllTarget flush_targets = 4 [deprecated = true];
-  map<string, uint64> flush_all_tss     = 5;
+  map<string, uint64> flush_all_tss     = 5; // pchannel -> flush all ts
 }
 
 message GetFlushAllStateResponse {
