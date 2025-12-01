@@ -197,6 +197,7 @@ enum MsgType {
     AddCollectionFunction = 116;
     AlterCollectionFunction = 117;
     DropCollectionFunction = 118;
+    TruncateCollection = 119;
 
     /* DEFINITION REQUESTS: PARTITION */
     CreatePartition = 200;
@@ -235,6 +236,7 @@ enum MsgType {
     FlushSegment = 406; // streaming service new msg type for internal usage compatible
     CreateSegment = 407; // streaming service new msg type for internal usage compatible
     Import = 408;
+    FlushAll = 409; // streaming service new msg type for internal usage compatible
 
     /* QUERY */
     Search = 500;
