@@ -135,6 +135,7 @@ const (
 	MilvusService_UpdateReplicateConfiguration_FullMethodName = "/milvus.proto.milvus.MilvusService/UpdateReplicateConfiguration"
 	MilvusService_GetReplicateInfo_FullMethodName             = "/milvus.proto.milvus.MilvusService/GetReplicateInfo"
 	MilvusService_CreateReplicateStream_FullMethodName        = "/milvus.proto.milvus.MilvusService/CreateReplicateStream"
+	MilvusService_ComputePhraseMatchSlop_FullMethodName       = "/milvus.proto.milvus.MilvusService/ComputePhraseMatchSlop"
 )
 
 // MilvusServiceClient is the client API for MilvusService service.
@@ -285,6 +286,7 @@ type MilvusServiceClient interface {
 	//   - Once established, the target cluster persists incoming messages into
 	//     its WAL (Write-Ahead Log) ensuring durability and consistency.
 	CreateReplicateStream(ctx context.Context, opts ...grpc.CallOption) (MilvusService_CreateReplicateStreamClient, error)
+	ComputePhraseMatchSlop(ctx context.Context, in *ComputePhraseMatchSlopRequest, opts ...grpc.CallOption) (*ComputePhraseMatchSlopResponse, error)
 }
 
 type milvusServiceClient struct {
@@ -1345,6 +1347,15 @@ func (x *milvusServiceCreateReplicateStreamClient) Recv() (*ReplicateResponse, e
 	return m, nil
 }
 
+func (c *milvusServiceClient) ComputePhraseMatchSlop(ctx context.Context, in *ComputePhraseMatchSlopRequest, opts ...grpc.CallOption) (*ComputePhraseMatchSlopResponse, error) {
+	out := new(ComputePhraseMatchSlopResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ComputePhraseMatchSlop_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MilvusServiceServer is the server API for MilvusService service.
 // All implementations should embed UnimplementedMilvusServiceServer
 // for forward compatibility
@@ -1493,6 +1504,7 @@ type MilvusServiceServer interface {
 	//   - Once established, the target cluster persists incoming messages into
 	//     its WAL (Write-Ahead Log) ensuring durability and consistency.
 	CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error
+	ComputePhraseMatchSlop(context.Context, *ComputePhraseMatchSlopRequest) (*ComputePhraseMatchSlopResponse, error)
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -1840,6 +1852,9 @@ func (UnimplementedMilvusServiceServer) GetReplicateInfo(context.Context, *GetRe
 }
 func (UnimplementedMilvusServiceServer) CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method CreateReplicateStream not implemented")
+}
+func (UnimplementedMilvusServiceServer) ComputePhraseMatchSlop(context.Context, *ComputePhraseMatchSlopRequest) (*ComputePhraseMatchSlopResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ComputePhraseMatchSlop not implemented")
 }
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -3913,6 +3928,24 @@ func (x *milvusServiceCreateReplicateStreamServer) Recv() (*ReplicateRequest, er
 	return m, nil
 }
 
+func _MilvusService_ComputePhraseMatchSlop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ComputePhraseMatchSlopRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ComputePhraseMatchSlop(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ComputePhraseMatchSlop_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ComputePhraseMatchSlop(ctx, req.(*ComputePhraseMatchSlopRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MilvusService_ServiceDesc is the grpc.ServiceDesc for MilvusService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -4371,6 +4404,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetReplicateInfo",
 			Handler:    _MilvusService_GetReplicateInfo_Handler,
+		},
+		{
+			MethodName: "ComputePhraseMatchSlop",
+			Handler:    _MilvusService_ComputePhraseMatchSlop_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
