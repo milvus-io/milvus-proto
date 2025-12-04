@@ -52,6 +52,7 @@ enum FunctionType{
   BM25 =1;
   TextEmbedding =2;
   Rerank =3;
+  MinHash =4;
 }
 
 enum FieldState {
