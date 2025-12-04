@@ -143,6 +143,7 @@ const (
 	MilvusService_RestoreSnapshot_FullMethodName              = "/milvus.proto.milvus.MilvusService/RestoreSnapshot"
 	MilvusService_GetRestoreSnapshotState_FullMethodName      = "/milvus.proto.milvus.MilvusService/GetRestoreSnapshotState"
 	MilvusService_ListRestoreSnapshotJobs_FullMethodName      = "/milvus.proto.milvus.MilvusService/ListRestoreSnapshotJobs"
+	MilvusService_AlterCollectionSchema_FullMethodName        = "/milvus.proto.milvus.MilvusService/AlterCollectionSchema"
 )
 
 // MilvusServiceClient is the client API for MilvusService service.
@@ -302,6 +303,7 @@ type MilvusServiceClient interface {
 	RestoreSnapshot(ctx context.Context, in *RestoreSnapshotRequest, opts ...grpc.CallOption) (*RestoreSnapshotResponse, error)
 	GetRestoreSnapshotState(ctx context.Context, in *GetRestoreSnapshotStateRequest, opts ...grpc.CallOption) (*GetRestoreSnapshotStateResponse, error)
 	ListRestoreSnapshotJobs(ctx context.Context, in *ListRestoreSnapshotJobsRequest, opts ...grpc.CallOption) (*ListRestoreSnapshotJobsResponse, error)
+	AlterCollectionSchema(ctx context.Context, in *AlterCollectionSchemaRequest, opts ...grpc.CallOption) (*AlterCollectionSchemaResponse, error)
 }
 
 type milvusServiceClient struct {
@@ -1434,6 +1436,15 @@ func (c *milvusServiceClient) ListRestoreSnapshotJobs(ctx context.Context, in *L
 	return out, nil
 }
 
+func (c *milvusServiceClient) AlterCollectionSchema(ctx context.Context, in *AlterCollectionSchemaRequest, opts ...grpc.CallOption) (*AlterCollectionSchemaResponse, error) {
+	out := new(AlterCollectionSchemaResponse)
+	err := c.cc.Invoke(ctx, MilvusService_AlterCollectionSchema_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MilvusServiceServer is the server API for MilvusService service.
 // All implementations should embed UnimplementedMilvusServiceServer
 // for forward compatibility
@@ -1591,6 +1602,7 @@ type MilvusServiceServer interface {
 	RestoreSnapshot(context.Context, *RestoreSnapshotRequest) (*RestoreSnapshotResponse, error)
 	GetRestoreSnapshotState(context.Context, *GetRestoreSnapshotStateRequest) (*GetRestoreSnapshotStateResponse, error)
 	ListRestoreSnapshotJobs(context.Context, *ListRestoreSnapshotJobsRequest) (*ListRestoreSnapshotJobsResponse, error)
+	AlterCollectionSchema(context.Context, *AlterCollectionSchemaRequest) (*AlterCollectionSchemaResponse, error)
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -1962,6 +1974,9 @@ func (UnimplementedMilvusServiceServer) GetRestoreSnapshotState(context.Context,
 }
 func (UnimplementedMilvusServiceServer) ListRestoreSnapshotJobs(context.Context, *ListRestoreSnapshotJobsRequest) (*ListRestoreSnapshotJobsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRestoreSnapshotJobs not implemented")
+}
+func (UnimplementedMilvusServiceServer) AlterCollectionSchema(context.Context, *AlterCollectionSchemaRequest) (*AlterCollectionSchemaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AlterCollectionSchema not implemented")
 }
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -4179,6 +4194,24 @@ func _MilvusService_ListRestoreSnapshotJobs_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_AlterCollectionSchema_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AlterCollectionSchemaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).AlterCollectionSchema(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_AlterCollectionSchema_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).AlterCollectionSchema(ctx, req.(*AlterCollectionSchemaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MilvusService_ServiceDesc is the grpc.ServiceDesc for MilvusService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -4669,6 +4702,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListRestoreSnapshotJobs",
 			Handler:    _MilvusService_ListRestoreSnapshotJobs_Handler,
+		},
+		{
+			MethodName: "AlterCollectionSchema",
+			Handler:    _MilvusService_AlterCollectionSchema_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
