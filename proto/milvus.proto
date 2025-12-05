@@ -989,7 +989,7 @@ message AddCollectionFieldRequest {
 message AddCollectionFunctionRequest {
     option (common.privilege_ext_obj) = {
 	object_type: Collection
-	object_privilege: PrivilegeAddCollectionFunction
+	object_privilege: PrivilegeCreateCollection
 	object_name_index: 3
     };
     common.MsgBase base = 1;
@@ -1002,7 +1002,7 @@ message AddCollectionFunctionRequest {
 message AlterCollectionFunctionRequest {
     option (common.privilege_ext_obj) = {
 	object_type: Collection
-	object_privilege: PrivilegeDropCollectionFunction
+	object_privilege: PrivilegeCreateCollection
 	object_name_index: 3
     };
     common.MsgBase base = 1;
@@ -1016,7 +1016,7 @@ message AlterCollectionFunctionRequest {
 message DropCollectionFunctionRequest {
     option (common.privilege_ext_obj) = {
 	object_type: Collection
-	object_privilege: PrivilegeDropCollectionFunction
+	object_privilege: PrivilegeCreateCollection
 	object_name_index: 3
     };
     common.MsgBase base = 1;
