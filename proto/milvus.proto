@@ -1276,7 +1276,7 @@ message FlushAllRequest {
 
 message ClusterInfo {
   string cluster_id           = 1;
-  string control_channel      = 2;
+  string cchannel             = 2;
   repeated string pchannels   = 3;
 }
 
