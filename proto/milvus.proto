@@ -32,7 +32,7 @@ service MilvusService {
   rpc AddCollectionFunction(AddCollectionFunctionRequest) returns (common.Status) {}
   rpc AlterCollectionFunction(AlterCollectionFunctionRequest) returns (common.Status) {}
   rpc DropCollectionFunction(DropCollectionFunctionRequest) returns (common.Status) {}
-  rpc TruncateCollection(TruncateCollectionRequest) returns (common.Status) {}
+  rpc TruncateCollection(TruncateCollectionRequest) returns (TruncateCollectionResponse) {}
 
   rpc CreatePartition(CreatePartitionRequest) returns (common.Status) {}
   rpc DropPartition(DropPartitionRequest) returns (common.Status) {}
@@ -2585,6 +2585,10 @@ message TruncateCollectionRequest {
   string db_name = 2;
   // The unique collection name in milvus.(Required)
   string collection_name = 3;
+}
+
+message TruncateCollectionResponse {
+  common.Status status = 1;
 }
 
 message ComputePhraseMatchSlopRequest {

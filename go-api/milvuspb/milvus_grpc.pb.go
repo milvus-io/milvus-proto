@@ -163,7 +163,7 @@ type MilvusServiceClient interface {
 	AddCollectionFunction(ctx context.Context, in *AddCollectionFunctionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	AlterCollectionFunction(ctx context.Context, in *AlterCollectionFunctionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DropCollectionFunction(ctx context.Context, in *DropCollectionFunctionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
-	TruncateCollection(ctx context.Context, in *TruncateCollectionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	TruncateCollection(ctx context.Context, in *TruncateCollectionRequest, opts ...grpc.CallOption) (*TruncateCollectionResponse, error)
 	CreatePartition(ctx context.Context, in *CreatePartitionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DropPartition(ctx context.Context, in *DropPartitionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	HasPartition(ctx context.Context, in *HasPartitionRequest, opts ...grpc.CallOption) (*BoolResponse, error)
@@ -438,8 +438,8 @@ func (c *milvusServiceClient) DropCollectionFunction(ctx context.Context, in *Dr
 	return out, nil
 }
 
-func (c *milvusServiceClient) TruncateCollection(ctx context.Context, in *TruncateCollectionRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
-	out := new(commonpb.Status)
+func (c *milvusServiceClient) TruncateCollection(ctx context.Context, in *TruncateCollectionRequest, opts ...grpc.CallOption) (*TruncateCollectionResponse, error) {
+	out := new(TruncateCollectionResponse)
 	err := c.cc.Invoke(ctx, MilvusService_TruncateCollection_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -1452,7 +1452,7 @@ type MilvusServiceServer interface {
 	AddCollectionFunction(context.Context, *AddCollectionFunctionRequest) (*commonpb.Status, error)
 	AlterCollectionFunction(context.Context, *AlterCollectionFunctionRequest) (*commonpb.Status, error)
 	DropCollectionFunction(context.Context, *DropCollectionFunctionRequest) (*commonpb.Status, error)
-	TruncateCollection(context.Context, *TruncateCollectionRequest) (*commonpb.Status, error)
+	TruncateCollection(context.Context, *TruncateCollectionRequest) (*TruncateCollectionResponse, error)
 	CreatePartition(context.Context, *CreatePartitionRequest) (*commonpb.Status, error)
 	DropPartition(context.Context, *DropPartitionRequest) (*commonpb.Status, error)
 	HasPartition(context.Context, *HasPartitionRequest) (*BoolResponse, error)
@@ -1639,7 +1639,7 @@ func (UnimplementedMilvusServiceServer) AlterCollectionFunction(context.Context,
 func (UnimplementedMilvusServiceServer) DropCollectionFunction(context.Context, *DropCollectionFunctionRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DropCollectionFunction not implemented")
 }
-func (UnimplementedMilvusServiceServer) TruncateCollection(context.Context, *TruncateCollectionRequest) (*commonpb.Status, error) {
+func (UnimplementedMilvusServiceServer) TruncateCollection(context.Context, *TruncateCollectionRequest) (*TruncateCollectionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TruncateCollection not implemented")
 }
 func (UnimplementedMilvusServiceServer) CreatePartition(context.Context, *CreatePartitionRequest) (*commonpb.Status, error) {
