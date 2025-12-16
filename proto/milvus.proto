@@ -1269,11 +1269,11 @@ message ClusterInfo {
 }
 
 message FlushAllResponse {
-  common.Status status                  = 1;
-  uint64 flush_all_ts                   = 2 [deprecated = true];
-  repeated FlushAllResult flush_results = 3 [deprecated = true];
-  map<string, uint64> flush_all_tss     = 4; // pchannel -> flush all ts
-  ClusterInfo cluster_info              = 5;
+  common.Status status                                = 1;
+  uint64 flush_all_ts                                 = 2 [deprecated = true];
+  repeated FlushAllResult flush_results               = 3 [deprecated = true];
+  map<string, common.ImmutableMessage> flush_all_msgs = 4; // pchannel -> FlushAllMsg
+  ClusterInfo cluster_info                            = 5;
 }
 
 // Deprecated
