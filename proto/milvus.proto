@@ -997,6 +997,7 @@ message AddCollectionFieldRequest {
   int64  collectionID = 4;
   // The serialized `schema.FieldSchema`
   bytes schema = 5;
+  repeated common.KeyValuePair index_params = 6;
 }
 
 message AddCollectionFunctionRequest {
