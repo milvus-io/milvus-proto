@@ -112,6 +112,7 @@ message DataNodeTtMsg {
 }
 
 message ReplicateMsg {
+  option deprecated = true;
   common.MsgBase base = 1;
   bool is_end = 2;
   bool is_cluster = 3;
