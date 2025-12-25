@@ -118,6 +118,7 @@ message CollectionSchema {
   int32 version = 10; // The version of current collection schema updates, increment every time the schema content is updating, 
                       // 0 when the collection is created or the collection schema is updated before 2.6.5.
                       // the name dbName and description take no effect to it.
+  bool enable_namespace = 11;
 }
 
 message StructArrayFieldSchema {
