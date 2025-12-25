@@ -253,6 +253,7 @@ type MilvusServiceClient interface {
 	ListDatabases(ctx context.Context, in *ListDatabasesRequest, opts ...grpc.CallOption) (*ListDatabasesResponse, error)
 	AlterDatabase(ctx context.Context, in *AlterDatabaseRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DescribeDatabase(ctx context.Context, in *DescribeDatabaseRequest, opts ...grpc.CallOption) (*DescribeDatabaseResponse, error)
+	// Deprecated: Do not use.
 	// Deprecated CDC API
 	ReplicateMessage(ctx context.Context, in *ReplicateMessageRequest, opts ...grpc.CallOption) (*ReplicateMessageResponse, error)
 	BackupRBAC(ctx context.Context, in *BackupRBACMetaRequest, opts ...grpc.CallOption) (*BackupRBACMetaResponse, error)
@@ -1155,6 +1156,7 @@ func (c *milvusServiceClient) DescribeDatabase(ctx context.Context, in *Describe
 	return out, nil
 }
 
+// Deprecated: Do not use.
 func (c *milvusServiceClient) ReplicateMessage(ctx context.Context, in *ReplicateMessageRequest, opts ...grpc.CallOption) (*ReplicateMessageResponse, error) {
 	out := new(ReplicateMessageResponse)
 	err := c.cc.Invoke(ctx, MilvusService_ReplicateMessage_FullMethodName, in, out, opts...)
@@ -1562,6 +1564,7 @@ type MilvusServiceServer interface {
 	ListDatabases(context.Context, *ListDatabasesRequest) (*ListDatabasesResponse, error)
 	AlterDatabase(context.Context, *AlterDatabaseRequest) (*commonpb.Status, error)
 	DescribeDatabase(context.Context, *DescribeDatabaseRequest) (*DescribeDatabaseResponse, error)
+	// Deprecated: Do not use.
 	// Deprecated CDC API
 	ReplicateMessage(context.Context, *ReplicateMessageRequest) (*ReplicateMessageResponse, error)
 	BackupRBAC(context.Context, *BackupRBACMetaRequest) (*BackupRBACMetaResponse, error)

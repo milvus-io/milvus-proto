@@ -280,7 +280,7 @@ enum MsgType {
     Connect = 1209;
     ListClientInfos = 1210;
     AllocTimestamp = 1211;
-    Replicate = 1212;
+    Replicate = 1212 [deprecated = true];
 
     /* Credential */
     CreateCredential = 1500;
@@ -346,10 +346,11 @@ message MsgBase {
     int64 sourceID = 4;
     int64 targetID = 5;
     map<string, string> properties = 6;
-    ReplicateInfo replicateInfo = 7;
+    ReplicateInfo replicateInfo = 7 [deprecated = true];
 }
 
 message ReplicateInfo {
+    option deprecated = true;
     bool isReplicate = 1;
     uint64 msgTimestamp = 2;
     string replicateID = 3;
