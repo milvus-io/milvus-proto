@@ -124,6 +124,7 @@ message CollectionSchema {
   string external_spec = 12;
   bool do_physical_backfill = 13;
   repeated int64 file_resource_ids = 14;
+  bool enable_namespace = 15;
 }
 
 message StructArrayFieldSchema {
