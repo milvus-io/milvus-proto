@@ -144,6 +144,7 @@ const (
 	MilvusService_GetRestoreSnapshotState_FullMethodName      = "/milvus.proto.milvus.MilvusService/GetRestoreSnapshotState"
 	MilvusService_ListRestoreSnapshotJobs_FullMethodName      = "/milvus.proto.milvus.MilvusService/ListRestoreSnapshotJobs"
 	MilvusService_AlterCollectionSchema_FullMethodName        = "/milvus.proto.milvus.MilvusService/AlterCollectionSchema"
+	MilvusService_BatchUpdate_FullMethodName                  = "/milvus.proto.milvus.MilvusService/BatchUpdate"
 )
 
 // MilvusServiceClient is the client API for MilvusService service.
@@ -304,6 +305,7 @@ type MilvusServiceClient interface {
 	GetRestoreSnapshotState(ctx context.Context, in *GetRestoreSnapshotStateRequest, opts ...grpc.CallOption) (*GetRestoreSnapshotStateResponse, error)
 	ListRestoreSnapshotJobs(ctx context.Context, in *ListRestoreSnapshotJobsRequest, opts ...grpc.CallOption) (*ListRestoreSnapshotJobsResponse, error)
 	AlterCollectionSchema(ctx context.Context, in *AlterCollectionSchemaRequest, opts ...grpc.CallOption) (*AlterCollectionSchemaResponse, error)
+	BatchUpdate(ctx context.Context, in *BatchUpdateRequest, opts ...grpc.CallOption) (*BatchUpdateResponse, error)
 }
 
 type milvusServiceClient struct {
@@ -1445,6 +1447,15 @@ func (c *milvusServiceClient) AlterCollectionSchema(ctx context.Context, in *Alt
 	return out, nil
 }
 
+func (c *milvusServiceClient) BatchUpdate(ctx context.Context, in *BatchUpdateRequest, opts ...grpc.CallOption) (*BatchUpdateResponse, error) {
+	out := new(BatchUpdateResponse)
+	err := c.cc.Invoke(ctx, MilvusService_BatchUpdate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MilvusServiceServer is the server API for MilvusService service.
 // All implementations should embed UnimplementedMilvusServiceServer
 // for forward compatibility
@@ -1603,6 +1614,7 @@ type MilvusServiceServer interface {
 	GetRestoreSnapshotState(context.Context, *GetRestoreSnapshotStateRequest) (*GetRestoreSnapshotStateResponse, error)
 	ListRestoreSnapshotJobs(context.Context, *ListRestoreSnapshotJobsRequest) (*ListRestoreSnapshotJobsResponse, error)
 	AlterCollectionSchema(context.Context, *AlterCollectionSchemaRequest) (*AlterCollectionSchemaResponse, error)
+	BatchUpdate(context.Context, *BatchUpdateRequest) (*BatchUpdateResponse, error)
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -1977,6 +1989,9 @@ func (UnimplementedMilvusServiceServer) ListRestoreSnapshotJobs(context.Context,
 }
 func (UnimplementedMilvusServiceServer) AlterCollectionSchema(context.Context, *AlterCollectionSchemaRequest) (*AlterCollectionSchemaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AlterCollectionSchema not implemented")
+}
+func (UnimplementedMilvusServiceServer) BatchUpdate(context.Context, *BatchUpdateRequest) (*BatchUpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BatchUpdate not implemented")
 }
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -4212,6 +4227,24 @@ func _MilvusService_AlterCollectionSchema_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_BatchUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchUpdateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).BatchUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_BatchUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).BatchUpdate(ctx, req.(*BatchUpdateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MilvusService_ServiceDesc is the grpc.ServiceDesc for MilvusService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -4706,6 +4739,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AlterCollectionSchema",
 			Handler:    _MilvusService_AlterCollectionSchema_Handler,
+		},
+		{
+			MethodName: "BatchUpdate",
+			Handler:    _MilvusService_BatchUpdate_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
