@@ -2805,7 +2805,8 @@ message BatchUpdateRequest {
   common.MsgBase base = 1;
   string db_name = 2;
   string collection_name = 3;
-  repeated BatchUpdateItem items = 4;
+  repeated int64 field_ids = 4;
+  repeated BatchUpdateItem items = 5;
 }
 
 message BatchUpdateResponse {
