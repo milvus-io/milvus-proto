@@ -206,7 +206,7 @@ service MilvusService {
   rpc GetRestoreSnapshotState(GetRestoreSnapshotStateRequest) returns (GetRestoreSnapshotStateResponse) {}
   rpc ListRestoreSnapshotJobs(ListRestoreSnapshotJobsRequest) returns (ListRestoreSnapshotJobsResponse) {}
   rpc AlterCollectionSchema(AlterCollectionSchemaRequest) returns (AlterCollectionSchemaResponse) {}
-  rpc BatchUpdate(BatchUpdateRequest) returns (BatchUpdateResponse) {}
+  rpc BatchUpdateManifest(BatchUpdateManifestRequest) returns (common.Status) {}
 }
 
 message CreateAliasRequest {
@@ -2796,7 +2796,7 @@ message AlterCollectionSchemaResponse {
   common.Status index_status = 2;
 }
 
-message BatchUpdateRequest {
+message BatchUpdateManifestRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
     object_privilege: PrivilegeInsert
@@ -2805,24 +2805,11 @@ message BatchUpdateRequest {
   common.MsgBase base = 1;
   string db_name = 2;
   string collection_name = 3;
-  repeated int64 field_ids = 4;
-  repeated BatchUpdateItem items = 5;
+  repeated string field_names = 4; // work as hint for now
+  repeated BatchUpdateManifestItem items = 5;
 }
 
-message BatchUpdateResponse {
-  common.Status status = 1;
-  string ticket = 2;
-}
-
-message BatchUpdateItem {
-  DataFileType file_type = 1;
-  string path = 2;
-  int64 target_segment_id = 3;
-  string expr = 4;
-}
-
-enum DataFileType {
-  _ = 0;
-  Manifest = 1;
-  Parquet = 2;
+message BatchUpdateManifestItem {
+  int64 segment_id = 1;
+  int64 manifest_version = 2;
 }
