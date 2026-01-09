@@ -34,6 +34,7 @@ enum DataType {
   Geometry = 24;
   Text = 25;
   Timestamptz = 26;
+  Mol = 27; // Molecular data type
 
   BinaryVector = 100;
   FloatVector = 101;
@@ -165,6 +166,12 @@ message TimestamptzArray { repeated int64 data = 1; }
 
 message GeometryWktArray { repeated string data = 1; }
 
+// MolArray stores processed molecular data, for example, in pickle format.
+message MolArray { repeated bytes data = 1; }
+
+// MolSmilesArray stores user-provided SMILES strings for molecular data.
+message MolSmilesArray { repeated string data = 1; }
+
 message ValueField {
   oneof data {
     bool bool_data = 1;
@@ -192,6 +199,8 @@ message ScalarField {
     GeometryArray geometry_data = 10;
     TimestamptzArray timestamptz_data = 11;
     GeometryWktArray geometry_wkt_data = 12;
+    MolArray mol_data = 13;
+    MolSmilesArray mol_smiles_data = 14;
   }
 }
 
