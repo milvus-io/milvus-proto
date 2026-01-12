@@ -620,8 +620,9 @@ message ReplicateCheckpoint {
   uint64 time_tick = 4; // the time tick of the last replicated message
 }
 
-message HighlightData {        
+message HighlightData {
   repeated string fragments = 1;
+  repeated float scores = 2;
 }
 
 message HighlightResult {        
