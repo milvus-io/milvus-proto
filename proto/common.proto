@@ -603,6 +603,7 @@ message ReplicateCheckpoint {
 
 message HighlightData {        
   repeated string fragments = 1;
+  repeated float scores = 2;
 }
 
 message HighlightResult {        
