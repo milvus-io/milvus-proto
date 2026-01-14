@@ -166,7 +166,7 @@ message TimestamptzArray { repeated int64 data = 1; }
 
 message GeometryWktArray { repeated string data = 1; }
 
-// MolArray stores processed molecular data, for example, in pickle format.
+// MolArray stores processed molecular data in a serialized binary format.
 message MolArray { repeated bytes data = 1; }
 
 // MolSmilesArray stores user-provided SMILES strings for molecular data.
