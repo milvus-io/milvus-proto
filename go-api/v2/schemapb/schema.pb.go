@@ -148,6 +148,7 @@ const (
 	FunctionType_TextEmbedding FunctionType = 2
 	FunctionType_Rerank        FunctionType = 3
 	FunctionType_MinHash       FunctionType = 4
+	FunctionType_MolFingerprint FunctionType = 5
 )
 
 // Enum value maps for FunctionType.
@@ -158,6 +159,7 @@ var (
 		2: "TextEmbedding",
 		3: "Rerank",
 		4: "MinHash",
+		5: "MolFingerprint",
 	}
 	FunctionType_value = map[string]int32{
 		"Unknown":       0,
@@ -165,6 +167,7 @@ var (
 		"TextEmbedding": 2,
 		"Rerank":        3,
 		"MinHash":       4,
+		"MolFingerprint": 5,
 	}
 )
 

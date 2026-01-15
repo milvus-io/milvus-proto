@@ -54,6 +54,7 @@ enum FunctionType{
   TextEmbedding =2;
   Rerank =3;
   MinHash =4;
+  MolFingerprint =5;
 }
 
 enum FieldState {
