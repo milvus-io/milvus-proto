@@ -337,6 +337,11 @@ enum MsgType {
     ListRestoreSnapshotJobs = 2106;
 
     AlterCollectionSchema = 2200;
+
+    /* External Collection */
+    RefreshExternalCollection = 2300;
+    GetRefreshExternalCollectionProgress = 2301;
+    ListRefreshExternalCollectionJobs = 2302;
 }
 
 message MsgBase {
@@ -493,6 +498,7 @@ enum ObjectPrivilege {
     PrivilegeListSnapshots = 82;
     PrivilegeRestoreSnapshot = 83;
     PrivilegeAlterCollectionSchema = 84;
+    PrivilegeRefreshExternalCollection = 85;
 }
 
 message PrivilegeExt {
