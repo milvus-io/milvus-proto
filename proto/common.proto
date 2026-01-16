@@ -493,6 +493,7 @@ enum ObjectPrivilege {
     PrivilegeListSnapshots = 82;
     PrivilegeRestoreSnapshot = 83;
     PrivilegeAlterCollectionSchema = 84;
+    PrivilegeExpr = 85;
 }
 
 message PrivilegeExt {
