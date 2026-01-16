@@ -2545,6 +2545,9 @@ message UpdateReplicateConfigurationRequest {
     object_name_index: -1
   };
   common.ReplicateConfiguration replicate_configuration = 1;
+  // If true, the replication configuration will be updated forcefully. This is intended for
+  // failover scenarios and may bypass some safety checks. Use with caution.
+  bool force_update                                     = 2;
 }
 
 message GetReplicateInfoRequest {
