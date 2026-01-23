@@ -4760,6 +4760,205 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	ClientTelemetryService_ClientHeartbeat_FullMethodName     = "/milvus.proto.milvus.ClientTelemetryService/ClientHeartbeat"
+	ClientTelemetryService_GetClientTelemetry_FullMethodName  = "/milvus.proto.milvus.ClientTelemetryService/GetClientTelemetry"
+	ClientTelemetryService_PushClientCommand_FullMethodName   = "/milvus.proto.milvus.ClientTelemetryService/PushClientCommand"
+	ClientTelemetryService_DeleteClientCommand_FullMethodName = "/milvus.proto.milvus.ClientTelemetryService/DeleteClientCommand"
+)
+
+// ClientTelemetryServiceClient is the client API for ClientTelemetryService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ClientTelemetryServiceClient interface {
+	ClientHeartbeat(ctx context.Context, in *ClientHeartbeatRequest, opts ...grpc.CallOption) (*ClientHeartbeatResponse, error)
+	GetClientTelemetry(ctx context.Context, in *GetClientTelemetryRequest, opts ...grpc.CallOption) (*GetClientTelemetryResponse, error)
+	PushClientCommand(ctx context.Context, in *PushClientCommandRequest, opts ...grpc.CallOption) (*PushClientCommandResponse, error)
+	DeleteClientCommand(ctx context.Context, in *DeleteClientCommandRequest, opts ...grpc.CallOption) (*DeleteClientCommandResponse, error)
+}
+
+type clientTelemetryServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewClientTelemetryServiceClient(cc grpc.ClientConnInterface) ClientTelemetryServiceClient {
+	return &clientTelemetryServiceClient{cc}
+}
+
+func (c *clientTelemetryServiceClient) ClientHeartbeat(ctx context.Context, in *ClientHeartbeatRequest, opts ...grpc.CallOption) (*ClientHeartbeatResponse, error) {
+	out := new(ClientHeartbeatResponse)
+	err := c.cc.Invoke(ctx, ClientTelemetryService_ClientHeartbeat_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *clientTelemetryServiceClient) GetClientTelemetry(ctx context.Context, in *GetClientTelemetryRequest, opts ...grpc.CallOption) (*GetClientTelemetryResponse, error) {
+	out := new(GetClientTelemetryResponse)
+	err := c.cc.Invoke(ctx, ClientTelemetryService_GetClientTelemetry_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *clientTelemetryServiceClient) PushClientCommand(ctx context.Context, in *PushClientCommandRequest, opts ...grpc.CallOption) (*PushClientCommandResponse, error) {
+	out := new(PushClientCommandResponse)
+	err := c.cc.Invoke(ctx, ClientTelemetryService_PushClientCommand_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *clientTelemetryServiceClient) DeleteClientCommand(ctx context.Context, in *DeleteClientCommandRequest, opts ...grpc.CallOption) (*DeleteClientCommandResponse, error) {
+	out := new(DeleteClientCommandResponse)
+	err := c.cc.Invoke(ctx, ClientTelemetryService_DeleteClientCommand_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ClientTelemetryServiceServer is the server API for ClientTelemetryService service.
+// All implementations should embed UnimplementedClientTelemetryServiceServer
+// for forward compatibility
+type ClientTelemetryServiceServer interface {
+	ClientHeartbeat(context.Context, *ClientHeartbeatRequest) (*ClientHeartbeatResponse, error)
+	GetClientTelemetry(context.Context, *GetClientTelemetryRequest) (*GetClientTelemetryResponse, error)
+	PushClientCommand(context.Context, *PushClientCommandRequest) (*PushClientCommandResponse, error)
+	DeleteClientCommand(context.Context, *DeleteClientCommandRequest) (*DeleteClientCommandResponse, error)
+}
+
+// UnimplementedClientTelemetryServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedClientTelemetryServiceServer struct {
+}
+
+func (UnimplementedClientTelemetryServiceServer) ClientHeartbeat(context.Context, *ClientHeartbeatRequest) (*ClientHeartbeatResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientHeartbeat not implemented")
+}
+func (UnimplementedClientTelemetryServiceServer) GetClientTelemetry(context.Context, *GetClientTelemetryRequest) (*GetClientTelemetryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetClientTelemetry not implemented")
+}
+func (UnimplementedClientTelemetryServiceServer) PushClientCommand(context.Context, *PushClientCommandRequest) (*PushClientCommandResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PushClientCommand not implemented")
+}
+func (UnimplementedClientTelemetryServiceServer) DeleteClientCommand(context.Context, *DeleteClientCommandRequest) (*DeleteClientCommandResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteClientCommand not implemented")
+}
+
+// UnsafeClientTelemetryServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ClientTelemetryServiceServer will
+// result in compilation errors.
+type UnsafeClientTelemetryServiceServer interface {
+	mustEmbedUnimplementedClientTelemetryServiceServer()
+}
+
+func RegisterClientTelemetryServiceServer(s grpc.ServiceRegistrar, srv ClientTelemetryServiceServer) {
+	s.RegisterService(&ClientTelemetryService_ServiceDesc, srv)
+}
+
+func _ClientTelemetryService_ClientHeartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClientHeartbeatRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClientTelemetryServiceServer).ClientHeartbeat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClientTelemetryService_ClientHeartbeat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClientTelemetryServiceServer).ClientHeartbeat(ctx, req.(*ClientHeartbeatRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClientTelemetryService_GetClientTelemetry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetClientTelemetryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClientTelemetryServiceServer).GetClientTelemetry(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClientTelemetryService_GetClientTelemetry_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClientTelemetryServiceServer).GetClientTelemetry(ctx, req.(*GetClientTelemetryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClientTelemetryService_PushClientCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PushClientCommandRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClientTelemetryServiceServer).PushClientCommand(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClientTelemetryService_PushClientCommand_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClientTelemetryServiceServer).PushClientCommand(ctx, req.(*PushClientCommandRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClientTelemetryService_DeleteClientCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteClientCommandRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClientTelemetryServiceServer).DeleteClientCommand(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClientTelemetryService_DeleteClientCommand_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClientTelemetryServiceServer).DeleteClientCommand(ctx, req.(*DeleteClientCommandRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ClientTelemetryService_ServiceDesc is the grpc.ServiceDesc for ClientTelemetryService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ClientTelemetryService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "milvus.proto.milvus.ClientTelemetryService",
+	HandlerType: (*ClientTelemetryServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ClientHeartbeat",
+			Handler:    _ClientTelemetryService_ClientHeartbeat_Handler,
+		},
+		{
+			MethodName: "GetClientTelemetry",
+			Handler:    _ClientTelemetryService_GetClientTelemetry_Handler,
+		},
+		{
+			MethodName: "PushClientCommand",
+			Handler:    _ClientTelemetryService_PushClientCommand_Handler,
+		},
+		{
+			MethodName: "DeleteClientCommand",
+			Handler:    _ClientTelemetryService_DeleteClientCommand_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "milvus.proto",
+}
+
+const (
 	ProxyService_RegisterLink_FullMethodName = "/milvus.proto.milvus.ProxyService/RegisterLink"
 )
 

@@ -209,6 +209,15 @@ service MilvusService {
   rpc ListRestoreSnapshotJobs(ListRestoreSnapshotJobsRequest) returns (ListRestoreSnapshotJobsResponse) {}
   rpc AlterCollectionSchema(AlterCollectionSchemaRequest) returns (AlterCollectionSchemaResponse) {}
   rpc BatchUpdateManifest(BatchUpdateManifestRequest) returns (common.Status) {}
+
+}
+
+// Client Telemetry Service
+service ClientTelemetryService {
+  rpc ClientHeartbeat(ClientHeartbeatRequest) returns (ClientHeartbeatResponse) {}
+  rpc GetClientTelemetry(GetClientTelemetryRequest) returns (GetClientTelemetryResponse) {}
+  rpc PushClientCommand(PushClientCommandRequest) returns (PushClientCommandResponse) {}
+  rpc DeleteClientCommand(DeleteClientCommandRequest) returns (DeleteClientCommandResponse) {}
 }
 
 message CreateAliasRequest {
@@ -2819,4 +2828,65 @@ message BatchUpdateManifestRequest {
 message BatchUpdateManifestItem {
   int64 segment_id = 1;
   int64 manifest_version = 2;
+}
+
+// Client Heartbeat
+message ClientHeartbeatRequest {
+    common.ClientInfo client_info = 1;
+    int64 report_timestamp = 2;
+    repeated common.OperationMetrics metrics = 3;
+    repeated common.CommandReply command_replies = 4;
+    string config_hash = 5;
+    int64 last_command_timestamp = 6;
+}
+
+message ClientHeartbeatResponse {
+    common.Status status = 1;
+    int64 server_timestamp = 2;
+    repeated common.ClientCommand commands = 3;
+}
+
+// Get Client Telemetry
+message GetClientTelemetryRequest {
+    string database = 1;
+    string client_id = 2;
+    bool include_metrics = 3;
+}
+
+message ClientTelemetry {
+    common.ClientInfo client_info = 1;
+    int64 last_heartbeat_time = 2;
+    string status = 3;
+    repeated string databases = 4;
+    repeated common.OperationMetrics metrics = 5;
+}
+
+message GetClientTelemetryResponse {
+    common.Status status = 1;
+    repeated ClientTelemetry clients = 2;
+    common.Metrics aggregated = 3;
+}
+
+// Push Client Command
+message PushClientCommandRequest {
+    string command_type = 1;
+    bytes payload = 2;
+    string target_client_id = 3;
+    string target_database = 4;
+    int64 ttl_seconds = 5;
+    bool persistent = 6;
+}
+
+message PushClientCommandResponse {
+    common.Status status = 1;
+    string command_id = 2;
+}
+
+// Delete Client Command
+message DeleteClientCommandRequest {
+    string command_id = 1;
+}
+
+message DeleteClientCommandResponse {
+    common.Status status = 1;
 }

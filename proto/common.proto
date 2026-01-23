@@ -538,6 +538,37 @@ message ClientInfo {
     map<string, string> reserved = 6;
 }
 
+message Metrics {
+    int64 request_count = 1;
+    int64 success_count = 2;
+    int64 error_count = 3;
+    double avg_latency_ms = 4;
+    double p99_latency_ms = 5;
+    double max_latency_ms = 6;
+}
+
+message OperationMetrics {
+    string operation = 1;
+    Metrics global = 2;
+    map<string, Metrics> collection_metrics = 3;
+}
+
+message ClientCommand {
+    string command_id = 1;
+    string command_type = 2;
+    bytes payload = 3;
+    int64 create_time = 4;
+    bool persistent = 5;
+    string target_scope = 6;
+}
+
+message CommandReply {
+    string command_id = 1;
+    bool success = 2;
+    string error_message = 3;
+    bytes payload = 4;
+}
+
 message ServerInfo {
     string build_tags = 1;
     string build_time = 2;
