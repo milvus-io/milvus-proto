@@ -2545,6 +2545,9 @@ message UpdateReplicateConfigurationRequest {
     object_name_index: -1
   };
   common.ReplicateConfiguration replicate_configuration = 1;
+  // If true, the current cluster will be promoted to primary forcefully. 
+  // This is intended for failover scenarios.
+  bool force_promote                                    = 2;
 }
 
 message GetReplicateInfoRequest {
