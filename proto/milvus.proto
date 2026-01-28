@@ -185,6 +185,10 @@ service MilvusService {
   //     multiple times must not cause side effects.
   rpc UpdateReplicateConfiguration(UpdateReplicateConfigurationRequest) returns (common.Status){}
   //
+  // GetReplicateConfiguration retrieves the current cross-cluster replication topology.
+  // Sensitive fields (like connection tokens) are redacted in the response.
+  rpc GetReplicateConfiguration(GetReplicateConfigurationRequest) returns (GetReplicateConfigurationResponse){}
+  //
   // GetReplicateInfo retrieves replication-related metadata of specified channel from a target Milvus cluster.
   rpc GetReplicateInfo(GetReplicateInfoRequest) returns (GetReplicateInfoResponse){}
   //
@@ -2554,9 +2558,22 @@ message UpdateReplicateConfigurationRequest {
     object_name_index: -1
   };
   common.ReplicateConfiguration replicate_configuration = 1;
-  // If true, the current cluster will be promoted to primary forcefully. 
+  // If true, the current cluster will be promoted to primary forcefully.
   // This is intended for failover scenarios.
   bool force_promote                                    = 2;
+}
+
+message GetReplicateConfigurationRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeGetReplicateConfiguration
+    object_name_index: -1
+  };
+}
+
+message GetReplicateConfigurationResponse {
+  common.Status status = 1;
+  common.ReplicateConfiguration configuration = 2;
 }
 
 message GetReplicateInfoRequest {
