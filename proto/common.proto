@@ -196,6 +196,7 @@ enum MsgType {
     AddCollectionFunction = 116;
     AlterCollectionFunction = 117;
     DropCollectionFunction = 118;
+    TruncateCollection = 119;
 
     /* DEFINITION REQUESTS: PARTITION */
     CreatePartition = 200;
