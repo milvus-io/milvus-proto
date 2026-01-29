@@ -133,6 +133,7 @@ const (
 	MilvusService_DropRowPolicy_FullMethodName                = "/milvus.proto.milvus.MilvusService/DropRowPolicy"
 	MilvusService_ListRowPolicies_FullMethodName              = "/milvus.proto.milvus.MilvusService/ListRowPolicies"
 	MilvusService_UpdateReplicateConfiguration_FullMethodName = "/milvus.proto.milvus.MilvusService/UpdateReplicateConfiguration"
+	MilvusService_GetReplicateConfiguration_FullMethodName    = "/milvus.proto.milvus.MilvusService/GetReplicateConfiguration"
 	MilvusService_GetReplicateInfo_FullMethodName             = "/milvus.proto.milvus.MilvusService/GetReplicateInfo"
 	MilvusService_CreateReplicateStream_FullMethodName        = "/milvus.proto.milvus.MilvusService/CreateReplicateStream"
 	MilvusService_ComputePhraseMatchSlop_FullMethodName       = "/milvus.proto.milvus.MilvusService/ComputePhraseMatchSlop"
@@ -286,6 +287,9 @@ type MilvusServiceClient interface {
 	//   - The RPC is expected to be idempotent: submitting the same configuration
 	//     multiple times must not cause side effects.
 	UpdateReplicateConfiguration(ctx context.Context, in *UpdateReplicateConfigurationRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	// GetReplicateConfiguration retrieves the current cross-cluster replication topology.
+	// Sensitive fields (like connection tokens) are redacted in the response.
+	GetReplicateConfiguration(ctx context.Context, in *GetReplicateConfigurationRequest, opts ...grpc.CallOption) (*GetReplicateConfigurationResponse, error)
 	// GetReplicateInfo retrieves replication-related metadata of specified channel from a target Milvus cluster.
 	GetReplicateInfo(ctx context.Context, in *GetReplicateInfoRequest, opts ...grpc.CallOption) (*GetReplicateInfoResponse, error)
 	// CreateReplicateStream establishes a replication stream on the target Milvus cluster.
@@ -1328,6 +1332,15 @@ func (c *milvusServiceClient) UpdateReplicateConfiguration(ctx context.Context, 
 	return out, nil
 }
 
+func (c *milvusServiceClient) GetReplicateConfiguration(ctx context.Context, in *GetReplicateConfigurationRequest, opts ...grpc.CallOption) (*GetReplicateConfigurationResponse, error) {
+	out := new(GetReplicateConfigurationResponse)
+	err := c.cc.Invoke(ctx, MilvusService_GetReplicateConfiguration_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *milvusServiceClient) GetReplicateInfo(ctx context.Context, in *GetReplicateInfoRequest, opts ...grpc.CallOption) (*GetReplicateInfoResponse, error) {
 	out := new(GetReplicateInfoResponse)
 	err := c.cc.Invoke(ctx, MilvusService_GetReplicateInfo_FullMethodName, in, out, opts...)
@@ -1597,6 +1610,9 @@ type MilvusServiceServer interface {
 	//   - The RPC is expected to be idempotent: submitting the same configuration
 	//     multiple times must not cause side effects.
 	UpdateReplicateConfiguration(context.Context, *UpdateReplicateConfigurationRequest) (*commonpb.Status, error)
+	// GetReplicateConfiguration retrieves the current cross-cluster replication topology.
+	// Sensitive fields (like connection tokens) are redacted in the response.
+	GetReplicateConfiguration(context.Context, *GetReplicateConfigurationRequest) (*GetReplicateConfigurationResponse, error)
 	// GetReplicateInfo retrieves replication-related metadata of specified channel from a target Milvus cluster.
 	GetReplicateInfo(context.Context, *GetReplicateInfoRequest) (*GetReplicateInfoResponse, error)
 	// CreateReplicateStream establishes a replication stream on the target Milvus cluster.
@@ -1959,6 +1975,9 @@ func (UnimplementedMilvusServiceServer) ListRowPolicies(context.Context, *ListRo
 }
 func (UnimplementedMilvusServiceServer) UpdateReplicateConfiguration(context.Context, *UpdateReplicateConfigurationRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateReplicateConfiguration not implemented")
+}
+func (UnimplementedMilvusServiceServer) GetReplicateConfiguration(context.Context, *GetReplicateConfigurationRequest) (*GetReplicateConfigurationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReplicateConfiguration not implemented")
 }
 func (UnimplementedMilvusServiceServer) GetReplicateInfo(context.Context, *GetReplicateInfoRequest) (*GetReplicateInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetReplicateInfo not implemented")
@@ -4024,6 +4043,24 @@ func _MilvusService_UpdateReplicateConfiguration_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_GetReplicateConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReplicateConfigurationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).GetReplicateConfiguration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_GetReplicateConfiguration_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).GetReplicateConfiguration(ctx, req.(*GetReplicateConfigurationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MilvusService_GetReplicateInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetReplicateInfoRequest)
 	if err := dec(in); err != nil {
@@ -4702,6 +4739,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateReplicateConfiguration",
 			Handler:    _MilvusService_UpdateReplicateConfiguration_Handler,
+		},
+		{
+			MethodName: "GetReplicateConfiguration",
+			Handler:    _MilvusService_GetReplicateConfiguration_Handler,
 		},
 		{
 			MethodName: "GetReplicateInfo",
