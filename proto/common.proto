@@ -475,6 +475,7 @@ enum ObjectPrivilege {
     PrivilegeRemoveFileResource = 73;
     PrivilegeListFileResources = 74;
     PrivilegeUpdateReplicateConfiguration = 78;
+    PrivilegeGetReplicateConfiguration = 85;
 }
 
 message PrivilegeExt {
