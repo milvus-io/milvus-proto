@@ -277,7 +277,8 @@ message SearchResultData {
   string primary_field_name = 13;
   repeated common.HighlightResult highlight_results = 14;
   LongArray element_indices = 15;
-  repeated FieldData order_by_field_values = 16;
+  reserved 16; // was order_by_field_values, never used, reserved to avoid wire conflict
+  repeated FieldData group_by_field_values = 17;
 }
 
 // vector field clustering info
