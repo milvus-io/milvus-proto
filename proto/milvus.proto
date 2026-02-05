@@ -200,6 +200,16 @@ service MilvusService {
   //   - Once established, the target cluster persists incoming messages into
   //     its WAL (Write-Ahead Log) ensuring durability and consistency.
   rpc CreateReplicateStream(stream ReplicateRequest) returns (stream ReplicateResponse){}
+  //
+  // DumpMessages streams messages from a WAL range for data salvage.
+  //
+  // Semantics:
+  //   - Reads messages from start_message_id (exclusive) to end_message_id (inclusive).
+  //   - If end_message_id is not set, streams to the latest position.
+  //   - Only returns non-system messages (filters out TimeTick, CreateSegment, etc.).
+  //   - Typically used after force failover to recover unsynchronized messages
+  //     from the old primary cluster.
+  rpc DumpMessages(DumpMessagesRequest) returns (stream DumpMessagesResponse){}
 
   rpc ComputePhraseMatchSlop(ComputePhraseMatchSlopRequest) returns (ComputePhraseMatchSlopResponse) {}
   
@@ -2587,6 +2597,10 @@ message GetReplicateInfoRequest {
 
 message GetReplicateInfoResponse {
   common.ReplicateCheckpoint checkpoint = 1;
+  // salvage_checkpoint is captured during force promote.
+  // It represents the last synced position from the old primary.
+  // Data salvage tools can use this to dump unsynchronized messages from the old primary.
+  common.ReplicateCheckpoint salvage_checkpoint = 2;
 }
 
 message ReplicateMessage {
@@ -2608,6 +2622,22 @@ message ReplicateResponse {
   oneof response {
     ReplicateConfirmedMessageInfo replicate_confirmed_message_info = 1;
   }
+}
+
+// DumpMessagesRequest is used to dump messages from a WAL range.
+// This is typically used for data salvage after force failover.
+message DumpMessagesRequest {
+  string pchannel = 1;                   // Physical channel name to dump from
+  common.MessageID start_message_id = 2; // Start position for dumping
+  common.MessageID end_message_id = 3;   // End position (inclusive), optional - empty means dump to latest
+  bool start_position_exclusive = 4;     // If true (default), dump messages AFTER start_message_id; if false, include start_message_id
+}
+
+// DumpMessagesResponse contains a single message from the dump operation.
+// Messages are streamed one by one.
+message DumpMessagesResponse {
+  common.Status status = 1;
+  common.ImmutableMessage message = 2; // The dumped message
 }
 
 /*

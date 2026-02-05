@@ -136,6 +136,7 @@ const (
 	MilvusService_GetReplicateConfiguration_FullMethodName            = "/milvus.proto.milvus.MilvusService/GetReplicateConfiguration"
 	MilvusService_GetReplicateInfo_FullMethodName                     = "/milvus.proto.milvus.MilvusService/GetReplicateInfo"
 	MilvusService_CreateReplicateStream_FullMethodName                = "/milvus.proto.milvus.MilvusService/CreateReplicateStream"
+	MilvusService_DumpMessages_FullMethodName                         = "/milvus.proto.milvus.MilvusService/DumpMessages"
 	MilvusService_ComputePhraseMatchSlop_FullMethodName               = "/milvus.proto.milvus.MilvusService/ComputePhraseMatchSlop"
 	MilvusService_CreateSnapshot_FullMethodName                       = "/milvus.proto.milvus.MilvusService/CreateSnapshot"
 	MilvusService_DropSnapshot_FullMethodName                         = "/milvus.proto.milvus.MilvusService/DropSnapshot"
@@ -303,6 +304,15 @@ type MilvusServiceClient interface {
 	//   - Once established, the target cluster persists incoming messages into
 	//     its WAL (Write-Ahead Log) ensuring durability and consistency.
 	CreateReplicateStream(ctx context.Context, opts ...grpc.CallOption) (MilvusService_CreateReplicateStreamClient, error)
+	// DumpMessages streams messages from a WAL range for data salvage.
+	//
+	// Semantics:
+	//   - Reads messages from start_message_id (exclusive) to end_message_id (inclusive).
+	//   - If end_message_id is not set, streams to the latest position.
+	//   - Only returns non-system messages (filters out TimeTick, CreateSegment, etc.).
+	//   - Typically used after force failover to recover unsynchronized messages
+	//     from the old primary cluster.
+	DumpMessages(ctx context.Context, in *DumpMessagesRequest, opts ...grpc.CallOption) (MilvusService_DumpMessagesClient, error)
 	ComputePhraseMatchSlop(ctx context.Context, in *ComputePhraseMatchSlopRequest, opts ...grpc.CallOption) (*ComputePhraseMatchSlopResponse, error)
 	// snapshot related
 	CreateSnapshot(ctx context.Context, in *CreateSnapshotRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
@@ -1388,6 +1398,38 @@ func (x *milvusServiceCreateReplicateStreamClient) Recv() (*ReplicateResponse, e
 	return m, nil
 }
 
+func (c *milvusServiceClient) DumpMessages(ctx context.Context, in *DumpMessagesRequest, opts ...grpc.CallOption) (MilvusService_DumpMessagesClient, error) {
+	stream, err := c.cc.NewStream(ctx, &MilvusService_ServiceDesc.Streams[1], MilvusService_DumpMessages_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &milvusServiceDumpMessagesClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type MilvusService_DumpMessagesClient interface {
+	Recv() (*DumpMessagesResponse, error)
+	grpc.ClientStream
+}
+
+type milvusServiceDumpMessagesClient struct {
+	grpc.ClientStream
+}
+
+func (x *milvusServiceDumpMessagesClient) Recv() (*DumpMessagesResponse, error) {
+	m := new(DumpMessagesResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *milvusServiceClient) ComputePhraseMatchSlop(ctx context.Context, in *ComputePhraseMatchSlopRequest, opts ...grpc.CallOption) (*ComputePhraseMatchSlopResponse, error) {
 	out := new(ComputePhraseMatchSlopResponse)
 	err := c.cc.Invoke(ctx, MilvusService_ComputePhraseMatchSlop_FullMethodName, in, out, opts...)
@@ -1657,6 +1699,15 @@ type MilvusServiceServer interface {
 	//   - Once established, the target cluster persists incoming messages into
 	//     its WAL (Write-Ahead Log) ensuring durability and consistency.
 	CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error
+	// DumpMessages streams messages from a WAL range for data salvage.
+	//
+	// Semantics:
+	//   - Reads messages from start_message_id (exclusive) to end_message_id (inclusive).
+	//   - If end_message_id is not set, streams to the latest position.
+	//   - Only returns non-system messages (filters out TimeTick, CreateSegment, etc.).
+	//   - Typically used after force failover to recover unsynchronized messages
+	//     from the old primary cluster.
+	DumpMessages(*DumpMessagesRequest, MilvusService_DumpMessagesServer) error
 	ComputePhraseMatchSlop(context.Context, *ComputePhraseMatchSlopRequest) (*ComputePhraseMatchSlopResponse, error)
 	// snapshot related
 	CreateSnapshot(context.Context, *CreateSnapshotRequest) (*commonpb.Status, error)
@@ -2022,6 +2073,9 @@ func (UnimplementedMilvusServiceServer) GetReplicateInfo(context.Context, *GetRe
 }
 func (UnimplementedMilvusServiceServer) CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method CreateReplicateStream not implemented")
+}
+func (UnimplementedMilvusServiceServer) DumpMessages(*DumpMessagesRequest, MilvusService_DumpMessagesServer) error {
+	return status.Errorf(codes.Unimplemented, "method DumpMessages not implemented")
 }
 func (UnimplementedMilvusServiceServer) ComputePhraseMatchSlop(context.Context, *ComputePhraseMatchSlopRequest) (*ComputePhraseMatchSlopResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ComputePhraseMatchSlop not implemented")
@@ -4152,6 +4206,27 @@ func (x *milvusServiceCreateReplicateStreamServer) Recv() (*ReplicateRequest, er
 	return m, nil
 }
 
+func _MilvusService_DumpMessages_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(DumpMessagesRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MilvusServiceServer).DumpMessages(m, &milvusServiceDumpMessagesServer{stream})
+}
+
+type MilvusService_DumpMessagesServer interface {
+	Send(*DumpMessagesResponse) error
+	grpc.ServerStream
+}
+
+type milvusServiceDumpMessagesServer struct {
+	grpc.ServerStream
+}
+
+func (x *milvusServiceDumpMessagesServer) Send(m *DumpMessagesResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 func _MilvusService_ComputePhraseMatchSlop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ComputePhraseMatchSlopRequest)
 	if err := dec(in); err != nil {
@@ -4908,6 +4983,11 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 			Handler:       _MilvusService_CreateReplicateStream_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
+		},
+		{
+			StreamName:    "DumpMessages",
+			Handler:       _MilvusService_DumpMessages_Handler,
+			ServerStreams: true,
 		},
 	},
 	Metadata: "milvus.proto",
