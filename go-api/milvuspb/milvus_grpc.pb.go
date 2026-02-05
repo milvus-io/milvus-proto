@@ -307,11 +307,13 @@ type MilvusServiceClient interface {
 	// DumpMessages streams messages from a WAL range for data salvage.
 	//
 	// Semantics:
-	//   - Reads messages from start_message_id (exclusive) to end_message_id (inclusive).
-	//   - If end_message_id is not set, streams to the latest position.
-	//   - Only returns non-system messages (filters out TimeTick, CreateSegment, etc.).
+	//   - Reads messages starting from start_message_id position.
+	//   - Use start_position_exclusive to control whether start_message_id is included.
+	//   - Use start_timetick/end_timetick to filter messages by timetick range.
+	//   - Only returns non-system messages (filters out TimeTick, CreateSegment, Flush, RollbackTxn).
+	//   - Streams messages until end_timetick is reached or context is cancelled.
 	//   - Typically used after force failover to recover unsynchronized messages
-	//     from the old primary cluster.
+	//     from the old primary cluster using the salvage checkpoint.
 	DumpMessages(ctx context.Context, in *DumpMessagesRequest, opts ...grpc.CallOption) (MilvusService_DumpMessagesClient, error)
 	ComputePhraseMatchSlop(ctx context.Context, in *ComputePhraseMatchSlopRequest, opts ...grpc.CallOption) (*ComputePhraseMatchSlopResponse, error)
 	// snapshot related
@@ -1702,11 +1704,13 @@ type MilvusServiceServer interface {
 	// DumpMessages streams messages from a WAL range for data salvage.
 	//
 	// Semantics:
-	//   - Reads messages from start_message_id (exclusive) to end_message_id (inclusive).
-	//   - If end_message_id is not set, streams to the latest position.
-	//   - Only returns non-system messages (filters out TimeTick, CreateSegment, etc.).
+	//   - Reads messages starting from start_message_id position.
+	//   - Use start_position_exclusive to control whether start_message_id is included.
+	//   - Use start_timetick/end_timetick to filter messages by timetick range.
+	//   - Only returns non-system messages (filters out TimeTick, CreateSegment, Flush, RollbackTxn).
+	//   - Streams messages until end_timetick is reached or context is cancelled.
 	//   - Typically used after force failover to recover unsynchronized messages
-	//     from the old primary cluster.
+	//     from the old primary cluster using the salvage checkpoint.
 	DumpMessages(*DumpMessagesRequest, MilvusService_DumpMessagesServer) error
 	ComputePhraseMatchSlop(context.Context, *ComputePhraseMatchSlopRequest) (*ComputePhraseMatchSlopResponse, error)
 	// snapshot related

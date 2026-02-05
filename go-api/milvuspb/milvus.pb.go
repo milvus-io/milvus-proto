@@ -16075,18 +16075,21 @@ type ReplicateResponse_ReplicateConfirmedMessageInfo struct {
 
 func (*ReplicateResponse_ReplicateConfirmedMessageInfo) isReplicateResponse_Response() {}
 
-// DumpMessagesRequest is used to dump messages from a WAL range.
-// This is typically used for data salvage after force failover.
+// DumpMessagesRequest is used to dump messages from a WAL range for data salvage.
+//
+// Usage: After force failover, use GetReplicateInfo to get the salvage_checkpoint,
+// then call DumpMessages with the checkpoint's message_id and timetick to retrieve
+// unsynchronized messages from the old primary cluster.
 type DumpMessagesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Pchannel               string              `protobuf:"bytes,1,opt,name=pchannel,proto3" json:"pchannel,omitempty"`                                                              // Physical channel name to dump from
-	StartMessageId         *commonpb.MessageID `protobuf:"bytes,2,opt,name=start_message_id,json=startMessageId,proto3" json:"start_message_id,omitempty"`                          // Start position for dumping (required)
-	StartTimetick          uint64              `protobuf:"varint,3,opt,name=start_timetick,json=startTimetick,proto3" json:"start_timetick,omitempty"`                              // Start timetick filter (optional) - only dump messages with timetick >= start_timetick
-	EndTimetick            uint64              `protobuf:"varint,4,opt,name=end_timetick,json=endTimetick,proto3" json:"end_timetick,omitempty"`                                    // End timetick filter (optional) - only dump messages with timetick <= end_timetick, 0 means no limit
-	StartPositionExclusive bool                `protobuf:"varint,5,opt,name=start_position_exclusive,json=startPositionExclusive,proto3" json:"start_position_exclusive,omitempty"` // If true, dump messages AFTER start_message_id; if false, include start_message_id
+	Pchannel               string              `protobuf:"bytes,1,opt,name=pchannel,proto3" json:"pchannel,omitempty"`                                                              // Physical channel name to dump from (required)
+	StartMessageId         *commonpb.MessageID `protobuf:"bytes,2,opt,name=start_message_id,json=startMessageId,proto3" json:"start_message_id,omitempty"`                          // Start position in WAL (required) - typically from salvage_checkpoint.message_id
+	StartTimetick          uint64              `protobuf:"varint,3,opt,name=start_timetick,json=startTimetick,proto3" json:"start_timetick,omitempty"`                              // Start timetick filter (optional) - only dump messages with timetick >= start_timetick, typically from salvage_checkpoint.time_tick
+	EndTimetick            uint64              `protobuf:"varint,4,opt,name=end_timetick,json=endTimetick,proto3" json:"end_timetick,omitempty"`                                    // End timetick filter (optional) - only dump messages with timetick <= end_timetick, 0 means no limit (stream until cancelled)
+	StartPositionExclusive bool                `protobuf:"varint,5,opt,name=start_position_exclusive,json=startPositionExclusive,proto3" json:"start_position_exclusive,omitempty"` // If true, start AFTER start_message_id; if false, include start_message_id
 }
 
 func (x *DumpMessagesRequest) Reset() {
@@ -16156,8 +16159,8 @@ func (x *DumpMessagesRequest) GetStartPositionExclusive() bool {
 	return false
 }
 
-// DumpMessagesResponse contains either a status or a message from the dump operation.
-// Messages are streamed one by one.
+// DumpMessagesResponse streams messages from the WAL.
+// Each response contains either an error status or a message (never both).
 type DumpMessagesResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -16228,11 +16231,11 @@ type isDumpMessagesResponse_Response interface {
 }
 
 type DumpMessagesResponse_Status struct {
-	Status *commonpb.Status `protobuf:"bytes,1,opt,name=status,proto3,oneof"` // Error status (only sent on error)
+	Status *commonpb.Status `protobuf:"bytes,1,opt,name=status,proto3,oneof"` // Error status (only sent when an error occurs)
 }
 
 type DumpMessagesResponse_Message struct {
-	Message *commonpb.ImmutableMessage `protobuf:"bytes,2,opt,name=message,proto3,oneof"` // The dumped message
+	Message *commonpb.ImmutableMessage `protobuf:"bytes,2,opt,name=message,proto3,oneof"` // A dumped message (filtered to exclude system messages)
 }
 
 func (*DumpMessagesResponse_Status) isDumpMessagesResponse_Response() {}

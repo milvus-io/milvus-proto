@@ -204,11 +204,13 @@ service MilvusService {
   // DumpMessages streams messages from a WAL range for data salvage.
   //
   // Semantics:
-  //   - Reads messages from start_message_id (exclusive) to end_message_id (inclusive).
-  //   - If end_message_id is not set, streams to the latest position.
-  //   - Only returns non-system messages (filters out TimeTick, CreateSegment, etc.).
+  //   - Reads messages starting from start_message_id position.
+  //   - Use start_position_exclusive to control whether start_message_id is included.
+  //   - Use start_timetick/end_timetick to filter messages by timetick range.
+  //   - Only returns non-system messages (filters out TimeTick, CreateSegment, Flush, RollbackTxn).
+  //   - Streams messages until end_timetick is reached or context is cancelled.
   //   - Typically used after force failover to recover unsynchronized messages
-  //     from the old primary cluster.
+  //     from the old primary cluster using the salvage checkpoint.
   rpc DumpMessages(DumpMessagesRequest) returns (stream DumpMessagesResponse){}
 
   rpc ComputePhraseMatchSlop(ComputePhraseMatchSlopRequest) returns (ComputePhraseMatchSlopResponse) {}
@@ -2624,22 +2626,25 @@ message ReplicateResponse {
   }
 }
 
-// DumpMessagesRequest is used to dump messages from a WAL range.
-// This is typically used for data salvage after force failover.
+// DumpMessagesRequest is used to dump messages from a WAL range for data salvage.
+//
+// Usage: After force failover, use GetReplicateInfo to get the salvage_checkpoint,
+// then call DumpMessages with the checkpoint's message_id and timetick to retrieve
+// unsynchronized messages from the old primary cluster.
 message DumpMessagesRequest {
-  string pchannel = 1;                   // Physical channel name to dump from
-  common.MessageID start_message_id = 2; // Start position for dumping (required)
-  uint64 start_timetick = 3;             // Start timetick filter (optional) - only dump messages with timetick >= start_timetick
-  uint64 end_timetick = 4;               // End timetick filter (optional) - only dump messages with timetick <= end_timetick, 0 means no limit
-  bool start_position_exclusive = 5;     // If true, dump messages AFTER start_message_id; if false, include start_message_id
+  string pchannel = 1;                   // Physical channel name to dump from (required)
+  common.MessageID start_message_id = 2; // Start position in WAL (required) - typically from salvage_checkpoint.message_id
+  uint64 start_timetick = 3;             // Start timetick filter (optional) - only dump messages with timetick >= start_timetick, typically from salvage_checkpoint.time_tick
+  uint64 end_timetick = 4;               // End timetick filter (optional) - only dump messages with timetick <= end_timetick, 0 means no limit (stream until cancelled)
+  bool start_position_exclusive = 5;     // If true, start AFTER start_message_id; if false, include start_message_id
 }
 
-// DumpMessagesResponse contains either a status or a message from the dump operation.
-// Messages are streamed one by one.
+// DumpMessagesResponse streams messages from the WAL.
+// Each response contains either an error status or a message (never both).
 message DumpMessagesResponse {
   oneof response {
-    common.Status status = 1;              // Error status (only sent on error)
-    common.ImmutableMessage message = 2;   // The dumped message
+    common.Status status = 1;              // Error status (only sent when an error occurs)
+    common.ImmutableMessage message = 2;   // A dumped message (filtered to exclude system messages)
   }
 }
 
