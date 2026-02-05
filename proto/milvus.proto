@@ -2628,16 +2628,19 @@ message ReplicateResponse {
 // This is typically used for data salvage after force failover.
 message DumpMessagesRequest {
   string pchannel = 1;                   // Physical channel name to dump from
-  common.MessageID start_message_id = 2; // Start position for dumping
-  common.MessageID end_message_id = 3;   // End position (inclusive), optional - empty means dump to latest
-  bool start_position_exclusive = 4;     // If true (default), dump messages AFTER start_message_id; if false, include start_message_id
+  common.MessageID start_message_id = 2; // Start position for dumping (required)
+  uint64 start_timetick = 3;             // Start timetick filter (optional) - only dump messages with timetick >= start_timetick
+  uint64 end_timetick = 4;               // End timetick filter (optional) - only dump messages with timetick <= end_timetick, 0 means no limit
+  bool start_position_exclusive = 5;     // If true, dump messages AFTER start_message_id; if false, include start_message_id
 }
 
-// DumpMessagesResponse contains a single message from the dump operation.
+// DumpMessagesResponse contains either a status or a message from the dump operation.
 // Messages are streamed one by one.
 message DumpMessagesResponse {
-  common.Status status = 1;
-  common.ImmutableMessage message = 2; // The dumped message
+  oneof response {
+    common.Status status = 1;              // Error status (only sent on error)
+    common.ImmutableMessage message = 2;   // The dumped message
+  }
 }
 
 /*
