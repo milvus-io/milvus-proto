@@ -200,6 +200,17 @@ service MilvusService {
   //   - Once established, the target cluster persists incoming messages into
   //     its WAL (Write-Ahead Log) ensuring durability and consistency.
   rpc CreateReplicateStream(stream ReplicateRequest) returns (stream ReplicateResponse){}
+  //
+  // DumpMessages streams messages from a WAL range for data salvage.
+  //
+  // Semantics:
+  //   - Reads messages starting from start_message_id position (inclusive).
+  //   - Use start_timetick/end_timetick to filter messages by timetick range.
+  //   - Only returns non-system messages (filters out TimeTick, CreateSegment, Flush, RollbackTxn).
+  //   - Streams messages until end_timetick is reached or context is cancelled.
+  //   - Typically used after force failover to recover unsynchronized messages
+  //     from the old primary cluster using the salvage checkpoint.
+  rpc DumpMessages(DumpMessagesRequest) returns (stream DumpMessagesResponse){}
 
   rpc ComputePhraseMatchSlop(ComputePhraseMatchSlopRequest) returns (ComputePhraseMatchSlopResponse) {}
   
@@ -2592,6 +2603,10 @@ message GetReplicateInfoRequest {
 
 message GetReplicateInfoResponse {
   common.ReplicateCheckpoint checkpoint = 1;
+  // salvage_checkpoint is captured during force promote.
+  // It represents the last synced position from the old primary.
+  // Data salvage tools can use this to dump unsynchronized messages from the old primary.
+  common.ReplicateCheckpoint salvage_checkpoint = 2;
 }
 
 message ReplicateMessage {
@@ -2612,6 +2627,27 @@ message ReplicateConfirmedMessageInfo {
 message ReplicateResponse {
   oneof response {
     ReplicateConfirmedMessageInfo replicate_confirmed_message_info = 1;
+  }
+}
+
+// DumpMessagesRequest is used to dump messages from a WAL range for data salvage.
+//
+// Usage: After force failover, use GetReplicateInfo to get the salvage_checkpoint,
+// then call DumpMessages with the checkpoint's message_id and timetick to retrieve
+// unsynchronized messages from the old primary cluster.
+message DumpMessagesRequest {
+  string pchannel = 1;                   // Physical channel name to dump from (required)
+  common.MessageID start_message_id = 2; // Start position in WAL (required) - typically from salvage_checkpoint.message_id
+  uint64 start_timetick = 3;             // Start timetick filter (optional) - only dump messages with timetick >= start_timetick, typically from salvage_checkpoint.time_tick
+  uint64 end_timetick = 4;               // End timetick filter (optional) - only dump messages with timetick <= end_timetick, 0 means no limit (stream until cancelled)
+}
+
+// DumpMessagesResponse streams messages from the WAL.
+// Each response contains either an error status or a message (never both).
+message DumpMessagesResponse {
+  oneof response {
+    common.Status status = 1;              // Error status (only sent when an error occurs)
+    common.ImmutableMessage message = 2;   // A dumped message (filtered to exclude system messages)
   }
 }
 
