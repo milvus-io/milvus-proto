@@ -616,8 +616,14 @@ message ReplicateConfiguration {
 
 // ConnectionParam defines the params to connect to the Milvus cluster.
 message ConnectionParam {
-  string uri   = 1;
-  string token = 2;
+  string uri              = 1;
+  string token            = 2;
+  // TLS certificate file paths (all optional, for mTLS support).
+  // When ca_pem_path is set alone: one-way TLS (client verifies server).
+  // When all three are set: mutual TLS (mTLS).
+  string ca_pem_path      = 3;
+  string client_pem_path  = 4;
+  string client_key_path  = 5;
 }
 
 // MilvusCluster describes the Milvus cluster information, 
