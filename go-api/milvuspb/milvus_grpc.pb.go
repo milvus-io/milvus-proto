@@ -307,8 +307,7 @@ type MilvusServiceClient interface {
 	// DumpMessages streams messages from a WAL range for data salvage.
 	//
 	// Semantics:
-	//   - Reads messages starting from start_message_id position.
-	//   - Use start_position_exclusive to control whether start_message_id is included.
+	//   - Reads messages starting from start_message_id position (inclusive).
 	//   - Use start_timetick/end_timetick to filter messages by timetick range.
 	//   - Only returns non-system messages (filters out TimeTick, CreateSegment, Flush, RollbackTxn).
 	//   - Streams messages until end_timetick is reached or context is cancelled.
@@ -1704,8 +1703,7 @@ type MilvusServiceServer interface {
 	// DumpMessages streams messages from a WAL range for data salvage.
 	//
 	// Semantics:
-	//   - Reads messages starting from start_message_id position.
-	//   - Use start_position_exclusive to control whether start_message_id is included.
+	//   - Reads messages starting from start_message_id position (inclusive).
 	//   - Use start_timetick/end_timetick to filter messages by timetick range.
 	//   - Only returns non-system messages (filters out TimeTick, CreateSegment, Flush, RollbackTxn).
 	//   - Streams messages until end_timetick is reached or context is cancelled.
