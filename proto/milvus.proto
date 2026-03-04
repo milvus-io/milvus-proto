@@ -1227,6 +1227,10 @@ message QueryRequest {
   optional string namespace = 14;
 }
 
+message ElementIndices {
+  schema.LongArray indices = 1;
+}
+
 message QueryResults {
   common.Status status = 1;
   repeated schema.FieldData fields_data = 2;
@@ -1234,6 +1238,7 @@ message QueryResults {
   repeated string output_fields = 4;
   uint64 session_ts = 5; // for session-like operation like iterator
   string primary_field_name = 6;
+  repeated ElementIndices element_indices = 7;
 }
 
 message QueryCursor {
