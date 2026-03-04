@@ -34,6 +34,7 @@ enum DataType {
   Geometry = 24;
   Text = 25;
   Timestamptz = 26;
+  Mol = 27; // Molecular data type
 
   BinaryVector = 100;
   FloatVector = 101;
@@ -52,6 +53,8 @@ enum FunctionType{
   BM25 =1;
   TextEmbedding =2;
   Rerank =3;
+  MinHash =4;
+  MolFingerprint =5;
 }
 
 enum FieldState {
@@ -121,6 +124,9 @@ message CollectionSchema {
                       // the name dbName and description take no effect to it.
   string external_source = 11;
   string external_spec = 12;
+  bool do_physical_backfill = 13;
+  repeated int64 file_resource_ids = 14;
+  bool enable_namespace = 15;
 }
 
 message StructArrayFieldSchema {
@@ -161,6 +167,12 @@ message TimestamptzArray { repeated int64 data = 1; }
 
 message GeometryWktArray { repeated string data = 1; }
 
+// MolArray stores processed molecular data in a serialized binary format.
+message MolArray { repeated bytes data = 1; }
+
+// MolSmilesArray stores user-provided SMILES strings for molecular data.
+message MolSmilesArray { repeated string data = 1; }
+
 message ValueField {
   oneof data {
     bool bool_data = 1;
@@ -188,6 +200,8 @@ message ScalarField {
     GeometryArray geometry_data = 10;
     TimestamptzArray timestamptz_data = 11;
     GeometryWktArray geometry_wkt_data = 12;
+    MolArray mol_data = 13;
+    MolSmilesArray mol_smiles_data = 14;
   }
 }
 
@@ -263,6 +277,7 @@ message SearchResultData {
   string primary_field_name = 13;
   repeated common.HighlightResult highlight_results = 14;
   LongArray element_indices = 15;
+  repeated FieldData order_by_field_values = 16;
 }
 
 // vector field clustering info

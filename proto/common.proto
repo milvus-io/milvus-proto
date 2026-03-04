@@ -197,6 +197,7 @@ enum MsgType {
     AddCollectionFunction = 116;
     AlterCollectionFunction = 117;
     DropCollectionFunction = 118;
+    TruncateCollection = 119;
 
     /* DEFINITION REQUESTS: PARTITION */
     CreatePartition = 200;
@@ -279,7 +280,7 @@ enum MsgType {
     Connect = 1209;
     ListClientInfos = 1210;
     AllocTimestamp = 1211;
-    Replicate = 1212;
+    Replicate = 1212 [deprecated = true];
 
     /* Credential */
     CreateCredential = 1500;
@@ -323,9 +324,24 @@ enum MsgType {
     DescribeDatabase = 1805;
 
     AddCollectionField = 1900;
-
     /* WAL group */
     AlterWAL = 2000;
+
+    /* Snapshot */
+    CreateSnapshot = 2100;
+    DropSnapshot = 2101;
+    ListSnapshots = 2102;
+    DescribeSnapshot = 2103;
+    RestoreSnapshot = 2104;
+    GetRestoreSnapshotState = 2105;
+    ListRestoreSnapshotJobs = 2106;
+
+    AlterCollectionSchema = 2200;
+
+    /* External Collection */
+    RefreshExternalCollection = 2300;
+    GetRefreshExternalCollectionProgress = 2301;
+    ListRefreshExternalCollectionJobs = 2302;
 }
 
 message MsgBase {
@@ -335,10 +351,11 @@ message MsgBase {
     int64 sourceID = 4;
     int64 targetID = 5;
     map<string, string> properties = 6;
-    ReplicateInfo replicateInfo = 7;
+    ReplicateInfo replicateInfo = 7 [deprecated = true];
 }
 
 message ReplicateInfo {
+    option deprecated = true;
     bool isReplicate = 1;
     uint64 msgTimestamp = 2;
     string replicateID = 3;
@@ -475,6 +492,14 @@ enum ObjectPrivilege {
     PrivilegeRemoveFileResource = 73;
     PrivilegeListFileResources = 74;
     PrivilegeUpdateReplicateConfiguration = 78;
+    PrivilegeCreateSnapshot = 79;
+    PrivilegeDropSnapshot = 80;
+    PrivilegeDescribeSnapshot = 81;
+    PrivilegeListSnapshots = 82;
+    PrivilegeRestoreSnapshot = 83;
+    PrivilegeAlterCollectionSchema = 84;
+    PrivilegeGetReplicateConfiguration = 85;
+    PrivilegeRefreshExternalCollection = 86;
 }
 
 message PrivilegeExt {
@@ -518,6 +543,37 @@ message ClientInfo {
     string host = 5;
     // reserved for newly-added feature if necessary.
     map<string, string> reserved = 6;
+}
+
+message Metrics {
+    int64 request_count = 1;
+    int64 success_count = 2;
+    int64 error_count = 3;
+    double avg_latency_ms = 4;
+    double p99_latency_ms = 5;
+    double max_latency_ms = 6;
+}
+
+message OperationMetrics {
+    string operation = 1;
+    Metrics global = 2;
+    map<string, Metrics> collection_metrics = 3;
+}
+
+message ClientCommand {
+    string command_id = 1;
+    string command_type = 2;
+    bytes payload = 3;
+    int64 create_time = 4;
+    bool persistent = 5;
+    string target_scope = 6;
+}
+
+message CommandReply {
+    string command_id = 1;
+    bool success = 2;
+    string error_message = 3;
+    bytes payload = 4;
 }
 
 message ServerInfo {
@@ -602,8 +658,9 @@ message ReplicateCheckpoint {
   uint64 time_tick = 4; // the time tick of the last replicated message
 }
 
-message HighlightData {        
+message HighlightData {
   repeated string fragments = 1;
+  repeated float scores = 2;
 }
 
 message HighlightResult {        

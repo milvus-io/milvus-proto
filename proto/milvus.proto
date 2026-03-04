@@ -32,6 +32,7 @@ service MilvusService {
   rpc AddCollectionFunction(AddCollectionFunctionRequest) returns (common.Status) {}
   rpc AlterCollectionFunction(AlterCollectionFunctionRequest) returns (common.Status) {}
   rpc DropCollectionFunction(DropCollectionFunctionRequest) returns (common.Status) {}
+  rpc TruncateCollection(TruncateCollectionRequest) returns (TruncateCollectionResponse) {}
 
   rpc CreatePartition(CreatePartitionRequest) returns (common.Status) {}
   rpc DropPartition(DropPartitionRequest) returns (common.Status) {}
@@ -144,7 +145,9 @@ service MilvusService {
   rpc DescribeDatabase(DescribeDatabaseRequest) returns (DescribeDatabaseResponse) {}
 
   // Deprecated CDC API
-  rpc ReplicateMessage(ReplicateMessageRequest) returns (ReplicateMessageResponse) {}
+  rpc ReplicateMessage(ReplicateMessageRequest) returns (ReplicateMessageResponse) {
+    option deprecated = true;
+  }
 
   rpc BackupRBAC(BackupRBACMetaRequest) returns (BackupRBACMetaResponse){}
   rpc RestoreRBAC(RestoreRBACMetaRequest) returns (common.Status){}
@@ -182,6 +185,10 @@ service MilvusService {
   //     multiple times must not cause side effects.
   rpc UpdateReplicateConfiguration(UpdateReplicateConfigurationRequest) returns (common.Status){}
   //
+  // GetReplicateConfiguration retrieves the current cross-cluster replication topology.
+  // Sensitive fields (like connection tokens) are redacted in the response.
+  rpc GetReplicateConfiguration(GetReplicateConfigurationRequest) returns (GetReplicateConfigurationResponse){}
+  //
   // GetReplicateInfo retrieves replication-related metadata of specified channel from a target Milvus cluster.
   rpc GetReplicateInfo(GetReplicateInfoRequest) returns (GetReplicateInfoResponse){}
   //
@@ -193,6 +200,32 @@ service MilvusService {
   //   - Once established, the target cluster persists incoming messages into
   //     its WAL (Write-Ahead Log) ensuring durability and consistency.
   rpc CreateReplicateStream(stream ReplicateRequest) returns (stream ReplicateResponse){}
+
+  rpc ComputePhraseMatchSlop(ComputePhraseMatchSlopRequest) returns (ComputePhraseMatchSlopResponse) {}
+  
+  // snapshot related
+  rpc CreateSnapshot(CreateSnapshotRequest) returns (common.Status) {}
+  rpc DropSnapshot(DropSnapshotRequest) returns (common.Status) {}
+  rpc ListSnapshots(ListSnapshotsRequest) returns (ListSnapshotsResponse) {}
+  rpc DescribeSnapshot(DescribeSnapshotRequest) returns (DescribeSnapshotResponse) {}
+  rpc RestoreSnapshot(RestoreSnapshotRequest) returns (RestoreSnapshotResponse) {}
+  rpc GetRestoreSnapshotState(GetRestoreSnapshotStateRequest) returns (GetRestoreSnapshotStateResponse) {}
+  rpc ListRestoreSnapshotJobs(ListRestoreSnapshotJobsRequest) returns (ListRestoreSnapshotJobsResponse) {}
+  rpc AlterCollectionSchema(AlterCollectionSchemaRequest) returns (AlterCollectionSchemaResponse) {}
+  rpc BatchUpdateManifest(BatchUpdateManifestRequest) returns (common.Status) {}
+
+  // External Collection APIs
+  rpc RefreshExternalCollection(RefreshExternalCollectionRequest) returns (RefreshExternalCollectionResponse) {}
+  rpc GetRefreshExternalCollectionProgress(GetRefreshExternalCollectionProgressRequest) returns (GetRefreshExternalCollectionProgressResponse) {}
+  rpc ListRefreshExternalCollectionJobs(ListRefreshExternalCollectionJobsRequest) returns (ListRefreshExternalCollectionJobsResponse) {}
+}
+
+// Client Telemetry Service
+service ClientTelemetryService {
+  rpc ClientHeartbeat(ClientHeartbeatRequest) returns (ClientHeartbeatResponse) {}
+  rpc GetClientTelemetry(GetClientTelemetryRequest) returns (GetClientTelemetryResponse) {}
+  rpc PushClientCommand(PushClientCommandRequest) returns (PushClientCommandResponse) {}
+  rpc DeleteClientCommand(DeleteClientCommandRequest) returns (DeleteClientCommandResponse) {}
 }
 
 message CreateAliasRequest {
@@ -988,9 +1021,9 @@ message AddCollectionFieldRequest {
 
 message AddCollectionFunctionRequest {
   option (common.privilege_ext_obj) = {
-    object_type: Collection
+    object_type: Global 
     object_privilege: PrivilegeCreateCollection
-    object_name_index: 3
+    object_name_index: -1
   };
   common.MsgBase base = 1;
   string db_name = 2;
@@ -1001,9 +1034,9 @@ message AddCollectionFunctionRequest {
 
 message AlterCollectionFunctionRequest {
   option (common.privilege_ext_obj) = {
-    object_type: Collection
+    object_type: Global 
     object_privilege: PrivilegeCreateCollection
-    object_name_index: 3
+    object_name_index: -1
   };
   common.MsgBase base = 1;
   string db_name = 2;
@@ -1015,9 +1048,9 @@ message AlterCollectionFunctionRequest {
 
 message DropCollectionFunctionRequest {
   option (common.privilege_ext_obj) = {
-    object_type: Collection
+    object_type: Global 
     object_privilege: PrivilegeCreateCollection
-    object_name_index: 3
+    object_name_index: -1
   };
   common.MsgBase base = 1;
   string db_name = 2;
@@ -1269,11 +1302,18 @@ message FlushAllRequest {
   repeated FlushAllTarget flush_targets = 3 [deprecated = true];
 }
 
+message ClusterInfo {
+  string cluster_id           = 1;
+  string cchannel             = 2;
+  repeated string pchannels   = 3;
+}
+
 message FlushAllResponse {
-  common.Status status                  = 1;
-  uint64 flush_all_ts                   = 2 [deprecated = true];
-  repeated FlushAllResult flush_results = 3 [deprecated = true];
-  map<string, uint64> flush_all_tss     = 4; // pchannel -> flush all ts
+  common.Status status                                = 1;
+  uint64 flush_all_ts                                 = 2 [deprecated = true];
+  repeated FlushAllResult flush_results               = 3 [deprecated = true];
+  map<string, common.ImmutableMessage> flush_all_msgs = 4; // pchannel -> FlushAllMsg
+  ClusterInfo cluster_info                            = 5;
 }
 
 // Deprecated
@@ -2273,6 +2313,7 @@ message DescribeDatabaseResponse {
 }
 
 message ReplicateMessageRequest {
+  option deprecated = true;
   common.MsgBase base = 1;
   string channel_name = 2;
   uint64 BeginTs = 3;
@@ -2283,6 +2324,7 @@ message ReplicateMessageRequest {
 }
 
 message ReplicateMessageResponse {
+  option deprecated = true;
   common.Status status = 1;
   string position = 2;
 }
@@ -2525,6 +2567,22 @@ message UpdateReplicateConfigurationRequest {
     object_name_index: -1
   };
   common.ReplicateConfiguration replicate_configuration = 1;
+  // If true, the current cluster will be promoted to primary forcefully.
+  // This is intended for failover scenarios.
+  bool force_promote                                    = 2;
+}
+
+message GetReplicateConfigurationRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeGetReplicateConfiguration
+    object_name_index: -1
+  };
+}
+
+message GetReplicateConfigurationResponse {
+  common.Status status = 1;
+  common.ReplicateConfiguration configuration = 2;
 }
 
 message GetReplicateInfoRequest {
@@ -2555,4 +2613,365 @@ message ReplicateResponse {
   oneof response {
     ReplicateConfirmedMessageInfo replicate_confirmed_message_info = 1;
   }
+}
+
+/*
+* Truncate collection in milvus
+*/
+message TruncateCollectionRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDropCollection
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  string db_name = 2;
+  // The unique collection name in milvus.(Required)
+  string collection_name = 3;
+}
+
+message TruncateCollectionResponse {
+  common.Status status = 1;
+}
+
+message ComputePhraseMatchSlopRequest {
+  common.MsgBase base = 1;
+  string analyzer_params = 2;
+  string query_text = 3;
+  repeated string data_texts = 4;
+}
+
+message ComputePhraseMatchSlopResponse {
+  common.Status status = 1;
+  repeated bool is_match = 2;
+  repeated int64 slops = 3;
+}
+
+/*
+* Snapshot Management
+*/
+message CreateSnapshotRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCreateSnapshot
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  string name = 2;  // user-defined snapshot name
+  string description = 3; // user-defined snapshot description
+  string db_name = 4; // db name
+  string collection_name = 5; // collection name
+}
+
+message DropSnapshotRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDropSnapshot
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  string name = 2; // snapshot name
+}
+
+message ListSnapshotsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeListSnapshots
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  string db_name = 2; // db name
+  string collection_name = 3; // collection name, if collection_name is empty, it will list all snapshots.
+}
+
+// return all snapshots for the given collection
+// Note: list snapshots is not a privilege check operation
+message ListSnapshotsResponse {
+  common.Status status = 1;
+  repeated string snapshots = 2;
+}
+
+message DescribeSnapshotRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeDescribeSnapshot
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  string name = 2; // snapshot name
+}
+
+message DescribeSnapshotResponse {
+  common.Status status = 1;
+  string name = 2;  // user-defined snapshot name
+  string description = 3; // user-defined snapshot description
+  string collection_name = 4; // collection name
+  repeated string partition_names = 5; // the partition names in the snapshot.
+  int64 create_ts = 6; // create timestamp, all stream data before this timestamp will be flushed to segment list.
+  string s3_location = 7; // s3 location of the snapshot meta file if snapshot is exported to s3.
+}
+
+// restore a snapshot to a new collection
+message RestoreSnapshotRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeRestoreSnapshot
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  string name = 2; // snapshot name
+  string db_name = 3; // db name
+  string collection_name = 4; // collection name
+  bool rewrite_data = 5; // if true, use import to rewrite data to collection
+}
+
+message RestoreSnapshotResponse {
+  common.Status status = 1;
+  int64 job_id = 2;
+}
+
+enum RestoreSnapshotState {
+  RestoreSnapshotNone = 0;
+  RestoreSnapshotPending = 1;   // Job created, waiting to start
+  RestoreSnapshotExecuting = 2; // Executing restore snapshot job
+  RestoreSnapshotCompleted = 3; // All done
+  RestoreSnapshotFailed = 4;    // Failed
+}
+
+message RestoreSnapshotInfo {
+  int64 job_id = 1;
+  string snapshot_name = 2;
+  string db_name = 3;
+  string collection_name = 4;
+  RestoreSnapshotState state = 5;
+  int32 progress = 6; // progress percentage (0-100)
+  string reason = 7;
+  uint64 start_time = 8; // start timestamp in milliseconds
+  uint64 time_cost = 9; // time cost in milliseconds
+}
+
+message GetRestoreSnapshotStateRequest {
+   option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeRestoreSnapshot
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  int64 job_id = 2; // restore job ID
+}
+
+message GetRestoreSnapshotStateResponse {
+  common.Status status = 1;
+  RestoreSnapshotInfo info = 2;
+}
+
+message ListRestoreSnapshotJobsRequest {
+   option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeRestoreSnapshot
+    object_name_index: -1
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3; 
+}
+
+message ListRestoreSnapshotJobsResponse {
+  common.Status status = 1;
+  repeated RestoreSnapshotInfo jobs = 2;
+}
+
+message AlterCollectionSchemaRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeAlterCollectionSchema
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  int64  collectionID = 4;
+  
+  // The serialized `schema.FieldSchema`
+  message FieldInfo {
+    schema.FieldSchema field_schema = 1;
+    // Version before 2.0.2 doesn't contain index_name, we use default index name.
+    string index_name = 2;
+    // Support keys: index_type,metric_type, params. Different index_type may has different params.
+    repeated common.KeyValuePair extra_params = 3;
+  }
+  
+  // Add fields and functions request
+  message AddRequest {
+    repeated FieldInfo field_infos = 1;
+    repeated schema.FunctionSchema func_schema = 2;
+    bool do_physical_backfill = 3;
+  }
+  
+  // Drop field request
+  message DropRequest {
+    oneof field_identifier {
+      string field_name = 1;
+      int64 field_id = 2;
+    }
+  }
+  
+  // Action to perform on the collection schema
+  message Action {
+    oneof op {
+      AddRequest add_request = 1;
+      DropRequest drop_request = 2;
+    }
+  }
+  
+  Action action = 5;
+}
+
+message AlterCollectionSchemaResponse {
+  common.Status alter_status = 1;
+  common.Status index_status = 2;
+}
+
+message BatchUpdateManifestRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeInsert
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  repeated string field_names = 4; // work as hint for now
+  repeated BatchUpdateManifestItem items = 5;
+}
+
+message BatchUpdateManifestItem {
+  int64 segment_id = 1;
+  int64 manifest_version = 2;
+}
+
+// Client Heartbeat
+message ClientHeartbeatRequest {
+    common.ClientInfo client_info = 1;
+    int64 report_timestamp = 2;
+    repeated common.OperationMetrics metrics = 3;
+    repeated common.CommandReply command_replies = 4;
+    string config_hash = 5;
+    int64 last_command_timestamp = 6;
+}
+
+message ClientHeartbeatResponse {
+    common.Status status = 1;
+    int64 server_timestamp = 2;
+    repeated common.ClientCommand commands = 3;
+}
+
+// Get Client Telemetry
+message GetClientTelemetryRequest {
+    string database = 1;
+    string client_id = 2;
+    bool include_metrics = 3;
+}
+
+message ClientTelemetry {
+    common.ClientInfo client_info = 1;
+    int64 last_heartbeat_time = 2;
+    string status = 3;
+    repeated string databases = 4;
+    repeated common.OperationMetrics metrics = 5;
+}
+
+message GetClientTelemetryResponse {
+    common.Status status = 1;
+    repeated ClientTelemetry clients = 2;
+    common.Metrics aggregated = 3;
+}
+
+// Push Client Command
+message PushClientCommandRequest {
+    string command_type = 1;
+    bytes payload = 2;
+    string target_client_id = 3;
+    string target_database = 4;
+    int64 ttl_seconds = 5;
+    bool persistent = 6;
+}
+
+message PushClientCommandResponse {
+    common.Status status = 1;
+    string command_id = 2;
+}
+
+// Delete Client Command
+message DeleteClientCommandRequest {
+    string command_id = 1;
+}
+
+message DeleteClientCommandResponse {
+    common.Status status = 1;
+}
+
+// External Collection Refresh APIs
+enum RefreshExternalCollectionState {
+  RefreshPending = 0;      // Job is queued, waiting to execute
+  RefreshInProgress = 1;   // Job is currently executing
+  RefreshCompleted = 2;    // Job completed successfully
+  RefreshFailed = 3;       // Job failed with error
+}
+
+message RefreshExternalCollectionRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeRefreshExternalCollection
+    object_name_index: 3
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2;              // Database name
+  string collection_name = 3;      // Collection name (required)
+  string external_source = 4;      // Optional: new external source path
+  string external_spec = 5;        // Optional: new external spec configuration
+}
+
+message RefreshExternalCollectionResponse {
+  common.Status status = 1;
+  int64 job_id = 2;                // Unique job identifier for tracking
+}
+
+message GetRefreshExternalCollectionProgressRequest {
+  common.MsgBase base = 1;
+  int64 job_id = 2;                // Job ID from RefreshExternalCollection response
+}
+
+message RefreshExternalCollectionJobInfo {
+  int64 job_id = 1;                    // Job identifier
+  string collection_name = 2;          // Collection name
+  RefreshExternalCollectionState state = 3; // Current job state
+  int64 progress = 4;                  // Progress percentage (0-100)
+  string reason = 5;                   // Error message if failed
+  string external_source = 6;          // External source used for this job
+  int64 start_time = 7;                // Job start timestamp (Unix epoch ms)
+  int64 end_time = 8;                  // Job end timestamp (0 if not completed)
+}
+
+message GetRefreshExternalCollectionProgressResponse {
+  common.Status status = 1;
+  RefreshExternalCollectionJobInfo job_info = 2;
+}
+
+message ListRefreshExternalCollectionJobsRequest {
+  common.MsgBase base = 1;
+  string db_name = 2;              // Database name
+  string collection_name = 3;      // Collection name (optional, if empty lists all)
+}
+
+message ListRefreshExternalCollectionJobsResponse {
+  common.Status status = 1;
+  repeated RefreshExternalCollectionJobInfo jobs = 2;
 }

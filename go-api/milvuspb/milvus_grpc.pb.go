@@ -21,119 +21,134 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	MilvusService_CreateCollection_FullMethodName             = "/milvus.proto.milvus.MilvusService/CreateCollection"
-	MilvusService_DropCollection_FullMethodName               = "/milvus.proto.milvus.MilvusService/DropCollection"
-	MilvusService_HasCollection_FullMethodName                = "/milvus.proto.milvus.MilvusService/HasCollection"
-	MilvusService_LoadCollection_FullMethodName               = "/milvus.proto.milvus.MilvusService/LoadCollection"
-	MilvusService_ReleaseCollection_FullMethodName            = "/milvus.proto.milvus.MilvusService/ReleaseCollection"
-	MilvusService_DescribeCollection_FullMethodName           = "/milvus.proto.milvus.MilvusService/DescribeCollection"
-	MilvusService_BatchDescribeCollection_FullMethodName      = "/milvus.proto.milvus.MilvusService/BatchDescribeCollection"
-	MilvusService_GetCollectionStatistics_FullMethodName      = "/milvus.proto.milvus.MilvusService/GetCollectionStatistics"
-	MilvusService_ShowCollections_FullMethodName              = "/milvus.proto.milvus.MilvusService/ShowCollections"
-	MilvusService_AlterCollection_FullMethodName              = "/milvus.proto.milvus.MilvusService/AlterCollection"
-	MilvusService_AlterCollectionField_FullMethodName         = "/milvus.proto.milvus.MilvusService/AlterCollectionField"
-	MilvusService_AddCollectionFunction_FullMethodName        = "/milvus.proto.milvus.MilvusService/AddCollectionFunction"
-	MilvusService_AlterCollectionFunction_FullMethodName      = "/milvus.proto.milvus.MilvusService/AlterCollectionFunction"
-	MilvusService_DropCollectionFunction_FullMethodName       = "/milvus.proto.milvus.MilvusService/DropCollectionFunction"
-	MilvusService_CreatePartition_FullMethodName              = "/milvus.proto.milvus.MilvusService/CreatePartition"
-	MilvusService_DropPartition_FullMethodName                = "/milvus.proto.milvus.MilvusService/DropPartition"
-	MilvusService_HasPartition_FullMethodName                 = "/milvus.proto.milvus.MilvusService/HasPartition"
-	MilvusService_LoadPartitions_FullMethodName               = "/milvus.proto.milvus.MilvusService/LoadPartitions"
-	MilvusService_ReleasePartitions_FullMethodName            = "/milvus.proto.milvus.MilvusService/ReleasePartitions"
-	MilvusService_GetPartitionStatistics_FullMethodName       = "/milvus.proto.milvus.MilvusService/GetPartitionStatistics"
-	MilvusService_ShowPartitions_FullMethodName               = "/milvus.proto.milvus.MilvusService/ShowPartitions"
-	MilvusService_GetLoadingProgress_FullMethodName           = "/milvus.proto.milvus.MilvusService/GetLoadingProgress"
-	MilvusService_GetLoadState_FullMethodName                 = "/milvus.proto.milvus.MilvusService/GetLoadState"
-	MilvusService_CreateAlias_FullMethodName                  = "/milvus.proto.milvus.MilvusService/CreateAlias"
-	MilvusService_DropAlias_FullMethodName                    = "/milvus.proto.milvus.MilvusService/DropAlias"
-	MilvusService_AlterAlias_FullMethodName                   = "/milvus.proto.milvus.MilvusService/AlterAlias"
-	MilvusService_DescribeAlias_FullMethodName                = "/milvus.proto.milvus.MilvusService/DescribeAlias"
-	MilvusService_ListAliases_FullMethodName                  = "/milvus.proto.milvus.MilvusService/ListAliases"
-	MilvusService_CreateIndex_FullMethodName                  = "/milvus.proto.milvus.MilvusService/CreateIndex"
-	MilvusService_AlterIndex_FullMethodName                   = "/milvus.proto.milvus.MilvusService/AlterIndex"
-	MilvusService_DescribeIndex_FullMethodName                = "/milvus.proto.milvus.MilvusService/DescribeIndex"
-	MilvusService_GetIndexStatistics_FullMethodName           = "/milvus.proto.milvus.MilvusService/GetIndexStatistics"
-	MilvusService_GetIndexState_FullMethodName                = "/milvus.proto.milvus.MilvusService/GetIndexState"
-	MilvusService_GetIndexBuildProgress_FullMethodName        = "/milvus.proto.milvus.MilvusService/GetIndexBuildProgress"
-	MilvusService_DropIndex_FullMethodName                    = "/milvus.proto.milvus.MilvusService/DropIndex"
-	MilvusService_Insert_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Insert"
-	MilvusService_Delete_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Delete"
-	MilvusService_Upsert_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Upsert"
-	MilvusService_Search_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Search"
-	MilvusService_HybridSearch_FullMethodName                 = "/milvus.proto.milvus.MilvusService/HybridSearch"
-	MilvusService_Flush_FullMethodName                        = "/milvus.proto.milvus.MilvusService/Flush"
-	MilvusService_Query_FullMethodName                        = "/milvus.proto.milvus.MilvusService/Query"
-	MilvusService_CalcDistance_FullMethodName                 = "/milvus.proto.milvus.MilvusService/CalcDistance"
-	MilvusService_FlushAll_FullMethodName                     = "/milvus.proto.milvus.MilvusService/FlushAll"
-	MilvusService_AddCollectionField_FullMethodName           = "/milvus.proto.milvus.MilvusService/AddCollectionField"
-	MilvusService_GetFlushState_FullMethodName                = "/milvus.proto.milvus.MilvusService/GetFlushState"
-	MilvusService_GetFlushAllState_FullMethodName             = "/milvus.proto.milvus.MilvusService/GetFlushAllState"
-	MilvusService_GetPersistentSegmentInfo_FullMethodName     = "/milvus.proto.milvus.MilvusService/GetPersistentSegmentInfo"
-	MilvusService_GetQuerySegmentInfo_FullMethodName          = "/milvus.proto.milvus.MilvusService/GetQuerySegmentInfo"
-	MilvusService_GetReplicas_FullMethodName                  = "/milvus.proto.milvus.MilvusService/GetReplicas"
-	MilvusService_Dummy_FullMethodName                        = "/milvus.proto.milvus.MilvusService/Dummy"
-	MilvusService_RegisterLink_FullMethodName                 = "/milvus.proto.milvus.MilvusService/RegisterLink"
-	MilvusService_GetMetrics_FullMethodName                   = "/milvus.proto.milvus.MilvusService/GetMetrics"
-	MilvusService_GetComponentStates_FullMethodName           = "/milvus.proto.milvus.MilvusService/GetComponentStates"
-	MilvusService_LoadBalance_FullMethodName                  = "/milvus.proto.milvus.MilvusService/LoadBalance"
-	MilvusService_GetCompactionState_FullMethodName           = "/milvus.proto.milvus.MilvusService/GetCompactionState"
-	MilvusService_ManualCompaction_FullMethodName             = "/milvus.proto.milvus.MilvusService/ManualCompaction"
-	MilvusService_GetCompactionStateWithPlans_FullMethodName  = "/milvus.proto.milvus.MilvusService/GetCompactionStateWithPlans"
-	MilvusService_Import_FullMethodName                       = "/milvus.proto.milvus.MilvusService/Import"
-	MilvusService_GetImportState_FullMethodName               = "/milvus.proto.milvus.MilvusService/GetImportState"
-	MilvusService_ListImportTasks_FullMethodName              = "/milvus.proto.milvus.MilvusService/ListImportTasks"
-	MilvusService_CreateCredential_FullMethodName             = "/milvus.proto.milvus.MilvusService/CreateCredential"
-	MilvusService_UpdateCredential_FullMethodName             = "/milvus.proto.milvus.MilvusService/UpdateCredential"
-	MilvusService_DeleteCredential_FullMethodName             = "/milvus.proto.milvus.MilvusService/DeleteCredential"
-	MilvusService_ListCredUsers_FullMethodName                = "/milvus.proto.milvus.MilvusService/ListCredUsers"
-	MilvusService_CreateRole_FullMethodName                   = "/milvus.proto.milvus.MilvusService/CreateRole"
-	MilvusService_DropRole_FullMethodName                     = "/milvus.proto.milvus.MilvusService/DropRole"
-	MilvusService_OperateUserRole_FullMethodName              = "/milvus.proto.milvus.MilvusService/OperateUserRole"
-	MilvusService_SelectRole_FullMethodName                   = "/milvus.proto.milvus.MilvusService/SelectRole"
-	MilvusService_SelectUser_FullMethodName                   = "/milvus.proto.milvus.MilvusService/SelectUser"
-	MilvusService_OperatePrivilege_FullMethodName             = "/milvus.proto.milvus.MilvusService/OperatePrivilege"
-	MilvusService_OperatePrivilegeV2_FullMethodName           = "/milvus.proto.milvus.MilvusService/OperatePrivilegeV2"
-	MilvusService_SelectGrant_FullMethodName                  = "/milvus.proto.milvus.MilvusService/SelectGrant"
-	MilvusService_GetVersion_FullMethodName                   = "/milvus.proto.milvus.MilvusService/GetVersion"
-	MilvusService_CheckHealth_FullMethodName                  = "/milvus.proto.milvus.MilvusService/CheckHealth"
-	MilvusService_CreateResourceGroup_FullMethodName          = "/milvus.proto.milvus.MilvusService/CreateResourceGroup"
-	MilvusService_DropResourceGroup_FullMethodName            = "/milvus.proto.milvus.MilvusService/DropResourceGroup"
-	MilvusService_UpdateResourceGroups_FullMethodName         = "/milvus.proto.milvus.MilvusService/UpdateResourceGroups"
-	MilvusService_TransferNode_FullMethodName                 = "/milvus.proto.milvus.MilvusService/TransferNode"
-	MilvusService_TransferReplica_FullMethodName              = "/milvus.proto.milvus.MilvusService/TransferReplica"
-	MilvusService_ListResourceGroups_FullMethodName           = "/milvus.proto.milvus.MilvusService/ListResourceGroups"
-	MilvusService_DescribeResourceGroup_FullMethodName        = "/milvus.proto.milvus.MilvusService/DescribeResourceGroup"
-	MilvusService_RenameCollection_FullMethodName             = "/milvus.proto.milvus.MilvusService/RenameCollection"
-	MilvusService_ListIndexedSegment_FullMethodName           = "/milvus.proto.milvus.MilvusService/ListIndexedSegment"
-	MilvusService_DescribeSegmentIndexData_FullMethodName     = "/milvus.proto.milvus.MilvusService/DescribeSegmentIndexData"
-	MilvusService_Connect_FullMethodName                      = "/milvus.proto.milvus.MilvusService/Connect"
-	MilvusService_AllocTimestamp_FullMethodName               = "/milvus.proto.milvus.MilvusService/AllocTimestamp"
-	MilvusService_CreateDatabase_FullMethodName               = "/milvus.proto.milvus.MilvusService/CreateDatabase"
-	MilvusService_DropDatabase_FullMethodName                 = "/milvus.proto.milvus.MilvusService/DropDatabase"
-	MilvusService_ListDatabases_FullMethodName                = "/milvus.proto.milvus.MilvusService/ListDatabases"
-	MilvusService_AlterDatabase_FullMethodName                = "/milvus.proto.milvus.MilvusService/AlterDatabase"
-	MilvusService_DescribeDatabase_FullMethodName             = "/milvus.proto.milvus.MilvusService/DescribeDatabase"
-	MilvusService_ReplicateMessage_FullMethodName             = "/milvus.proto.milvus.MilvusService/ReplicateMessage"
-	MilvusService_BackupRBAC_FullMethodName                   = "/milvus.proto.milvus.MilvusService/BackupRBAC"
-	MilvusService_RestoreRBAC_FullMethodName                  = "/milvus.proto.milvus.MilvusService/RestoreRBAC"
-	MilvusService_CreatePrivilegeGroup_FullMethodName         = "/milvus.proto.milvus.MilvusService/CreatePrivilegeGroup"
-	MilvusService_DropPrivilegeGroup_FullMethodName           = "/milvus.proto.milvus.MilvusService/DropPrivilegeGroup"
-	MilvusService_ListPrivilegeGroups_FullMethodName          = "/milvus.proto.milvus.MilvusService/ListPrivilegeGroups"
-	MilvusService_OperatePrivilegeGroup_FullMethodName        = "/milvus.proto.milvus.MilvusService/OperatePrivilegeGroup"
-	MilvusService_RunAnalyzer_FullMethodName                  = "/milvus.proto.milvus.MilvusService/RunAnalyzer"
-	MilvusService_AddFileResource_FullMethodName              = "/milvus.proto.milvus.MilvusService/AddFileResource"
-	MilvusService_RemoveFileResource_FullMethodName           = "/milvus.proto.milvus.MilvusService/RemoveFileResource"
-	MilvusService_ListFileResources_FullMethodName            = "/milvus.proto.milvus.MilvusService/ListFileResources"
-	MilvusService_AddUserTags_FullMethodName                  = "/milvus.proto.milvus.MilvusService/AddUserTags"
-	MilvusService_DeleteUserTags_FullMethodName               = "/milvus.proto.milvus.MilvusService/DeleteUserTags"
-	MilvusService_GetUserTags_FullMethodName                  = "/milvus.proto.milvus.MilvusService/GetUserTags"
-	MilvusService_ListUsersWithTag_FullMethodName             = "/milvus.proto.milvus.MilvusService/ListUsersWithTag"
-	MilvusService_CreateRowPolicy_FullMethodName              = "/milvus.proto.milvus.MilvusService/CreateRowPolicy"
-	MilvusService_DropRowPolicy_FullMethodName                = "/milvus.proto.milvus.MilvusService/DropRowPolicy"
-	MilvusService_ListRowPolicies_FullMethodName              = "/milvus.proto.milvus.MilvusService/ListRowPolicies"
-	MilvusService_UpdateReplicateConfiguration_FullMethodName = "/milvus.proto.milvus.MilvusService/UpdateReplicateConfiguration"
-	MilvusService_GetReplicateInfo_FullMethodName             = "/milvus.proto.milvus.MilvusService/GetReplicateInfo"
-	MilvusService_CreateReplicateStream_FullMethodName        = "/milvus.proto.milvus.MilvusService/CreateReplicateStream"
+	MilvusService_CreateCollection_FullMethodName                     = "/milvus.proto.milvus.MilvusService/CreateCollection"
+	MilvusService_DropCollection_FullMethodName                       = "/milvus.proto.milvus.MilvusService/DropCollection"
+	MilvusService_HasCollection_FullMethodName                        = "/milvus.proto.milvus.MilvusService/HasCollection"
+	MilvusService_LoadCollection_FullMethodName                       = "/milvus.proto.milvus.MilvusService/LoadCollection"
+	MilvusService_ReleaseCollection_FullMethodName                    = "/milvus.proto.milvus.MilvusService/ReleaseCollection"
+	MilvusService_DescribeCollection_FullMethodName                   = "/milvus.proto.milvus.MilvusService/DescribeCollection"
+	MilvusService_BatchDescribeCollection_FullMethodName              = "/milvus.proto.milvus.MilvusService/BatchDescribeCollection"
+	MilvusService_GetCollectionStatistics_FullMethodName              = "/milvus.proto.milvus.MilvusService/GetCollectionStatistics"
+	MilvusService_ShowCollections_FullMethodName                      = "/milvus.proto.milvus.MilvusService/ShowCollections"
+	MilvusService_AlterCollection_FullMethodName                      = "/milvus.proto.milvus.MilvusService/AlterCollection"
+	MilvusService_AlterCollectionField_FullMethodName                 = "/milvus.proto.milvus.MilvusService/AlterCollectionField"
+	MilvusService_AddCollectionFunction_FullMethodName                = "/milvus.proto.milvus.MilvusService/AddCollectionFunction"
+	MilvusService_AlterCollectionFunction_FullMethodName              = "/milvus.proto.milvus.MilvusService/AlterCollectionFunction"
+	MilvusService_DropCollectionFunction_FullMethodName               = "/milvus.proto.milvus.MilvusService/DropCollectionFunction"
+	MilvusService_TruncateCollection_FullMethodName                   = "/milvus.proto.milvus.MilvusService/TruncateCollection"
+	MilvusService_CreatePartition_FullMethodName                      = "/milvus.proto.milvus.MilvusService/CreatePartition"
+	MilvusService_DropPartition_FullMethodName                        = "/milvus.proto.milvus.MilvusService/DropPartition"
+	MilvusService_HasPartition_FullMethodName                         = "/milvus.proto.milvus.MilvusService/HasPartition"
+	MilvusService_LoadPartitions_FullMethodName                       = "/milvus.proto.milvus.MilvusService/LoadPartitions"
+	MilvusService_ReleasePartitions_FullMethodName                    = "/milvus.proto.milvus.MilvusService/ReleasePartitions"
+	MilvusService_GetPartitionStatistics_FullMethodName               = "/milvus.proto.milvus.MilvusService/GetPartitionStatistics"
+	MilvusService_ShowPartitions_FullMethodName                       = "/milvus.proto.milvus.MilvusService/ShowPartitions"
+	MilvusService_GetLoadingProgress_FullMethodName                   = "/milvus.proto.milvus.MilvusService/GetLoadingProgress"
+	MilvusService_GetLoadState_FullMethodName                         = "/milvus.proto.milvus.MilvusService/GetLoadState"
+	MilvusService_CreateAlias_FullMethodName                          = "/milvus.proto.milvus.MilvusService/CreateAlias"
+	MilvusService_DropAlias_FullMethodName                            = "/milvus.proto.milvus.MilvusService/DropAlias"
+	MilvusService_AlterAlias_FullMethodName                           = "/milvus.proto.milvus.MilvusService/AlterAlias"
+	MilvusService_DescribeAlias_FullMethodName                        = "/milvus.proto.milvus.MilvusService/DescribeAlias"
+	MilvusService_ListAliases_FullMethodName                          = "/milvus.proto.milvus.MilvusService/ListAliases"
+	MilvusService_CreateIndex_FullMethodName                          = "/milvus.proto.milvus.MilvusService/CreateIndex"
+	MilvusService_AlterIndex_FullMethodName                           = "/milvus.proto.milvus.MilvusService/AlterIndex"
+	MilvusService_DescribeIndex_FullMethodName                        = "/milvus.proto.milvus.MilvusService/DescribeIndex"
+	MilvusService_GetIndexStatistics_FullMethodName                   = "/milvus.proto.milvus.MilvusService/GetIndexStatistics"
+	MilvusService_GetIndexState_FullMethodName                        = "/milvus.proto.milvus.MilvusService/GetIndexState"
+	MilvusService_GetIndexBuildProgress_FullMethodName                = "/milvus.proto.milvus.MilvusService/GetIndexBuildProgress"
+	MilvusService_DropIndex_FullMethodName                            = "/milvus.proto.milvus.MilvusService/DropIndex"
+	MilvusService_Insert_FullMethodName                               = "/milvus.proto.milvus.MilvusService/Insert"
+	MilvusService_Delete_FullMethodName                               = "/milvus.proto.milvus.MilvusService/Delete"
+	MilvusService_Upsert_FullMethodName                               = "/milvus.proto.milvus.MilvusService/Upsert"
+	MilvusService_Search_FullMethodName                               = "/milvus.proto.milvus.MilvusService/Search"
+	MilvusService_HybridSearch_FullMethodName                         = "/milvus.proto.milvus.MilvusService/HybridSearch"
+	MilvusService_Flush_FullMethodName                                = "/milvus.proto.milvus.MilvusService/Flush"
+	MilvusService_Query_FullMethodName                                = "/milvus.proto.milvus.MilvusService/Query"
+	MilvusService_CalcDistance_FullMethodName                         = "/milvus.proto.milvus.MilvusService/CalcDistance"
+	MilvusService_FlushAll_FullMethodName                             = "/milvus.proto.milvus.MilvusService/FlushAll"
+	MilvusService_AddCollectionField_FullMethodName                   = "/milvus.proto.milvus.MilvusService/AddCollectionField"
+	MilvusService_GetFlushState_FullMethodName                        = "/milvus.proto.milvus.MilvusService/GetFlushState"
+	MilvusService_GetFlushAllState_FullMethodName                     = "/milvus.proto.milvus.MilvusService/GetFlushAllState"
+	MilvusService_GetPersistentSegmentInfo_FullMethodName             = "/milvus.proto.milvus.MilvusService/GetPersistentSegmentInfo"
+	MilvusService_GetQuerySegmentInfo_FullMethodName                  = "/milvus.proto.milvus.MilvusService/GetQuerySegmentInfo"
+	MilvusService_GetReplicas_FullMethodName                          = "/milvus.proto.milvus.MilvusService/GetReplicas"
+	MilvusService_Dummy_FullMethodName                                = "/milvus.proto.milvus.MilvusService/Dummy"
+	MilvusService_RegisterLink_FullMethodName                         = "/milvus.proto.milvus.MilvusService/RegisterLink"
+	MilvusService_GetMetrics_FullMethodName                           = "/milvus.proto.milvus.MilvusService/GetMetrics"
+	MilvusService_GetComponentStates_FullMethodName                   = "/milvus.proto.milvus.MilvusService/GetComponentStates"
+	MilvusService_LoadBalance_FullMethodName                          = "/milvus.proto.milvus.MilvusService/LoadBalance"
+	MilvusService_GetCompactionState_FullMethodName                   = "/milvus.proto.milvus.MilvusService/GetCompactionState"
+	MilvusService_ManualCompaction_FullMethodName                     = "/milvus.proto.milvus.MilvusService/ManualCompaction"
+	MilvusService_GetCompactionStateWithPlans_FullMethodName          = "/milvus.proto.milvus.MilvusService/GetCompactionStateWithPlans"
+	MilvusService_Import_FullMethodName                               = "/milvus.proto.milvus.MilvusService/Import"
+	MilvusService_GetImportState_FullMethodName                       = "/milvus.proto.milvus.MilvusService/GetImportState"
+	MilvusService_ListImportTasks_FullMethodName                      = "/milvus.proto.milvus.MilvusService/ListImportTasks"
+	MilvusService_CreateCredential_FullMethodName                     = "/milvus.proto.milvus.MilvusService/CreateCredential"
+	MilvusService_UpdateCredential_FullMethodName                     = "/milvus.proto.milvus.MilvusService/UpdateCredential"
+	MilvusService_DeleteCredential_FullMethodName                     = "/milvus.proto.milvus.MilvusService/DeleteCredential"
+	MilvusService_ListCredUsers_FullMethodName                        = "/milvus.proto.milvus.MilvusService/ListCredUsers"
+	MilvusService_CreateRole_FullMethodName                           = "/milvus.proto.milvus.MilvusService/CreateRole"
+	MilvusService_DropRole_FullMethodName                             = "/milvus.proto.milvus.MilvusService/DropRole"
+	MilvusService_OperateUserRole_FullMethodName                      = "/milvus.proto.milvus.MilvusService/OperateUserRole"
+	MilvusService_SelectRole_FullMethodName                           = "/milvus.proto.milvus.MilvusService/SelectRole"
+	MilvusService_SelectUser_FullMethodName                           = "/milvus.proto.milvus.MilvusService/SelectUser"
+	MilvusService_OperatePrivilege_FullMethodName                     = "/milvus.proto.milvus.MilvusService/OperatePrivilege"
+	MilvusService_OperatePrivilegeV2_FullMethodName                   = "/milvus.proto.milvus.MilvusService/OperatePrivilegeV2"
+	MilvusService_SelectGrant_FullMethodName                          = "/milvus.proto.milvus.MilvusService/SelectGrant"
+	MilvusService_GetVersion_FullMethodName                           = "/milvus.proto.milvus.MilvusService/GetVersion"
+	MilvusService_CheckHealth_FullMethodName                          = "/milvus.proto.milvus.MilvusService/CheckHealth"
+	MilvusService_CreateResourceGroup_FullMethodName                  = "/milvus.proto.milvus.MilvusService/CreateResourceGroup"
+	MilvusService_DropResourceGroup_FullMethodName                    = "/milvus.proto.milvus.MilvusService/DropResourceGroup"
+	MilvusService_UpdateResourceGroups_FullMethodName                 = "/milvus.proto.milvus.MilvusService/UpdateResourceGroups"
+	MilvusService_TransferNode_FullMethodName                         = "/milvus.proto.milvus.MilvusService/TransferNode"
+	MilvusService_TransferReplica_FullMethodName                      = "/milvus.proto.milvus.MilvusService/TransferReplica"
+	MilvusService_ListResourceGroups_FullMethodName                   = "/milvus.proto.milvus.MilvusService/ListResourceGroups"
+	MilvusService_DescribeResourceGroup_FullMethodName                = "/milvus.proto.milvus.MilvusService/DescribeResourceGroup"
+	MilvusService_RenameCollection_FullMethodName                     = "/milvus.proto.milvus.MilvusService/RenameCollection"
+	MilvusService_ListIndexedSegment_FullMethodName                   = "/milvus.proto.milvus.MilvusService/ListIndexedSegment"
+	MilvusService_DescribeSegmentIndexData_FullMethodName             = "/milvus.proto.milvus.MilvusService/DescribeSegmentIndexData"
+	MilvusService_Connect_FullMethodName                              = "/milvus.proto.milvus.MilvusService/Connect"
+	MilvusService_AllocTimestamp_FullMethodName                       = "/milvus.proto.milvus.MilvusService/AllocTimestamp"
+	MilvusService_CreateDatabase_FullMethodName                       = "/milvus.proto.milvus.MilvusService/CreateDatabase"
+	MilvusService_DropDatabase_FullMethodName                         = "/milvus.proto.milvus.MilvusService/DropDatabase"
+	MilvusService_ListDatabases_FullMethodName                        = "/milvus.proto.milvus.MilvusService/ListDatabases"
+	MilvusService_AlterDatabase_FullMethodName                        = "/milvus.proto.milvus.MilvusService/AlterDatabase"
+	MilvusService_DescribeDatabase_FullMethodName                     = "/milvus.proto.milvus.MilvusService/DescribeDatabase"
+	MilvusService_ReplicateMessage_FullMethodName                     = "/milvus.proto.milvus.MilvusService/ReplicateMessage"
+	MilvusService_BackupRBAC_FullMethodName                           = "/milvus.proto.milvus.MilvusService/BackupRBAC"
+	MilvusService_RestoreRBAC_FullMethodName                          = "/milvus.proto.milvus.MilvusService/RestoreRBAC"
+	MilvusService_CreatePrivilegeGroup_FullMethodName                 = "/milvus.proto.milvus.MilvusService/CreatePrivilegeGroup"
+	MilvusService_DropPrivilegeGroup_FullMethodName                   = "/milvus.proto.milvus.MilvusService/DropPrivilegeGroup"
+	MilvusService_ListPrivilegeGroups_FullMethodName                  = "/milvus.proto.milvus.MilvusService/ListPrivilegeGroups"
+	MilvusService_OperatePrivilegeGroup_FullMethodName                = "/milvus.proto.milvus.MilvusService/OperatePrivilegeGroup"
+	MilvusService_RunAnalyzer_FullMethodName                          = "/milvus.proto.milvus.MilvusService/RunAnalyzer"
+	MilvusService_AddFileResource_FullMethodName                      = "/milvus.proto.milvus.MilvusService/AddFileResource"
+	MilvusService_RemoveFileResource_FullMethodName                   = "/milvus.proto.milvus.MilvusService/RemoveFileResource"
+	MilvusService_ListFileResources_FullMethodName                    = "/milvus.proto.milvus.MilvusService/ListFileResources"
+	MilvusService_AddUserTags_FullMethodName                          = "/milvus.proto.milvus.MilvusService/AddUserTags"
+	MilvusService_DeleteUserTags_FullMethodName                       = "/milvus.proto.milvus.MilvusService/DeleteUserTags"
+	MilvusService_GetUserTags_FullMethodName                          = "/milvus.proto.milvus.MilvusService/GetUserTags"
+	MilvusService_ListUsersWithTag_FullMethodName                     = "/milvus.proto.milvus.MilvusService/ListUsersWithTag"
+	MilvusService_CreateRowPolicy_FullMethodName                      = "/milvus.proto.milvus.MilvusService/CreateRowPolicy"
+	MilvusService_DropRowPolicy_FullMethodName                        = "/milvus.proto.milvus.MilvusService/DropRowPolicy"
+	MilvusService_ListRowPolicies_FullMethodName                      = "/milvus.proto.milvus.MilvusService/ListRowPolicies"
+	MilvusService_UpdateReplicateConfiguration_FullMethodName         = "/milvus.proto.milvus.MilvusService/UpdateReplicateConfiguration"
+	MilvusService_GetReplicateConfiguration_FullMethodName            = "/milvus.proto.milvus.MilvusService/GetReplicateConfiguration"
+	MilvusService_GetReplicateInfo_FullMethodName                     = "/milvus.proto.milvus.MilvusService/GetReplicateInfo"
+	MilvusService_CreateReplicateStream_FullMethodName                = "/milvus.proto.milvus.MilvusService/CreateReplicateStream"
+	MilvusService_ComputePhraseMatchSlop_FullMethodName               = "/milvus.proto.milvus.MilvusService/ComputePhraseMatchSlop"
+	MilvusService_CreateSnapshot_FullMethodName                       = "/milvus.proto.milvus.MilvusService/CreateSnapshot"
+	MilvusService_DropSnapshot_FullMethodName                         = "/milvus.proto.milvus.MilvusService/DropSnapshot"
+	MilvusService_ListSnapshots_FullMethodName                        = "/milvus.proto.milvus.MilvusService/ListSnapshots"
+	MilvusService_DescribeSnapshot_FullMethodName                     = "/milvus.proto.milvus.MilvusService/DescribeSnapshot"
+	MilvusService_RestoreSnapshot_FullMethodName                      = "/milvus.proto.milvus.MilvusService/RestoreSnapshot"
+	MilvusService_GetRestoreSnapshotState_FullMethodName              = "/milvus.proto.milvus.MilvusService/GetRestoreSnapshotState"
+	MilvusService_ListRestoreSnapshotJobs_FullMethodName              = "/milvus.proto.milvus.MilvusService/ListRestoreSnapshotJobs"
+	MilvusService_AlterCollectionSchema_FullMethodName                = "/milvus.proto.milvus.MilvusService/AlterCollectionSchema"
+	MilvusService_BatchUpdateManifest_FullMethodName                  = "/milvus.proto.milvus.MilvusService/BatchUpdateManifest"
+	MilvusService_RefreshExternalCollection_FullMethodName            = "/milvus.proto.milvus.MilvusService/RefreshExternalCollection"
+	MilvusService_GetRefreshExternalCollectionProgress_FullMethodName = "/milvus.proto.milvus.MilvusService/GetRefreshExternalCollectionProgress"
+	MilvusService_ListRefreshExternalCollectionJobs_FullMethodName    = "/milvus.proto.milvus.MilvusService/ListRefreshExternalCollectionJobs"
 )
 
 // MilvusServiceClient is the client API for MilvusService service.
@@ -154,6 +169,7 @@ type MilvusServiceClient interface {
 	AddCollectionFunction(ctx context.Context, in *AddCollectionFunctionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	AlterCollectionFunction(ctx context.Context, in *AlterCollectionFunctionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DropCollectionFunction(ctx context.Context, in *DropCollectionFunctionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	TruncateCollection(ctx context.Context, in *TruncateCollectionRequest, opts ...grpc.CallOption) (*TruncateCollectionResponse, error)
 	CreatePartition(ctx context.Context, in *CreatePartitionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DropPartition(ctx context.Context, in *DropPartitionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	HasPartition(ctx context.Context, in *HasPartitionRequest, opts ...grpc.CallOption) (*BoolResponse, error)
@@ -241,6 +257,7 @@ type MilvusServiceClient interface {
 	ListDatabases(ctx context.Context, in *ListDatabasesRequest, opts ...grpc.CallOption) (*ListDatabasesResponse, error)
 	AlterDatabase(ctx context.Context, in *AlterDatabaseRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DescribeDatabase(ctx context.Context, in *DescribeDatabaseRequest, opts ...grpc.CallOption) (*DescribeDatabaseResponse, error)
+	// Deprecated: Do not use.
 	// Deprecated CDC API
 	ReplicateMessage(ctx context.Context, in *ReplicateMessageRequest, opts ...grpc.CallOption) (*ReplicateMessageResponse, error)
 	BackupRBAC(ctx context.Context, in *BackupRBACMetaRequest, opts ...grpc.CallOption) (*BackupRBACMetaResponse, error)
@@ -273,6 +290,9 @@ type MilvusServiceClient interface {
 	//   - The RPC is expected to be idempotent: submitting the same configuration
 	//     multiple times must not cause side effects.
 	UpdateReplicateConfiguration(ctx context.Context, in *UpdateReplicateConfigurationRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	// GetReplicateConfiguration retrieves the current cross-cluster replication topology.
+	// Sensitive fields (like connection tokens) are redacted in the response.
+	GetReplicateConfiguration(ctx context.Context, in *GetReplicateConfigurationRequest, opts ...grpc.CallOption) (*GetReplicateConfigurationResponse, error)
 	// GetReplicateInfo retrieves replication-related metadata of specified channel from a target Milvus cluster.
 	GetReplicateInfo(ctx context.Context, in *GetReplicateInfoRequest, opts ...grpc.CallOption) (*GetReplicateInfoResponse, error)
 	// CreateReplicateStream establishes a replication stream on the target Milvus cluster.
@@ -283,6 +303,21 @@ type MilvusServiceClient interface {
 	//   - Once established, the target cluster persists incoming messages into
 	//     its WAL (Write-Ahead Log) ensuring durability and consistency.
 	CreateReplicateStream(ctx context.Context, opts ...grpc.CallOption) (MilvusService_CreateReplicateStreamClient, error)
+	ComputePhraseMatchSlop(ctx context.Context, in *ComputePhraseMatchSlopRequest, opts ...grpc.CallOption) (*ComputePhraseMatchSlopResponse, error)
+	// snapshot related
+	CreateSnapshot(ctx context.Context, in *CreateSnapshotRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	DropSnapshot(ctx context.Context, in *DropSnapshotRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	ListSnapshots(ctx context.Context, in *ListSnapshotsRequest, opts ...grpc.CallOption) (*ListSnapshotsResponse, error)
+	DescribeSnapshot(ctx context.Context, in *DescribeSnapshotRequest, opts ...grpc.CallOption) (*DescribeSnapshotResponse, error)
+	RestoreSnapshot(ctx context.Context, in *RestoreSnapshotRequest, opts ...grpc.CallOption) (*RestoreSnapshotResponse, error)
+	GetRestoreSnapshotState(ctx context.Context, in *GetRestoreSnapshotStateRequest, opts ...grpc.CallOption) (*GetRestoreSnapshotStateResponse, error)
+	ListRestoreSnapshotJobs(ctx context.Context, in *ListRestoreSnapshotJobsRequest, opts ...grpc.CallOption) (*ListRestoreSnapshotJobsResponse, error)
+	AlterCollectionSchema(ctx context.Context, in *AlterCollectionSchemaRequest, opts ...grpc.CallOption) (*AlterCollectionSchemaResponse, error)
+	BatchUpdateManifest(ctx context.Context, in *BatchUpdateManifestRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	// External Collection APIs
+	RefreshExternalCollection(ctx context.Context, in *RefreshExternalCollectionRequest, opts ...grpc.CallOption) (*RefreshExternalCollectionResponse, error)
+	GetRefreshExternalCollectionProgress(ctx context.Context, in *GetRefreshExternalCollectionProgressRequest, opts ...grpc.CallOption) (*GetRefreshExternalCollectionProgressResponse, error)
+	ListRefreshExternalCollectionJobs(ctx context.Context, in *ListRefreshExternalCollectionJobsRequest, opts ...grpc.CallOption) (*ListRefreshExternalCollectionJobsResponse, error)
 }
 
 type milvusServiceClient struct {
@@ -413,6 +448,15 @@ func (c *milvusServiceClient) AlterCollectionFunction(ctx context.Context, in *A
 func (c *milvusServiceClient) DropCollectionFunction(ctx context.Context, in *DropCollectionFunctionRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
 	out := new(commonpb.Status)
 	err := c.cc.Invoke(ctx, MilvusService_DropCollectionFunction_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) TruncateCollection(ctx context.Context, in *TruncateCollectionRequest, opts ...grpc.CallOption) (*TruncateCollectionResponse, error) {
+	out := new(TruncateCollectionResponse)
+	err := c.cc.Invoke(ctx, MilvusService_TruncateCollection_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1123,6 +1167,7 @@ func (c *milvusServiceClient) DescribeDatabase(ctx context.Context, in *Describe
 	return out, nil
 }
 
+// Deprecated: Do not use.
 func (c *milvusServiceClient) ReplicateMessage(ctx context.Context, in *ReplicateMessageRequest, opts ...grpc.CallOption) (*ReplicateMessageResponse, error) {
 	out := new(ReplicateMessageResponse)
 	err := c.cc.Invoke(ctx, MilvusService_ReplicateMessage_FullMethodName, in, out, opts...)
@@ -1294,6 +1339,15 @@ func (c *milvusServiceClient) UpdateReplicateConfiguration(ctx context.Context, 
 	return out, nil
 }
 
+func (c *milvusServiceClient) GetReplicateConfiguration(ctx context.Context, in *GetReplicateConfigurationRequest, opts ...grpc.CallOption) (*GetReplicateConfigurationResponse, error) {
+	out := new(GetReplicateConfigurationResponse)
+	err := c.cc.Invoke(ctx, MilvusService_GetReplicateConfiguration_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *milvusServiceClient) GetReplicateInfo(ctx context.Context, in *GetReplicateInfoRequest, opts ...grpc.CallOption) (*GetReplicateInfoResponse, error) {
 	out := new(GetReplicateInfoResponse)
 	err := c.cc.Invoke(ctx, MilvusService_GetReplicateInfo_FullMethodName, in, out, opts...)
@@ -1334,6 +1388,123 @@ func (x *milvusServiceCreateReplicateStreamClient) Recv() (*ReplicateResponse, e
 	return m, nil
 }
 
+func (c *milvusServiceClient) ComputePhraseMatchSlop(ctx context.Context, in *ComputePhraseMatchSlopRequest, opts ...grpc.CallOption) (*ComputePhraseMatchSlopResponse, error) {
+	out := new(ComputePhraseMatchSlopResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ComputePhraseMatchSlop_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) CreateSnapshot(ctx context.Context, in *CreateSnapshotRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_CreateSnapshot_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) DropSnapshot(ctx context.Context, in *DropSnapshotRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_DropSnapshot_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) ListSnapshots(ctx context.Context, in *ListSnapshotsRequest, opts ...grpc.CallOption) (*ListSnapshotsResponse, error) {
+	out := new(ListSnapshotsResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ListSnapshots_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) DescribeSnapshot(ctx context.Context, in *DescribeSnapshotRequest, opts ...grpc.CallOption) (*DescribeSnapshotResponse, error) {
+	out := new(DescribeSnapshotResponse)
+	err := c.cc.Invoke(ctx, MilvusService_DescribeSnapshot_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) RestoreSnapshot(ctx context.Context, in *RestoreSnapshotRequest, opts ...grpc.CallOption) (*RestoreSnapshotResponse, error) {
+	out := new(RestoreSnapshotResponse)
+	err := c.cc.Invoke(ctx, MilvusService_RestoreSnapshot_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) GetRestoreSnapshotState(ctx context.Context, in *GetRestoreSnapshotStateRequest, opts ...grpc.CallOption) (*GetRestoreSnapshotStateResponse, error) {
+	out := new(GetRestoreSnapshotStateResponse)
+	err := c.cc.Invoke(ctx, MilvusService_GetRestoreSnapshotState_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) ListRestoreSnapshotJobs(ctx context.Context, in *ListRestoreSnapshotJobsRequest, opts ...grpc.CallOption) (*ListRestoreSnapshotJobsResponse, error) {
+	out := new(ListRestoreSnapshotJobsResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ListRestoreSnapshotJobs_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) AlterCollectionSchema(ctx context.Context, in *AlterCollectionSchemaRequest, opts ...grpc.CallOption) (*AlterCollectionSchemaResponse, error) {
+	out := new(AlterCollectionSchemaResponse)
+	err := c.cc.Invoke(ctx, MilvusService_AlterCollectionSchema_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) BatchUpdateManifest(ctx context.Context, in *BatchUpdateManifestRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_BatchUpdateManifest_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) RefreshExternalCollection(ctx context.Context, in *RefreshExternalCollectionRequest, opts ...grpc.CallOption) (*RefreshExternalCollectionResponse, error) {
+	out := new(RefreshExternalCollectionResponse)
+	err := c.cc.Invoke(ctx, MilvusService_RefreshExternalCollection_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) GetRefreshExternalCollectionProgress(ctx context.Context, in *GetRefreshExternalCollectionProgressRequest, opts ...grpc.CallOption) (*GetRefreshExternalCollectionProgressResponse, error) {
+	out := new(GetRefreshExternalCollectionProgressResponse)
+	err := c.cc.Invoke(ctx, MilvusService_GetRefreshExternalCollectionProgress_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) ListRefreshExternalCollectionJobs(ctx context.Context, in *ListRefreshExternalCollectionJobsRequest, opts ...grpc.CallOption) (*ListRefreshExternalCollectionJobsResponse, error) {
+	out := new(ListRefreshExternalCollectionJobsResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ListRefreshExternalCollectionJobs_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MilvusServiceServer is the server API for MilvusService service.
 // All implementations should embed UnimplementedMilvusServiceServer
 // for forward compatibility
@@ -1352,6 +1523,7 @@ type MilvusServiceServer interface {
 	AddCollectionFunction(context.Context, *AddCollectionFunctionRequest) (*commonpb.Status, error)
 	AlterCollectionFunction(context.Context, *AlterCollectionFunctionRequest) (*commonpb.Status, error)
 	DropCollectionFunction(context.Context, *DropCollectionFunctionRequest) (*commonpb.Status, error)
+	TruncateCollection(context.Context, *TruncateCollectionRequest) (*TruncateCollectionResponse, error)
 	CreatePartition(context.Context, *CreatePartitionRequest) (*commonpb.Status, error)
 	DropPartition(context.Context, *DropPartitionRequest) (*commonpb.Status, error)
 	HasPartition(context.Context, *HasPartitionRequest) (*BoolResponse, error)
@@ -1439,6 +1611,7 @@ type MilvusServiceServer interface {
 	ListDatabases(context.Context, *ListDatabasesRequest) (*ListDatabasesResponse, error)
 	AlterDatabase(context.Context, *AlterDatabaseRequest) (*commonpb.Status, error)
 	DescribeDatabase(context.Context, *DescribeDatabaseRequest) (*DescribeDatabaseResponse, error)
+	// Deprecated: Do not use.
 	// Deprecated CDC API
 	ReplicateMessage(context.Context, *ReplicateMessageRequest) (*ReplicateMessageResponse, error)
 	BackupRBAC(context.Context, *BackupRBACMetaRequest) (*BackupRBACMetaResponse, error)
@@ -1471,6 +1644,9 @@ type MilvusServiceServer interface {
 	//   - The RPC is expected to be idempotent: submitting the same configuration
 	//     multiple times must not cause side effects.
 	UpdateReplicateConfiguration(context.Context, *UpdateReplicateConfigurationRequest) (*commonpb.Status, error)
+	// GetReplicateConfiguration retrieves the current cross-cluster replication topology.
+	// Sensitive fields (like connection tokens) are redacted in the response.
+	GetReplicateConfiguration(context.Context, *GetReplicateConfigurationRequest) (*GetReplicateConfigurationResponse, error)
 	// GetReplicateInfo retrieves replication-related metadata of specified channel from a target Milvus cluster.
 	GetReplicateInfo(context.Context, *GetReplicateInfoRequest) (*GetReplicateInfoResponse, error)
 	// CreateReplicateStream establishes a replication stream on the target Milvus cluster.
@@ -1481,6 +1657,21 @@ type MilvusServiceServer interface {
 	//   - Once established, the target cluster persists incoming messages into
 	//     its WAL (Write-Ahead Log) ensuring durability and consistency.
 	CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error
+	ComputePhraseMatchSlop(context.Context, *ComputePhraseMatchSlopRequest) (*ComputePhraseMatchSlopResponse, error)
+	// snapshot related
+	CreateSnapshot(context.Context, *CreateSnapshotRequest) (*commonpb.Status, error)
+	DropSnapshot(context.Context, *DropSnapshotRequest) (*commonpb.Status, error)
+	ListSnapshots(context.Context, *ListSnapshotsRequest) (*ListSnapshotsResponse, error)
+	DescribeSnapshot(context.Context, *DescribeSnapshotRequest) (*DescribeSnapshotResponse, error)
+	RestoreSnapshot(context.Context, *RestoreSnapshotRequest) (*RestoreSnapshotResponse, error)
+	GetRestoreSnapshotState(context.Context, *GetRestoreSnapshotStateRequest) (*GetRestoreSnapshotStateResponse, error)
+	ListRestoreSnapshotJobs(context.Context, *ListRestoreSnapshotJobsRequest) (*ListRestoreSnapshotJobsResponse, error)
+	AlterCollectionSchema(context.Context, *AlterCollectionSchemaRequest) (*AlterCollectionSchemaResponse, error)
+	BatchUpdateManifest(context.Context, *BatchUpdateManifestRequest) (*commonpb.Status, error)
+	// External Collection APIs
+	RefreshExternalCollection(context.Context, *RefreshExternalCollectionRequest) (*RefreshExternalCollectionResponse, error)
+	GetRefreshExternalCollectionProgress(context.Context, *GetRefreshExternalCollectionProgressRequest) (*GetRefreshExternalCollectionProgressResponse, error)
+	ListRefreshExternalCollectionJobs(context.Context, *ListRefreshExternalCollectionJobsRequest) (*ListRefreshExternalCollectionJobsResponse, error)
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -1528,6 +1719,9 @@ func (UnimplementedMilvusServiceServer) AlterCollectionFunction(context.Context,
 }
 func (UnimplementedMilvusServiceServer) DropCollectionFunction(context.Context, *DropCollectionFunctionRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DropCollectionFunction not implemented")
+}
+func (UnimplementedMilvusServiceServer) TruncateCollection(context.Context, *TruncateCollectionRequest) (*TruncateCollectionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TruncateCollection not implemented")
 }
 func (UnimplementedMilvusServiceServer) CreatePartition(context.Context, *CreatePartitionRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePartition not implemented")
@@ -1820,11 +2014,53 @@ func (UnimplementedMilvusServiceServer) ListRowPolicies(context.Context, *ListRo
 func (UnimplementedMilvusServiceServer) UpdateReplicateConfiguration(context.Context, *UpdateReplicateConfigurationRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateReplicateConfiguration not implemented")
 }
+func (UnimplementedMilvusServiceServer) GetReplicateConfiguration(context.Context, *GetReplicateConfigurationRequest) (*GetReplicateConfigurationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReplicateConfiguration not implemented")
+}
 func (UnimplementedMilvusServiceServer) GetReplicateInfo(context.Context, *GetReplicateInfoRequest) (*GetReplicateInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetReplicateInfo not implemented")
 }
 func (UnimplementedMilvusServiceServer) CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method CreateReplicateStream not implemented")
+}
+func (UnimplementedMilvusServiceServer) ComputePhraseMatchSlop(context.Context, *ComputePhraseMatchSlopRequest) (*ComputePhraseMatchSlopResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ComputePhraseMatchSlop not implemented")
+}
+func (UnimplementedMilvusServiceServer) CreateSnapshot(context.Context, *CreateSnapshotRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSnapshot not implemented")
+}
+func (UnimplementedMilvusServiceServer) DropSnapshot(context.Context, *DropSnapshotRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DropSnapshot not implemented")
+}
+func (UnimplementedMilvusServiceServer) ListSnapshots(context.Context, *ListSnapshotsRequest) (*ListSnapshotsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListSnapshots not implemented")
+}
+func (UnimplementedMilvusServiceServer) DescribeSnapshot(context.Context, *DescribeSnapshotRequest) (*DescribeSnapshotResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DescribeSnapshot not implemented")
+}
+func (UnimplementedMilvusServiceServer) RestoreSnapshot(context.Context, *RestoreSnapshotRequest) (*RestoreSnapshotResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RestoreSnapshot not implemented")
+}
+func (UnimplementedMilvusServiceServer) GetRestoreSnapshotState(context.Context, *GetRestoreSnapshotStateRequest) (*GetRestoreSnapshotStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRestoreSnapshotState not implemented")
+}
+func (UnimplementedMilvusServiceServer) ListRestoreSnapshotJobs(context.Context, *ListRestoreSnapshotJobsRequest) (*ListRestoreSnapshotJobsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRestoreSnapshotJobs not implemented")
+}
+func (UnimplementedMilvusServiceServer) AlterCollectionSchema(context.Context, *AlterCollectionSchemaRequest) (*AlterCollectionSchemaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AlterCollectionSchema not implemented")
+}
+func (UnimplementedMilvusServiceServer) BatchUpdateManifest(context.Context, *BatchUpdateManifestRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BatchUpdateManifest not implemented")
+}
+func (UnimplementedMilvusServiceServer) RefreshExternalCollection(context.Context, *RefreshExternalCollectionRequest) (*RefreshExternalCollectionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshExternalCollection not implemented")
+}
+func (UnimplementedMilvusServiceServer) GetRefreshExternalCollectionProgress(context.Context, *GetRefreshExternalCollectionProgressRequest) (*GetRefreshExternalCollectionProgressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRefreshExternalCollectionProgress not implemented")
+}
+func (UnimplementedMilvusServiceServer) ListRefreshExternalCollectionJobs(context.Context, *ListRefreshExternalCollectionJobsRequest) (*ListRefreshExternalCollectionJobsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRefreshExternalCollectionJobs not implemented")
 }
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -2086,6 +2322,24 @@ func _MilvusService_DropCollectionFunction_Handler(srv interface{}, ctx context.
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MilvusServiceServer).DropCollectionFunction(ctx, req.(*DropCollectionFunctionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_TruncateCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TruncateCollectionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).TruncateCollection(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_TruncateCollection_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).TruncateCollection(ctx, req.(*TruncateCollectionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3836,6 +4090,24 @@ func _MilvusService_UpdateReplicateConfiguration_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_GetReplicateConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReplicateConfigurationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).GetReplicateConfiguration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_GetReplicateConfiguration_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).GetReplicateConfiguration(ctx, req.(*GetReplicateConfigurationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MilvusService_GetReplicateInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetReplicateInfoRequest)
 	if err := dec(in); err != nil {
@@ -3878,6 +4150,240 @@ func (x *milvusServiceCreateReplicateStreamServer) Recv() (*ReplicateRequest, er
 		return nil, err
 	}
 	return m, nil
+}
+
+func _MilvusService_ComputePhraseMatchSlop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ComputePhraseMatchSlopRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ComputePhraseMatchSlop(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ComputePhraseMatchSlop_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ComputePhraseMatchSlop(ctx, req.(*ComputePhraseMatchSlopRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_CreateSnapshot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSnapshotRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).CreateSnapshot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_CreateSnapshot_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).CreateSnapshot(ctx, req.(*CreateSnapshotRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_DropSnapshot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DropSnapshotRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).DropSnapshot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_DropSnapshot_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).DropSnapshot(ctx, req.(*DropSnapshotRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_ListSnapshots_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSnapshotsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ListSnapshots(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ListSnapshots_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ListSnapshots(ctx, req.(*ListSnapshotsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_DescribeSnapshot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DescribeSnapshotRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).DescribeSnapshot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_DescribeSnapshot_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).DescribeSnapshot(ctx, req.(*DescribeSnapshotRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_RestoreSnapshot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RestoreSnapshotRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).RestoreSnapshot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_RestoreSnapshot_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).RestoreSnapshot(ctx, req.(*RestoreSnapshotRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_GetRestoreSnapshotState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRestoreSnapshotStateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).GetRestoreSnapshotState(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_GetRestoreSnapshotState_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).GetRestoreSnapshotState(ctx, req.(*GetRestoreSnapshotStateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_ListRestoreSnapshotJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRestoreSnapshotJobsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ListRestoreSnapshotJobs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ListRestoreSnapshotJobs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ListRestoreSnapshotJobs(ctx, req.(*ListRestoreSnapshotJobsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_AlterCollectionSchema_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AlterCollectionSchemaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).AlterCollectionSchema(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_AlterCollectionSchema_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).AlterCollectionSchema(ctx, req.(*AlterCollectionSchemaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_BatchUpdateManifest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchUpdateManifestRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).BatchUpdateManifest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_BatchUpdateManifest_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).BatchUpdateManifest(ctx, req.(*BatchUpdateManifestRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_RefreshExternalCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshExternalCollectionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).RefreshExternalCollection(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_RefreshExternalCollection_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).RefreshExternalCollection(ctx, req.(*RefreshExternalCollectionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_GetRefreshExternalCollectionProgress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRefreshExternalCollectionProgressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).GetRefreshExternalCollectionProgress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_GetRefreshExternalCollectionProgress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).GetRefreshExternalCollectionProgress(ctx, req.(*GetRefreshExternalCollectionProgressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_ListRefreshExternalCollectionJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRefreshExternalCollectionJobsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ListRefreshExternalCollectionJobs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ListRefreshExternalCollectionJobs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ListRefreshExternalCollectionJobs(ctx, req.(*ListRefreshExternalCollectionJobsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 // MilvusService_ServiceDesc is the grpc.ServiceDesc for MilvusService service.
@@ -3942,6 +4448,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DropCollectionFunction",
 			Handler:    _MilvusService_DropCollectionFunction_Handler,
+		},
+		{
+			MethodName: "TruncateCollection",
+			Handler:    _MilvusService_TruncateCollection_Handler,
 		},
 		{
 			MethodName: "CreatePartition",
@@ -4332,8 +4842,64 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MilvusService_UpdateReplicateConfiguration_Handler,
 		},
 		{
+			MethodName: "GetReplicateConfiguration",
+			Handler:    _MilvusService_GetReplicateConfiguration_Handler,
+		},
+		{
 			MethodName: "GetReplicateInfo",
 			Handler:    _MilvusService_GetReplicateInfo_Handler,
+		},
+		{
+			MethodName: "ComputePhraseMatchSlop",
+			Handler:    _MilvusService_ComputePhraseMatchSlop_Handler,
+		},
+		{
+			MethodName: "CreateSnapshot",
+			Handler:    _MilvusService_CreateSnapshot_Handler,
+		},
+		{
+			MethodName: "DropSnapshot",
+			Handler:    _MilvusService_DropSnapshot_Handler,
+		},
+		{
+			MethodName: "ListSnapshots",
+			Handler:    _MilvusService_ListSnapshots_Handler,
+		},
+		{
+			MethodName: "DescribeSnapshot",
+			Handler:    _MilvusService_DescribeSnapshot_Handler,
+		},
+		{
+			MethodName: "RestoreSnapshot",
+			Handler:    _MilvusService_RestoreSnapshot_Handler,
+		},
+		{
+			MethodName: "GetRestoreSnapshotState",
+			Handler:    _MilvusService_GetRestoreSnapshotState_Handler,
+		},
+		{
+			MethodName: "ListRestoreSnapshotJobs",
+			Handler:    _MilvusService_ListRestoreSnapshotJobs_Handler,
+		},
+		{
+			MethodName: "AlterCollectionSchema",
+			Handler:    _MilvusService_AlterCollectionSchema_Handler,
+		},
+		{
+			MethodName: "BatchUpdateManifest",
+			Handler:    _MilvusService_BatchUpdateManifest_Handler,
+		},
+		{
+			MethodName: "RefreshExternalCollection",
+			Handler:    _MilvusService_RefreshExternalCollection_Handler,
+		},
+		{
+			MethodName: "GetRefreshExternalCollectionProgress",
+			Handler:    _MilvusService_GetRefreshExternalCollectionProgress_Handler,
+		},
+		{
+			MethodName: "ListRefreshExternalCollectionJobs",
+			Handler:    _MilvusService_ListRefreshExternalCollectionJobs_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
@@ -4344,6 +4910,205 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 	},
+	Metadata: "milvus.proto",
+}
+
+const (
+	ClientTelemetryService_ClientHeartbeat_FullMethodName     = "/milvus.proto.milvus.ClientTelemetryService/ClientHeartbeat"
+	ClientTelemetryService_GetClientTelemetry_FullMethodName  = "/milvus.proto.milvus.ClientTelemetryService/GetClientTelemetry"
+	ClientTelemetryService_PushClientCommand_FullMethodName   = "/milvus.proto.milvus.ClientTelemetryService/PushClientCommand"
+	ClientTelemetryService_DeleteClientCommand_FullMethodName = "/milvus.proto.milvus.ClientTelemetryService/DeleteClientCommand"
+)
+
+// ClientTelemetryServiceClient is the client API for ClientTelemetryService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ClientTelemetryServiceClient interface {
+	ClientHeartbeat(ctx context.Context, in *ClientHeartbeatRequest, opts ...grpc.CallOption) (*ClientHeartbeatResponse, error)
+	GetClientTelemetry(ctx context.Context, in *GetClientTelemetryRequest, opts ...grpc.CallOption) (*GetClientTelemetryResponse, error)
+	PushClientCommand(ctx context.Context, in *PushClientCommandRequest, opts ...grpc.CallOption) (*PushClientCommandResponse, error)
+	DeleteClientCommand(ctx context.Context, in *DeleteClientCommandRequest, opts ...grpc.CallOption) (*DeleteClientCommandResponse, error)
+}
+
+type clientTelemetryServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewClientTelemetryServiceClient(cc grpc.ClientConnInterface) ClientTelemetryServiceClient {
+	return &clientTelemetryServiceClient{cc}
+}
+
+func (c *clientTelemetryServiceClient) ClientHeartbeat(ctx context.Context, in *ClientHeartbeatRequest, opts ...grpc.CallOption) (*ClientHeartbeatResponse, error) {
+	out := new(ClientHeartbeatResponse)
+	err := c.cc.Invoke(ctx, ClientTelemetryService_ClientHeartbeat_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *clientTelemetryServiceClient) GetClientTelemetry(ctx context.Context, in *GetClientTelemetryRequest, opts ...grpc.CallOption) (*GetClientTelemetryResponse, error) {
+	out := new(GetClientTelemetryResponse)
+	err := c.cc.Invoke(ctx, ClientTelemetryService_GetClientTelemetry_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *clientTelemetryServiceClient) PushClientCommand(ctx context.Context, in *PushClientCommandRequest, opts ...grpc.CallOption) (*PushClientCommandResponse, error) {
+	out := new(PushClientCommandResponse)
+	err := c.cc.Invoke(ctx, ClientTelemetryService_PushClientCommand_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *clientTelemetryServiceClient) DeleteClientCommand(ctx context.Context, in *DeleteClientCommandRequest, opts ...grpc.CallOption) (*DeleteClientCommandResponse, error) {
+	out := new(DeleteClientCommandResponse)
+	err := c.cc.Invoke(ctx, ClientTelemetryService_DeleteClientCommand_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ClientTelemetryServiceServer is the server API for ClientTelemetryService service.
+// All implementations should embed UnimplementedClientTelemetryServiceServer
+// for forward compatibility
+type ClientTelemetryServiceServer interface {
+	ClientHeartbeat(context.Context, *ClientHeartbeatRequest) (*ClientHeartbeatResponse, error)
+	GetClientTelemetry(context.Context, *GetClientTelemetryRequest) (*GetClientTelemetryResponse, error)
+	PushClientCommand(context.Context, *PushClientCommandRequest) (*PushClientCommandResponse, error)
+	DeleteClientCommand(context.Context, *DeleteClientCommandRequest) (*DeleteClientCommandResponse, error)
+}
+
+// UnimplementedClientTelemetryServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedClientTelemetryServiceServer struct {
+}
+
+func (UnimplementedClientTelemetryServiceServer) ClientHeartbeat(context.Context, *ClientHeartbeatRequest) (*ClientHeartbeatResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientHeartbeat not implemented")
+}
+func (UnimplementedClientTelemetryServiceServer) GetClientTelemetry(context.Context, *GetClientTelemetryRequest) (*GetClientTelemetryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetClientTelemetry not implemented")
+}
+func (UnimplementedClientTelemetryServiceServer) PushClientCommand(context.Context, *PushClientCommandRequest) (*PushClientCommandResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PushClientCommand not implemented")
+}
+func (UnimplementedClientTelemetryServiceServer) DeleteClientCommand(context.Context, *DeleteClientCommandRequest) (*DeleteClientCommandResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteClientCommand not implemented")
+}
+
+// UnsafeClientTelemetryServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ClientTelemetryServiceServer will
+// result in compilation errors.
+type UnsafeClientTelemetryServiceServer interface {
+	mustEmbedUnimplementedClientTelemetryServiceServer()
+}
+
+func RegisterClientTelemetryServiceServer(s grpc.ServiceRegistrar, srv ClientTelemetryServiceServer) {
+	s.RegisterService(&ClientTelemetryService_ServiceDesc, srv)
+}
+
+func _ClientTelemetryService_ClientHeartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClientHeartbeatRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClientTelemetryServiceServer).ClientHeartbeat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClientTelemetryService_ClientHeartbeat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClientTelemetryServiceServer).ClientHeartbeat(ctx, req.(*ClientHeartbeatRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClientTelemetryService_GetClientTelemetry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetClientTelemetryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClientTelemetryServiceServer).GetClientTelemetry(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClientTelemetryService_GetClientTelemetry_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClientTelemetryServiceServer).GetClientTelemetry(ctx, req.(*GetClientTelemetryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClientTelemetryService_PushClientCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PushClientCommandRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClientTelemetryServiceServer).PushClientCommand(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClientTelemetryService_PushClientCommand_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClientTelemetryServiceServer).PushClientCommand(ctx, req.(*PushClientCommandRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClientTelemetryService_DeleteClientCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteClientCommandRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClientTelemetryServiceServer).DeleteClientCommand(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClientTelemetryService_DeleteClientCommand_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClientTelemetryServiceServer).DeleteClientCommand(ctx, req.(*DeleteClientCommandRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ClientTelemetryService_ServiceDesc is the grpc.ServiceDesc for ClientTelemetryService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ClientTelemetryService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "milvus.proto.milvus.ClientTelemetryService",
+	HandlerType: (*ClientTelemetryServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ClientHeartbeat",
+			Handler:    _ClientTelemetryService_ClientHeartbeat_Handler,
+		},
+		{
+			MethodName: "GetClientTelemetry",
+			Handler:    _ClientTelemetryService_GetClientTelemetry_Handler,
+		},
+		{
+			MethodName: "PushClientCommand",
+			Handler:    _ClientTelemetryService_PushClientCommand_Handler,
+		},
+		{
+			MethodName: "DeleteClientCommand",
+			Handler:    _ClientTelemetryService_DeleteClientCommand_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "milvus.proto",
 }
 

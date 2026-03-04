@@ -104,5 +104,4 @@ $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
 $protoc --proto_path="${GOOGLE_PROTO_DIR}" --proto_path=. \
     --go_out=paths=source_relative:./../go-api/tokenizerpb \
     --go-grpc_out=require_unimplemented_servers=false,paths=source_relative:./../go-api/tokenizerpb tokenizer.proto
-
 popd
