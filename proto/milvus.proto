@@ -2689,9 +2689,9 @@ message ComputePhraseMatchSlopResponse {
 */
 message CreateSnapshotRequest {
   option (common.privilege_ext_obj) = {
-    object_type: Global
+    object_type: Collection
     object_privilege: PrivilegeCreateSnapshot
-    object_name_index: -1
+    object_name_index: 5
   };
 
   common.MsgBase base = 1;
@@ -2703,20 +2703,22 @@ message CreateSnapshotRequest {
 
 message DropSnapshotRequest {
   option (common.privilege_ext_obj) = {
-    object_type: Global
+    object_type: Collection
     object_privilege: PrivilegeDropSnapshot
-    object_name_index: -1
+    object_name_index: 4
   };
 
   common.MsgBase base = 1;
   string name = 2; // snapshot name
+  string db_name = 3; // db name
+  string collection_name = 4; // collection name
 }
 
 message ListSnapshotsRequest {
   option (common.privilege_ext_obj) = {
-    object_type: Global
+    object_type: Collection
     object_privilege: PrivilegeListSnapshots
-    object_name_index: -1
+    object_name_index: 3
   };
   common.MsgBase base = 1;
   string db_name = 2; // db name
@@ -2732,13 +2734,15 @@ message ListSnapshotsResponse {
 
 message DescribeSnapshotRequest {
   option (common.privilege_ext_obj) = {
-    object_type: Global
+    object_type: Collection
     object_privilege: PrivilegeDescribeSnapshot
-    object_name_index: -1
+    object_name_index: 4
   };
 
   common.MsgBase base = 1;
   string name = 2; // snapshot name
+  string db_name = 3; // db name
+  string collection_name = 4; // collection name
 }
 
 message DescribeSnapshotResponse {
@@ -2754,16 +2758,18 @@ message DescribeSnapshotResponse {
 // restore a snapshot to a new collection
 message RestoreSnapshotRequest {
   option (common.privilege_ext_obj) = {
-    object_type: Global
+    object_type: Collection
     object_privilege: PrivilegeRestoreSnapshot
-    object_name_index: -1
+    object_name_index: 4
   };
 
   common.MsgBase base = 1;
   string name = 2; // snapshot name
-  string db_name = 3; // db name
-  string collection_name = 4; // collection name
+  string db_name = 3; // source db name (where the snapshot lives)
+  string collection_name = 4; // source collection name (where the snapshot lives)
   bool rewrite_data = 5; // if true, use import to rewrite data to collection
+  string target_db_name = 6; // target db name (where to restore to)
+  string target_collection_name = 7; // target collection name (must not exist)
 }
 
 message RestoreSnapshotResponse {
@@ -2792,12 +2798,6 @@ message RestoreSnapshotInfo {
 }
 
 message GetRestoreSnapshotStateRequest {
-   option (common.privilege_ext_obj) = {
-    object_type: Global
-    object_privilege: PrivilegeRestoreSnapshot
-    object_name_index: -1
-  };
-
   common.MsgBase base = 1;
   int64 job_id = 2; // restore job ID
 }
@@ -2809,9 +2809,9 @@ message GetRestoreSnapshotStateResponse {
 
 message ListRestoreSnapshotJobsRequest {
    option (common.privilege_ext_obj) = {
-    object_type: Global
+    object_type: Collection
     object_privilege: PrivilegeRestoreSnapshot
-    object_name_index: -1
+    object_name_index: 3
   };
   common.MsgBase base = 1;
   string db_name = 2;
