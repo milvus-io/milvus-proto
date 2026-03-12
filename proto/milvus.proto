@@ -2699,6 +2699,7 @@ message CreateSnapshotRequest {
   string description = 3; // user-defined snapshot description
   string db_name = 4; // db name
   string collection_name = 5; // collection name
+  int64 compaction_protection_seconds = 6; // duration in seconds to protect referenced segments from compaction, 0 = no protection
 }
 
 message DropSnapshotRequest {
