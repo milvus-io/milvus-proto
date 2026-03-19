@@ -618,6 +618,7 @@ message ReplicateConfiguration {
 message ConnectionParam {
   string uri   = 1;
   string token = 2;
+  string grpc_authority = 3;
 }
 
 // MilvusCluster describes the Milvus cluster information, 
