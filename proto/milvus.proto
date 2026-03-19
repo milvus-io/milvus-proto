@@ -222,6 +222,8 @@ service MilvusService {
   rpc RestoreSnapshot(RestoreSnapshotRequest) returns (RestoreSnapshotResponse) {}
   rpc GetRestoreSnapshotState(GetRestoreSnapshotStateRequest) returns (GetRestoreSnapshotStateResponse) {}
   rpc ListRestoreSnapshotJobs(ListRestoreSnapshotJobsRequest) returns (ListRestoreSnapshotJobsResponse) {}
+  rpc PinSnapshotData(PinSnapshotDataRequest) returns (PinSnapshotDataResponse) {}
+  rpc UnpinSnapshotData(UnpinSnapshotDataRequest) returns (common.Status) {}
   rpc AlterCollectionSchema(AlterCollectionSchemaRequest) returns (AlterCollectionSchemaResponse) {}
   rpc BatchUpdateManifest(BatchUpdateManifestRequest) returns (common.Status) {}
 
@@ -2822,6 +2824,36 @@ message ListRestoreSnapshotJobsRequest {
 message ListRestoreSnapshotJobsResponse {
   common.Status status = 1;
   repeated RestoreSnapshotInfo jobs = 2;
+}
+
+message PinSnapshotDataRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegePinSnapshotData
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  string name = 2;                    // snapshot name
+  string db_name = 3;                 // database name
+  string collection_name = 4;         // collection name
+  int64 ttl_seconds = 5;              // optional: 0 = no expiry, >0 = auto-expire in seconds
+}
+
+message PinSnapshotDataResponse {
+  common.Status status = 1;
+  int64 pin_id = 2;                   // allocated pin ID for Unpin
+}
+
+message UnpinSnapshotDataRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeUnpinSnapshotData
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  int64 pin_id = 2;                   // pin ID from PinSnapshotData response
 }
 
 message AlterCollectionSchemaRequest {
