@@ -145,6 +145,8 @@ const (
 	MilvusService_RestoreSnapshot_FullMethodName                      = "/milvus.proto.milvus.MilvusService/RestoreSnapshot"
 	MilvusService_GetRestoreSnapshotState_FullMethodName              = "/milvus.proto.milvus.MilvusService/GetRestoreSnapshotState"
 	MilvusService_ListRestoreSnapshotJobs_FullMethodName              = "/milvus.proto.milvus.MilvusService/ListRestoreSnapshotJobs"
+	MilvusService_PinSnapshotData_FullMethodName                      = "/milvus.proto.milvus.MilvusService/PinSnapshotData"
+	MilvusService_UnpinSnapshotData_FullMethodName                    = "/milvus.proto.milvus.MilvusService/UnpinSnapshotData"
 	MilvusService_AlterCollectionSchema_FullMethodName                = "/milvus.proto.milvus.MilvusService/AlterCollectionSchema"
 	MilvusService_BatchUpdateManifest_FullMethodName                  = "/milvus.proto.milvus.MilvusService/BatchUpdateManifest"
 	MilvusService_RefreshExternalCollection_FullMethodName            = "/milvus.proto.milvus.MilvusService/RefreshExternalCollection"
@@ -323,6 +325,8 @@ type MilvusServiceClient interface {
 	RestoreSnapshot(ctx context.Context, in *RestoreSnapshotRequest, opts ...grpc.CallOption) (*RestoreSnapshotResponse, error)
 	GetRestoreSnapshotState(ctx context.Context, in *GetRestoreSnapshotStateRequest, opts ...grpc.CallOption) (*GetRestoreSnapshotStateResponse, error)
 	ListRestoreSnapshotJobs(ctx context.Context, in *ListRestoreSnapshotJobsRequest, opts ...grpc.CallOption) (*ListRestoreSnapshotJobsResponse, error)
+	PinSnapshotData(ctx context.Context, in *PinSnapshotDataRequest, opts ...grpc.CallOption) (*PinSnapshotDataResponse, error)
+	UnpinSnapshotData(ctx context.Context, in *UnpinSnapshotDataRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	AlterCollectionSchema(ctx context.Context, in *AlterCollectionSchemaRequest, opts ...grpc.CallOption) (*AlterCollectionSchemaResponse, error)
 	BatchUpdateManifest(ctx context.Context, in *BatchUpdateManifestRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	// External Collection APIs
@@ -1503,6 +1507,24 @@ func (c *milvusServiceClient) ListRestoreSnapshotJobs(ctx context.Context, in *L
 	return out, nil
 }
 
+func (c *milvusServiceClient) PinSnapshotData(ctx context.Context, in *PinSnapshotDataRequest, opts ...grpc.CallOption) (*PinSnapshotDataResponse, error) {
+	out := new(PinSnapshotDataResponse)
+	err := c.cc.Invoke(ctx, MilvusService_PinSnapshotData_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) UnpinSnapshotData(ctx context.Context, in *UnpinSnapshotDataRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_UnpinSnapshotData_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *milvusServiceClient) AlterCollectionSchema(ctx context.Context, in *AlterCollectionSchemaRequest, opts ...grpc.CallOption) (*AlterCollectionSchemaResponse, error) {
 	out := new(AlterCollectionSchemaResponse)
 	err := c.cc.Invoke(ctx, MilvusService_AlterCollectionSchema_FullMethodName, in, out, opts...)
@@ -1719,6 +1741,8 @@ type MilvusServiceServer interface {
 	RestoreSnapshot(context.Context, *RestoreSnapshotRequest) (*RestoreSnapshotResponse, error)
 	GetRestoreSnapshotState(context.Context, *GetRestoreSnapshotStateRequest) (*GetRestoreSnapshotStateResponse, error)
 	ListRestoreSnapshotJobs(context.Context, *ListRestoreSnapshotJobsRequest) (*ListRestoreSnapshotJobsResponse, error)
+	PinSnapshotData(context.Context, *PinSnapshotDataRequest) (*PinSnapshotDataResponse, error)
+	UnpinSnapshotData(context.Context, *UnpinSnapshotDataRequest) (*commonpb.Status, error)
 	AlterCollectionSchema(context.Context, *AlterCollectionSchemaRequest) (*AlterCollectionSchemaResponse, error)
 	BatchUpdateManifest(context.Context, *BatchUpdateManifestRequest) (*commonpb.Status, error)
 	// External Collection APIs
@@ -2102,6 +2126,12 @@ func (UnimplementedMilvusServiceServer) GetRestoreSnapshotState(context.Context,
 }
 func (UnimplementedMilvusServiceServer) ListRestoreSnapshotJobs(context.Context, *ListRestoreSnapshotJobsRequest) (*ListRestoreSnapshotJobsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRestoreSnapshotJobs not implemented")
+}
+func (UnimplementedMilvusServiceServer) PinSnapshotData(context.Context, *PinSnapshotDataRequest) (*PinSnapshotDataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PinSnapshotData not implemented")
+}
+func (UnimplementedMilvusServiceServer) UnpinSnapshotData(context.Context, *UnpinSnapshotDataRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnpinSnapshotData not implemented")
 }
 func (UnimplementedMilvusServiceServer) AlterCollectionSchema(context.Context, *AlterCollectionSchemaRequest) (*AlterCollectionSchemaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AlterCollectionSchema not implemented")
@@ -4373,6 +4403,42 @@ func _MilvusService_ListRestoreSnapshotJobs_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_PinSnapshotData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PinSnapshotDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).PinSnapshotData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_PinSnapshotData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).PinSnapshotData(ctx, req.(*PinSnapshotDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_UnpinSnapshotData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnpinSnapshotDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).UnpinSnapshotData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_UnpinSnapshotData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).UnpinSnapshotData(ctx, req.(*UnpinSnapshotDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MilvusService_AlterCollectionSchema_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AlterCollectionSchemaRequest)
 	if err := dec(in); err != nil {
@@ -4957,6 +5023,14 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListRestoreSnapshotJobs",
 			Handler:    _MilvusService_ListRestoreSnapshotJobs_Handler,
+		},
+		{
+			MethodName: "PinSnapshotData",
+			Handler:    _MilvusService_PinSnapshotData_Handler,
+		},
+		{
+			MethodName: "UnpinSnapshotData",
+			Handler:    _MilvusService_UnpinSnapshotData_Handler,
 		},
 		{
 			MethodName: "AlterCollectionSchema",
