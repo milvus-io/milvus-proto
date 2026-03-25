@@ -136,6 +136,7 @@ const (
 	MilvusService_GetReplicateConfiguration_FullMethodName    = "/milvus.proto.milvus.MilvusService/GetReplicateConfiguration"
 	MilvusService_GetReplicateInfo_FullMethodName             = "/milvus.proto.milvus.MilvusService/GetReplicateInfo"
 	MilvusService_CreateReplicateStream_FullMethodName        = "/milvus.proto.milvus.MilvusService/CreateReplicateStream"
+	MilvusService_DumpMessages_FullMethodName                 = "/milvus.proto.milvus.MilvusService/DumpMessages"
 )
 
 // MilvusServiceClient is the client API for MilvusService service.
@@ -289,6 +290,16 @@ type MilvusServiceClient interface {
 	//   - Once established, the target cluster persists incoming messages into
 	//     its WAL (Write-Ahead Log) ensuring durability and consistency.
 	CreateReplicateStream(ctx context.Context, opts ...grpc.CallOption) (MilvusService_CreateReplicateStreamClient, error)
+	// DumpMessages streams messages from a WAL range for data salvage.
+	//
+	// Semantics:
+	//   - Reads messages starting from start_message_id position (inclusive).
+	//   - Use start_timetick/end_timetick to filter messages by timetick range.
+	//   - Only returns non-system messages (filters out TimeTick, CreateSegment, Flush, RollbackTxn).
+	//   - Streams messages until end_timetick is reached or context is cancelled.
+	//   - Typically used after force failover to recover unsynchronized messages
+	//     from the old primary cluster using the salvage checkpoint.
+	DumpMessages(ctx context.Context, in *DumpMessagesRequest, opts ...grpc.CallOption) (MilvusService_DumpMessagesClient, error)
 }
 
 type milvusServiceClient struct {
@@ -1358,6 +1369,38 @@ func (x *milvusServiceCreateReplicateStreamClient) Recv() (*ReplicateResponse, e
 	return m, nil
 }
 
+func (c *milvusServiceClient) DumpMessages(ctx context.Context, in *DumpMessagesRequest, opts ...grpc.CallOption) (MilvusService_DumpMessagesClient, error) {
+	stream, err := c.cc.NewStream(ctx, &MilvusService_ServiceDesc.Streams[1], MilvusService_DumpMessages_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &milvusServiceDumpMessagesClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type MilvusService_DumpMessagesClient interface {
+	Recv() (*DumpMessagesResponse, error)
+	grpc.ClientStream
+}
+
+type milvusServiceDumpMessagesClient struct {
+	grpc.ClientStream
+}
+
+func (x *milvusServiceDumpMessagesClient) Recv() (*DumpMessagesResponse, error) {
+	m := new(DumpMessagesResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // MilvusServiceServer is the server API for MilvusService service.
 // All implementations should embed UnimplementedMilvusServiceServer
 // for forward compatibility
@@ -1509,6 +1552,16 @@ type MilvusServiceServer interface {
 	//   - Once established, the target cluster persists incoming messages into
 	//     its WAL (Write-Ahead Log) ensuring durability and consistency.
 	CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error
+	// DumpMessages streams messages from a WAL range for data salvage.
+	//
+	// Semantics:
+	//   - Reads messages starting from start_message_id position (inclusive).
+	//   - Use start_timetick/end_timetick to filter messages by timetick range.
+	//   - Only returns non-system messages (filters out TimeTick, CreateSegment, Flush, RollbackTxn).
+	//   - Streams messages until end_timetick is reached or context is cancelled.
+	//   - Typically used after force failover to recover unsynchronized messages
+	//     from the old primary cluster using the salvage checkpoint.
+	DumpMessages(*DumpMessagesRequest, MilvusService_DumpMessagesServer) error
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -1859,6 +1912,9 @@ func (UnimplementedMilvusServiceServer) GetReplicateInfo(context.Context, *GetRe
 }
 func (UnimplementedMilvusServiceServer) CreateReplicateStream(MilvusService_CreateReplicateStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method CreateReplicateStream not implemented")
+}
+func (UnimplementedMilvusServiceServer) DumpMessages(*DumpMessagesRequest, MilvusService_DumpMessagesServer) error {
+	return status.Errorf(codes.Unimplemented, "method DumpMessages not implemented")
 }
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -3950,6 +4006,27 @@ func (x *milvusServiceCreateReplicateStreamServer) Recv() (*ReplicateRequest, er
 	return m, nil
 }
 
+func _MilvusService_DumpMessages_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(DumpMessagesRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MilvusServiceServer).DumpMessages(m, &milvusServiceDumpMessagesServer{stream})
+}
+
+type MilvusService_DumpMessagesServer interface {
+	Send(*DumpMessagesResponse) error
+	grpc.ServerStream
+}
+
+type milvusServiceDumpMessagesServer struct {
+	grpc.ServerStream
+}
+
+func (x *milvusServiceDumpMessagesServer) Send(m *DumpMessagesResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // MilvusService_ServiceDesc is the grpc.ServiceDesc for MilvusService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -4420,6 +4497,11 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 			Handler:       _MilvusService_CreateReplicateStream_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
+		},
+		{
+			StreamName:    "DumpMessages",
+			Handler:       _MilvusService_DumpMessages_Handler,
+			ServerStreams: true,
 		},
 	},
 	Metadata: "milvus.proto",
