@@ -40,3 +40,4 @@ get-proto-deps:
 	else \
 		echo "protoc-gen-go-grpc@v$(PROTOC_GEN_GO_GRPC_VERSION) already installed";\
 	fi
+	@echo "install protoc-gen-go-vtproto to $(INSTALL_PATH)" && GOBIN=$(INSTALL_PATH) go install github.com/planetscale/vtprotobuf/cmd/protoc-gen-go-vtproto@v0.6.1-0.20240319094008-0393e58bdf10
