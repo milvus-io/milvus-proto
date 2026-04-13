@@ -2883,11 +2883,12 @@ message AlterCollectionSchemaRequest {
     bool do_physical_backfill = 3;
   }
   
-  // Drop field request
+  // Drop field or function request
   message DropRequest {
-    oneof field_identifier {
+    oneof identifier {
       string field_name = 1;
       int64 field_id = 2;
+      string function_name = 3;
     }
   }
   
