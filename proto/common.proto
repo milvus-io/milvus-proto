@@ -326,6 +326,17 @@ enum MsgType {
 
     /* WAL group */
     AlterWAL = 2000;
+
+    /* Snapshot */
+    CreateSnapshot = 2100;
+    DropSnapshot = 2101;
+    ListSnapshots = 2102;
+    DescribeSnapshot = 2103;
+    RestoreSnapshot = 2104;
+    GetRestoreSnapshotState = 2105;
+    ListRestoreSnapshotJobs = 2106;
+    PinSnapshotData = 2107;
+    UnpinSnapshotData = 2108;
 }
 
 message MsgBase {
@@ -476,6 +487,14 @@ enum ObjectPrivilege {
     PrivilegeListFileResources = 74;
     PrivilegeUpdateReplicateConfiguration = 78;
     PrivilegeGetReplicateConfiguration = 85;
+
+    PrivilegeCreateSnapshot = 79;
+    PrivilegeDropSnapshot = 80;
+    PrivilegeDescribeSnapshot = 81;
+    PrivilegeListSnapshots = 82;
+    PrivilegeRestoreSnapshot = 83;
+    PrivilegePinSnapshotData = 87;
+    PrivilegeUnpinSnapshotData = 88;
 }
 
 message PrivilegeExt {
