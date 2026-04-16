@@ -209,6 +209,17 @@ service MilvusService {
   //   - Typically used after force failover to recover unsynchronized messages
   //     from the old primary cluster using the salvage checkpoint.
   rpc DumpMessages(DumpMessagesRequest) returns (stream DumpMessagesResponse){}
+
+  // snapshot related
+  rpc CreateSnapshot(CreateSnapshotRequest) returns (common.Status) {}
+  rpc DropSnapshot(DropSnapshotRequest) returns (common.Status) {}
+  rpc ListSnapshots(ListSnapshotsRequest) returns (ListSnapshotsResponse) {}
+  rpc DescribeSnapshot(DescribeSnapshotRequest) returns (DescribeSnapshotResponse) {}
+  rpc RestoreSnapshot(RestoreSnapshotRequest) returns (RestoreSnapshotResponse) {}
+  rpc GetRestoreSnapshotState(GetRestoreSnapshotStateRequest) returns (GetRestoreSnapshotStateResponse) {}
+  rpc ListRestoreSnapshotJobs(ListRestoreSnapshotJobsRequest) returns (ListRestoreSnapshotJobsResponse) {}
+  rpc PinSnapshotData(PinSnapshotDataRequest) returns (PinSnapshotDataResponse) {}
+  rpc UnpinSnapshotData(UnpinSnapshotDataRequest) returns (common.Status) {}
 }
 
 message CreateAliasRequest {
@@ -2634,4 +2645,174 @@ message TruncateCollectionRequest {
 
 message TruncateCollectionResponse {
   common.Status status = 1;
+}
+
+/*
+* Snapshot Management
+*/
+message CreateSnapshotRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeCreateSnapshot
+    object_name_index: 5
+  };
+
+  common.MsgBase base = 1;
+  string name = 2;  // user-defined snapshot name
+  string description = 3; // user-defined snapshot description
+  string db_name = 4; // db name
+  string collection_name = 5; // collection name
+  int64 compaction_protection_seconds = 6; // duration in seconds to protect referenced segments from compaction, 0 = no protection
+}
+
+message DropSnapshotRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeDropSnapshot
+    object_name_index: 4
+  };
+
+  common.MsgBase base = 1;
+  string name = 2; // snapshot name
+  string db_name = 3; // db name
+  string collection_name = 4; // collection name
+}
+
+message ListSnapshotsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeListSnapshots
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2; // db name
+  string collection_name = 3; // collection name, if collection_name is empty, it will list all snapshots.
+}
+
+// return all snapshots for the given collection
+// Note: list snapshots is not a privilege check operation
+message ListSnapshotsResponse {
+  common.Status status = 1;
+  repeated string snapshots = 2;
+}
+
+message DescribeSnapshotRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeDescribeSnapshot
+    object_name_index: 4
+  };
+
+  common.MsgBase base = 1;
+  string name = 2; // snapshot name
+  string db_name = 3; // db name
+  string collection_name = 4; // collection name
+}
+
+message DescribeSnapshotResponse {
+  common.Status status = 1;
+  string name = 2;  // user-defined snapshot name
+  string description = 3; // user-defined snapshot description
+  string collection_name = 4; // collection name
+  repeated string partition_names = 5; // the partition names in the snapshot.
+  int64 create_ts = 6; // create timestamp, all stream data before this timestamp will be flushed to segment list.
+  string s3_location = 7; // s3 location of the snapshot meta file if snapshot is exported to s3.
+}
+
+// restore a snapshot to a new collection
+message RestoreSnapshotRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeRestoreSnapshot
+    object_name_index: 4
+  };
+
+  common.MsgBase base = 1;
+  string name = 2; // snapshot name
+  string db_name = 3; // source db name (where the snapshot lives)
+  string collection_name = 4; // source collection name (where the snapshot lives)
+  bool rewrite_data = 5; // if true, use import to rewrite data to collection
+  string target_db_name = 6; // target db name (where to restore to)
+  string target_collection_name = 7; // target collection name (must not exist)
+}
+
+message RestoreSnapshotResponse {
+  common.Status status = 1;
+  int64 job_id = 2;
+}
+
+enum RestoreSnapshotState {
+  RestoreSnapshotNone = 0;
+  RestoreSnapshotPending = 1;   // Job created, waiting to start
+  RestoreSnapshotExecuting = 2; // Executing restore snapshot job
+  RestoreSnapshotCompleted = 3; // All done
+  RestoreSnapshotFailed = 4;    // Failed
+}
+
+message RestoreSnapshotInfo {
+  int64 job_id = 1;
+  string snapshot_name = 2;
+  string db_name = 3;
+  string collection_name = 4;
+  RestoreSnapshotState state = 5;
+  int32 progress = 6; // progress percentage (0-100)
+  string reason = 7;
+  uint64 start_time = 8; // start timestamp in milliseconds
+  uint64 time_cost = 9; // time cost in milliseconds
+}
+
+message GetRestoreSnapshotStateRequest {
+  common.MsgBase base = 1;
+  int64 job_id = 2; // restore job ID
+}
+
+message GetRestoreSnapshotStateResponse {
+  common.Status status = 1;
+  RestoreSnapshotInfo info = 2;
+}
+
+message ListRestoreSnapshotJobsRequest {
+   option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeRestoreSnapshot
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3; 
+}
+
+message ListRestoreSnapshotJobsResponse {
+  common.Status status = 1;
+  repeated RestoreSnapshotInfo jobs = 2;
+}
+
+message PinSnapshotDataRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegePinSnapshotData
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  string name = 2;                    // snapshot name
+  string db_name = 3;                 // database name
+  string collection_name = 4;         // collection name
+  int64 ttl_seconds = 5;              // optional: 0 = no expiry, >0 = auto-expire in seconds
+}
+
+message PinSnapshotDataResponse {
+  common.Status status = 1;
+  int64 pin_id = 2;                   // allocated pin ID for Unpin
+}
+
+message UnpinSnapshotDataRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeUnpinSnapshotData
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  int64 pin_id = 2;                   // pin ID from PinSnapshotData response
 }
