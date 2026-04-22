@@ -1088,6 +1088,11 @@ message UpsertRequest {
   uint64 schema_timestamp = 8;
   bool partial_update = 9;
   optional string namespace = 10;
+  // field_ops carries per-field FieldPartialUpdateOp directives describing
+  // how each FieldData should be merged during a partial upsert. Ops are
+  // matched to fields_data entries by field_name. A non-REPLACE op implies
+  // partial_update=true regardless of the partial_update flag.
+  repeated schema.FieldPartialUpdateOp field_ops = 11;
 }
 
 message MutationResult {
