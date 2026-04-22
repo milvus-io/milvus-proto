@@ -237,6 +237,40 @@ message StructArrayField {
   repeated FieldData fields = 1;
 }
 
+// FieldPartialUpdateOp describes how the values carried by the matching
+// FieldData should be applied against the existing row during a partial
+// upsert.
+//
+// The message is referenced from UpsertRequest.field_ops rather than
+// embedded in FieldData to keep FieldData a pure data carrier — FieldData
+// flows through InsertRequest, QueryResults, SearchResultData and
+// internal msgstream paths where an op directive would be meaningless
+// and risk accidental echo-back on client-side read-modify-write flows.
+//
+// Ops are matched to FieldData entries by field_name. When no op message
+// targets a given field, that field is merged with REPLACE semantics
+// (full overwrite), preserving backward compatibility.
+message FieldPartialUpdateOp {
+  enum OpType {
+    // REPLACE overwrites the field with the new values. Default behavior
+    // when no op targets a field. Applicable to all field types.
+    REPLACE = 0;
+    // ARRAY_APPEND appends the new values to the tail of the existing
+    // array. Requires DataType_Array. The resulting length must not
+    // exceed the field's max_capacity.
+    ARRAY_APPEND = 1;
+    // ARRAY_REMOVE removes every occurrence of each provided value from
+    // the existing array. Requires DataType_Array. No-op when the base
+    // array is empty or no element matches.
+    ARRAY_REMOVE = 2;
+  }
+  // field_name identifies the FieldData this op targets. Must match a
+  // field carried by UpsertRequest.fields_data; unknown field names are
+  // rejected by the server.
+  string field_name = 1;
+  OpType op = 2;
+}
+
 message FieldData {
   DataType type = 1;
   string field_name = 2;
