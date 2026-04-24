@@ -314,6 +314,61 @@ message SearchResultData {
   LongArray element_indices = 15;
   reserved 16; // was order_by_field_values, never used, reserved to avoid wire conflict
   repeated FieldData group_by_field_values = 17;
+  repeated AggBucket agg_buckets = 18;
+  repeated int64 agg_topks = 19;
+}
+
+message AggBucket {
+  repeated BucketKeyEntry key = 1;
+  int64 count = 2;
+  // metrics carries a typed metric result per alias. min/max may yield
+  // string/bool values when the source field has those types; count/sum/avg
+  // stay numeric. The MetricValue oneof avoids a lossy all-double encoding.
+  map<string, MetricValue> metrics = 3;
+  repeated AggHit hits = 4;
+  repeated AggBucket sub_groups = 5;
+}
+
+// MetricValue is the typed result of a single metric aggregation.
+message MetricValue {
+  oneof value {
+    int64  int_val    = 1;
+    double double_val = 2;
+    string string_val = 3;
+    bool   bool_val   = 4;
+  }
+}
+
+message BucketKeyEntry {
+  int64 field_id = 1;
+  string field_name = 2;
+  oneof value {
+    int64 int_val = 3;
+    string string_val = 4;
+    bool bool_val = 5;
+  }
+}
+
+message AggHit {
+  oneof pk {
+    int64 int_pk = 1;
+    string str_pk = 2;
+  }
+  float score = 3;
+  repeated AggHitField fields = 4;
+}
+
+message AggHitField {
+  int64 field_id = 1;
+  string field_name = 2;
+  oneof value {
+    int64 int_val = 3;
+    bool bool_val = 4;
+    float float_val = 5;
+    double double_val = 6;
+    string string_val = 7;
+    bytes bytes_val = 8;
+  }
 }
 
 // vector field clustering info
