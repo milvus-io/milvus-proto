@@ -19,7 +19,7 @@ type LogInfo interface {
 
 type Extension interface {
 	Report(info any) int
-	ReportRefused(ctx context.Context, req interface{}, resp interface{}, err error, fullMethod string) error
+	ReportAction(ctx context.Context, req interface{}, resp interface{}, err error, fullMethod string, action string) error
 }
 
 type HookContextKeyType string
