@@ -8,8 +8,8 @@ package milvuspb
 
 import (
 	context "context"
-	commonpb "github.com/milvus-io/milvus-proto/go-api/v2/commonpb"
-	federpb "github.com/milvus-io/milvus-proto/go-api/v2/federpb"
+	commonpb "github.com/milvus-io/milvus-proto/go-api/v3/commonpb"
+	federpb "github.com/milvus-io/milvus-proto/go-api/v3/federpb"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
