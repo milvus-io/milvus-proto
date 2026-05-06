@@ -3034,6 +3034,7 @@ message RefreshExternalCollectionJobInfo {
   string external_source = 6;          // External source used for this job
   int64 start_time = 7;                // Job start timestamp (Unix epoch ms)
   int64 end_time = 8;                  // Job end timestamp (0 if not completed)
+  string external_spec = 9;            // External spec used for this job
 }
 
 message GetRefreshExternalCollectionProgressResponse {
