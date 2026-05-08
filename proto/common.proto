@@ -681,3 +681,34 @@ message Highlighter {
     HighlightType type = 1;
     repeated KeyValuePair params = 2;
 }
+
+message MetricAggSpec {
+    string op = 1;          // "avg" | "sum" | "count" | "min" | "max"
+    string field_name = 2;  // field name | "_score" | "*" (count(*))
+}
+
+message SortSpec {
+    string field_name = 1;  // field name (JSON path expression OK) | "_score"
+    string direction = 2;   // "asc" | "desc"
+    bool null_first = 3;
+}
+
+message TopHitsSpec {
+    int64 size = 1;
+    repeated SortSpec sort = 2;
+}
+
+message OrderSpec {
+    string key = 1;         // metric alias | "_count" | "_key"
+    string direction = 2;   // "asc" | "desc"
+    bool null_first = 3;
+}
+
+message SearchAggregationSpec {
+    repeated string fields = 1;                        // field names, JSON path expression OK
+    int64 size = 2;                                    // max buckets at this level
+    map<string, MetricAggSpec> metrics = 3;            // alias -> MetricAggSpec
+    repeated OrderSpec order = 4;                      // index 0 = highest priority
+    TopHitsSpec top_hits = 5;                          // nil = pure aggregation level
+    SearchAggregationSpec sub_aggregation = 6;         // recursive nesting
+}

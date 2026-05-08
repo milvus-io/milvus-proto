@@ -1165,6 +1165,7 @@ message SearchRequest {
   schema.FunctionScore function_score = 19;  
   optional string namespace = 20;
   common.Highlighter highlighter = 21;
+  common.SearchAggregationSpec search_aggregation = 23;
 }
 
 message Hits {
