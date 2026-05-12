@@ -221,6 +221,8 @@ service MilvusService {
   rpc ListSnapshots(ListSnapshotsRequest) returns (ListSnapshotsResponse) {}
   rpc DescribeSnapshot(DescribeSnapshotRequest) returns (DescribeSnapshotResponse) {}
   rpc RestoreSnapshot(RestoreSnapshotRequest) returns (RestoreSnapshotResponse) {}
+  rpc RestoreExternalSnapshot(RestoreExternalSnapshotRequest) returns (RestoreExternalSnapshotResponse) {}
+  rpc ExportSnapshot(ExportSnapshotRequest) returns (ExportSnapshotResponse) {}
   rpc GetRestoreSnapshotState(GetRestoreSnapshotStateRequest) returns (GetRestoreSnapshotStateResponse) {}
   rpc ListRestoreSnapshotJobs(ListRestoreSnapshotJobsRequest) returns (ListRestoreSnapshotJobsResponse) {}
   rpc PinSnapshotData(PinSnapshotDataRequest) returns (PinSnapshotDataResponse) {}
@@ -2799,6 +2801,45 @@ message RestoreSnapshotRequest {
 message RestoreSnapshotResponse {
   common.Status status = 1;
   int64 job_id = 2;
+}
+
+// restore an external snapshot by metadata URI to a new collection
+message RestoreExternalSnapshotRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeRestoreExternalSnapshot
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2; // target db name (where to restore to)
+  string target_collection_name = 3; // target collection name (must not exist)
+  string snapshot_metadata_uri = 4; // external snapshot metadata URI
+}
+
+message RestoreExternalSnapshotResponse {
+  common.Status status = 1;
+  int64 job_id = 2;
+}
+
+// export a snapshot and all referenced files to a self-contained external bundle
+message ExportSnapshotRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeExportSnapshot
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  string name = 2; // source snapshot name
+  string db_name = 3; // source db name (where the snapshot lives)
+  string collection_name = 4; // source collection name (where the snapshot lives)
+  string target_s3_path = 5; // target root path for the exported snapshot bundle
+}
+
+message ExportSnapshotResponse {
+  common.Status status = 1;
+  string snapshot_metadata_uri = 2;
 }
 
 enum RestoreSnapshotState {
