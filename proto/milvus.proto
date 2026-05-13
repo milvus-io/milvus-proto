@@ -76,6 +76,7 @@ service MilvusService {
   rpc FlushAll(FlushAllRequest) returns (FlushAllResponse) {}
 
   rpc AddCollectionField(AddCollectionFieldRequest) returns (common.Status) {}
+  rpc AddCollectionStructField(AddCollectionStructFieldRequest) returns (common.Status) {}
 
   rpc GetFlushState(GetFlushStateRequest) returns (GetFlushStateResponse) {}
   rpc GetFlushAllState(GetFlushAllStateRequest) returns (GetFlushAllStateResponse) {}
@@ -1030,6 +1031,19 @@ message AddCollectionFieldRequest {
   int64  collectionID = 4;
   // The serialized `schema.FieldSchema`
   bytes schema = 5;
+}
+
+message AddCollectionStructFieldRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeAddCollectionField
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  int64  collectionID = 4;
+  schema.StructArrayFieldSchema struct_array_field_schema = 5;
 }
 
 message AddCollectionFunctionRequest {

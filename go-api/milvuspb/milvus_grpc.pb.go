@@ -67,6 +67,7 @@ const (
 	MilvusService_CalcDistance_FullMethodName                         = "/milvus.proto.milvus.MilvusService/CalcDistance"
 	MilvusService_FlushAll_FullMethodName                             = "/milvus.proto.milvus.MilvusService/FlushAll"
 	MilvusService_AddCollectionField_FullMethodName                   = "/milvus.proto.milvus.MilvusService/AddCollectionField"
+	MilvusService_AddCollectionStructField_FullMethodName             = "/milvus.proto.milvus.MilvusService/AddCollectionStructField"
 	MilvusService_GetFlushState_FullMethodName                        = "/milvus.proto.milvus.MilvusService/GetFlushState"
 	MilvusService_GetFlushAllState_FullMethodName                     = "/milvus.proto.milvus.MilvusService/GetFlushAllState"
 	MilvusService_GetPersistentSegmentInfo_FullMethodName             = "/milvus.proto.milvus.MilvusService/GetPersistentSegmentInfo"
@@ -208,6 +209,7 @@ type MilvusServiceClient interface {
 	CalcDistance(ctx context.Context, in *CalcDistanceRequest, opts ...grpc.CallOption) (*CalcDistanceResults, error)
 	FlushAll(ctx context.Context, in *FlushAllRequest, opts ...grpc.CallOption) (*FlushAllResponse, error)
 	AddCollectionField(ctx context.Context, in *AddCollectionFieldRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	AddCollectionStructField(ctx context.Context, in *AddCollectionStructFieldRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	GetFlushState(ctx context.Context, in *GetFlushStateRequest, opts ...grpc.CallOption) (*GetFlushStateResponse, error)
 	GetFlushAllState(ctx context.Context, in *GetFlushAllStateRequest, opts ...grpc.CallOption) (*GetFlushAllStateResponse, error)
 	GetPersistentSegmentInfo(ctx context.Context, in *GetPersistentSegmentInfoRequest, opts ...grpc.CallOption) (*GetPersistentSegmentInfoResponse, error)
@@ -753,6 +755,15 @@ func (c *milvusServiceClient) FlushAll(ctx context.Context, in *FlushAllRequest,
 func (c *milvusServiceClient) AddCollectionField(ctx context.Context, in *AddCollectionFieldRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
 	out := new(commonpb.Status)
 	err := c.cc.Invoke(ctx, MilvusService_AddCollectionField_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) AddCollectionStructField(ctx context.Context, in *AddCollectionStructFieldRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_AddCollectionStructField_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1624,6 +1635,7 @@ type MilvusServiceServer interface {
 	CalcDistance(context.Context, *CalcDistanceRequest) (*CalcDistanceResults, error)
 	FlushAll(context.Context, *FlushAllRequest) (*FlushAllResponse, error)
 	AddCollectionField(context.Context, *AddCollectionFieldRequest) (*commonpb.Status, error)
+	AddCollectionStructField(context.Context, *AddCollectionStructFieldRequest) (*commonpb.Status, error)
 	GetFlushState(context.Context, *GetFlushStateRequest) (*GetFlushStateResponse, error)
 	GetFlushAllState(context.Context, *GetFlushAllStateRequest) (*GetFlushAllStateResponse, error)
 	GetPersistentSegmentInfo(context.Context, *GetPersistentSegmentInfoRequest) (*GetPersistentSegmentInfoResponse, error)
@@ -1892,6 +1904,9 @@ func (UnimplementedMilvusServiceServer) FlushAll(context.Context, *FlushAllReque
 }
 func (UnimplementedMilvusServiceServer) AddCollectionField(context.Context, *AddCollectionFieldRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCollectionField not implemented")
+}
+func (UnimplementedMilvusServiceServer) AddCollectionStructField(context.Context, *AddCollectionStructFieldRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCollectionStructField not implemented")
 }
 func (UnimplementedMilvusServiceServer) GetFlushState(context.Context, *GetFlushStateRequest) (*GetFlushStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFlushState not implemented")
@@ -2984,6 +2999,24 @@ func _MilvusService_AddCollectionField_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MilvusServiceServer).AddCollectionField(ctx, req.(*AddCollectionFieldRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_AddCollectionStructField_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCollectionStructFieldRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).AddCollectionStructField(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_AddCollectionStructField_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).AddCollectionStructField(ctx, req.(*AddCollectionStructFieldRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4719,6 +4752,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddCollectionField",
 			Handler:    _MilvusService_AddCollectionField_Handler,
+		},
+		{
+			MethodName: "AddCollectionStructField",
+			Handler:    _MilvusService_AddCollectionStructField_Handler,
 		},
 		{
 			MethodName: "GetFlushState",
