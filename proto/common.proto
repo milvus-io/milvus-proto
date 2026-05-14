@@ -162,6 +162,7 @@ message PlaceholderValue {
     // for dense vector, all rows are of the same length; for sparse vector,
     // the length of each row may vary depending on their number of non-zeros.
     repeated bytes values = 3;
+    bool element_level = 4;
 }
 
 message PlaceholderGroup {
