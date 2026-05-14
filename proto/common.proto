@@ -706,9 +706,10 @@ message OrderSpec {
 
 message SearchAggregationSpec {
     repeated string fields = 1;                        // field names, JSON path expression OK
-    int64 size = 2;                                    // max buckets at this level
+    int64 size = 2;                                    // max buckets returned at this level
     map<string, MetricAggSpec> metrics = 3;            // alias -> MetricAggSpec
     repeated OrderSpec order = 4;                      // index 0 = highest priority
     TopHitsSpec top_hits = 5;                          // nil = pure aggregation level
     SearchAggregationSpec sub_aggregation = 6;         // recursive nesting
+    int64 search_size = 7;                             // candidate buckets searched at this level; 0 means size
 }
