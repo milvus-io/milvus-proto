@@ -51,6 +51,11 @@ When we implement a new feature with new API, the following steps are recommende
 4. in SDK project, sync the milvus-proto submodule to the commit and submit a commit
 5. develop SDK and main project parallelly
 
+## To generate proto files after making changes
+
+```make generate-proto```
+
+
 ## License
 Milvus proto repo is part of LF AI & Data Milvus project under Apache License 2.0.
 
