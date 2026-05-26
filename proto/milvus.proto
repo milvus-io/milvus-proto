@@ -1135,6 +1135,7 @@ message DeleteRequest {
   repeated uint32 hash_keys = 6;
   common.ConsistencyLevel consistency_level = 7;
   map<string, schema.TemplateValue> expr_template_values = 8;
+  optional string namespace = 9;
 }
 
 
