@@ -2926,7 +2926,6 @@ message AlterCollectionSchemaRequest {
 
 message AlterCollectionSchemaResponse {
   common.Status alter_status = 1;
-  common.Status index_status = 2;
 }
 
 message BatchUpdateManifestRequest {
