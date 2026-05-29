@@ -111,6 +111,7 @@ service MilvusService {
 
   // https://wiki.lfaidata.foundation/display/MIL/MEP+29+--+Support+Role-Based+Access+Control
   rpc CreateRole(CreateRoleRequest) returns (common.Status) {}
+  rpc AlterRole(AlterRoleRequest) returns (common.Status) {}
   rpc DropRole(DropRoleRequest) returns (common.Status) {}
   rpc OperateUserRole(OperateUserRoleRequest) returns (common.Status) {}
   rpc SelectRole(SelectRoleRequest) returns (SelectRoleResponse) {}
@@ -1740,6 +1741,7 @@ message ListCredUsersRequest {
 // https://wiki.lfaidata.foundation/display/MIL/MEP+29+--+Support+Role-Based+Access+Control
 message RoleEntity {
   string name = 1;
+  string description = 2;
 }
 
 message UserEntity {
@@ -1756,6 +1758,20 @@ message CreateRoleRequest {
   common.MsgBase base = 1;
   // role
   RoleEntity entity = 2;
+}
+
+message AlterRoleRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCreateOwnership
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  // role name
+  string role_name = 2;
+  // role description
+  string description = 3;
 }
 
 message DropRoleRequest {
