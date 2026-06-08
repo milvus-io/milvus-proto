@@ -337,6 +337,8 @@ enum MsgType {
     ListRestoreSnapshotJobs = 2106;
     PinSnapshotData = 2107;
     UnpinSnapshotData = 2108;
+    RestoreExternalSnapshot = 2109;
+    ExportSnapshot = 2110;
 
     AlterCollectionSchema = 2200;
 
@@ -504,6 +506,8 @@ enum ObjectPrivilege {
     PrivilegeRefreshExternalCollection = 86;
     PrivilegePinSnapshotData = 87;
     PrivilegeUnpinSnapshotData = 88;
+    PrivilegeRestoreExternalSnapshot = 89;
+    PrivilegeExportSnapshot = 90;
 }
 
 message PrivilegeExt {
