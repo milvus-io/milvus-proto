@@ -2815,8 +2815,10 @@ message RestoreExternalSnapshotRequest {
   string db_name = 2; // target db name (where to restore to)
   string target_collection_name = 3; // target collection name (must not exist)
   string snapshot_metadata_uri = 4; // external snapshot metadata URI
-  string foreign_storage_spec = 5; // optional foreign storage spec for cross-bucket restore source
-  string foreign_credential_ref = 6; // optional cluster-local credential reference for foreign storage
+  // Optional external storage spec JSON for the external snapshot storage.
+  // Snapshot APIs consume the extfs section for provider, endpoint, region,
+  // SSL, IAM, and credential settings.
+  string external_spec = 5;
 }
 
 message RestoreExternalSnapshotResponse {
@@ -2837,8 +2839,10 @@ message ExportSnapshotRequest {
   string db_name = 3; // source db name (where the snapshot lives)
   string collection_name = 4; // source collection name (where the snapshot lives)
   string target_s3_path = 5; // target root path for the exported snapshot bundle
-  string foreign_storage_spec = 6; // optional foreign storage spec for cross-bucket export target
-  string foreign_credential_ref = 7; // optional cluster-local credential reference for foreign storage
+  // Optional external storage spec JSON for the external snapshot storage.
+  // Snapshot APIs consume the extfs section for provider, endpoint, region,
+  // SSL, IAM, and credential settings.
+  string external_spec = 6;
 }
 
 message ExportSnapshotResponse {
