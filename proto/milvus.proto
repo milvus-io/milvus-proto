@@ -2960,6 +2960,7 @@ message AlterCollectionSchemaRequest {
       int64 field_id = 2;
       string function_name = 3;
     }
+    bool drop_function_output_fields = 4;
   }
   
   // Action to perform on the collection schema
@@ -2975,7 +2976,6 @@ message AlterCollectionSchemaRequest {
 
 message AlterCollectionSchemaResponse {
   common.Status alter_status = 1;
-  common.Status index_status = 2;
 }
 
 message BatchUpdateManifestRequest {
