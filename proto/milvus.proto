@@ -110,6 +110,7 @@ service MilvusService {
 
   // https://wiki.lfaidata.foundation/display/MIL/MEP+29+--+Support+Role-Based+Access+Control
   rpc CreateRole(CreateRoleRequest) returns (common.Status) {}
+  rpc AlterRole(AlterRoleRequest) returns (common.Status) {}
   rpc DropRole(DropRoleRequest) returns (common.Status) {}
   rpc OperateUserRole(OperateUserRoleRequest) returns (common.Status) {}
   rpc SelectRole(SelectRoleRequest) returns (SelectRoleResponse) {}
@@ -1635,6 +1636,7 @@ message CreateCredentialRequest {
   uint64 created_utc_timestamps = 4;
   // modify time
   uint64 modified_utc_timestamps = 5;
+  optional string description = 6;
 }
 
 message UpdateCredentialRequest {
@@ -1655,6 +1657,7 @@ message UpdateCredentialRequest {
   uint64 created_utc_timestamps = 5;
   // modify time
   uint64 modified_utc_timestamps = 6;
+  optional string description = 7;
 }
 
 message DeleteCredentialRequest {
@@ -1689,6 +1692,7 @@ message ListCredUsersRequest {
 // https://wiki.lfaidata.foundation/display/MIL/MEP+29+--+Support+Role-Based+Access+Control
 message RoleEntity {
   string name = 1;
+  string description = 2;
 }
 
 message UserEntity {
@@ -1705,6 +1709,20 @@ message CreateRoleRequest {
   common.MsgBase base = 1;
   // role
   RoleEntity entity = 2;
+}
+
+message AlterRoleRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCreateOwnership
+    object_name_index: -1
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  // role name
+  string role_name = 2;
+  // role description
+  string description = 3;
 }
 
 message DropRoleRequest {
@@ -1850,6 +1868,7 @@ message SelectUserRequest {
 message UserResult {
   UserEntity user = 1;
   repeated RoleEntity roles = 2;
+  string description = 3;
 }
 
 message SelectUserResponse {
