@@ -1635,6 +1635,7 @@ message CreateCredentialRequest {
   uint64 created_utc_timestamps = 4;
   // modify time
   uint64 modified_utc_timestamps = 5;
+  optional string description = 6;
 }
 
 message UpdateCredentialRequest {
@@ -1655,6 +1656,7 @@ message UpdateCredentialRequest {
   uint64 created_utc_timestamps = 5;
   // modify time
   uint64 modified_utc_timestamps = 6;
+  optional string description = 7;
 }
 
 message DeleteCredentialRequest {
@@ -1850,6 +1852,7 @@ message SelectUserRequest {
 message UserResult {
   UserEntity user = 1;
   repeated RoleEntity roles = 2;
+  string description = 3;
 }
 
 message SelectUserResponse {
