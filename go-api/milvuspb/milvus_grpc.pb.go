@@ -89,6 +89,7 @@ const (
 	MilvusService_DeleteCredential_FullMethodName                     = "/milvus.proto.milvus.MilvusService/DeleteCredential"
 	MilvusService_ListCredUsers_FullMethodName                        = "/milvus.proto.milvus.MilvusService/ListCredUsers"
 	MilvusService_CreateRole_FullMethodName                           = "/milvus.proto.milvus.MilvusService/CreateRole"
+	MilvusService_AlterRole_FullMethodName                            = "/milvus.proto.milvus.MilvusService/AlterRole"
 	MilvusService_DropRole_FullMethodName                             = "/milvus.proto.milvus.MilvusService/DropRole"
 	MilvusService_OperateUserRole_FullMethodName                      = "/milvus.proto.milvus.MilvusService/OperateUserRole"
 	MilvusService_SelectRole_FullMethodName                           = "/milvus.proto.milvus.MilvusService/SelectRole"
@@ -238,6 +239,7 @@ type MilvusServiceClient interface {
 	ListCredUsers(ctx context.Context, in *ListCredUsersRequest, opts ...grpc.CallOption) (*ListCredUsersResponse, error)
 	// https://wiki.lfaidata.foundation/display/MIL/MEP+29+--+Support+Role-Based+Access+Control
 	CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	AlterRole(ctx context.Context, in *AlterRoleRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DropRole(ctx context.Context, in *DropRoleRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	OperateUserRole(ctx context.Context, in *OperateUserRoleRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	SelectRole(ctx context.Context, in *SelectRoleRequest, opts ...grpc.CallOption) (*SelectRoleResponse, error)
@@ -957,6 +959,15 @@ func (c *milvusServiceClient) ListCredUsers(ctx context.Context, in *ListCredUse
 func (c *milvusServiceClient) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
 	out := new(commonpb.Status)
 	err := c.cc.Invoke(ctx, MilvusService_CreateRole_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) AlterRole(ctx context.Context, in *AlterRoleRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_AlterRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1684,6 +1695,7 @@ type MilvusServiceServer interface {
 	ListCredUsers(context.Context, *ListCredUsersRequest) (*ListCredUsersResponse, error)
 	// https://wiki.lfaidata.foundation/display/MIL/MEP+29+--+Support+Role-Based+Access+Control
 	CreateRole(context.Context, *CreateRoleRequest) (*commonpb.Status, error)
+	AlterRole(context.Context, *AlterRoleRequest) (*commonpb.Status, error)
 	DropRole(context.Context, *DropRoleRequest) (*commonpb.Status, error)
 	OperateUserRole(context.Context, *OperateUserRoleRequest) (*commonpb.Status, error)
 	SelectRole(context.Context, *SelectRoleRequest) (*SelectRoleResponse, error)
@@ -1994,6 +2006,9 @@ func (UnimplementedMilvusServiceServer) ListCredUsers(context.Context, *ListCred
 }
 func (UnimplementedMilvusServiceServer) CreateRole(context.Context, *CreateRoleRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRole not implemented")
+}
+func (UnimplementedMilvusServiceServer) AlterRole(context.Context, *AlterRoleRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AlterRole not implemented")
 }
 func (UnimplementedMilvusServiceServer) DropRole(context.Context, *DropRoleRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DropRole not implemented")
@@ -3425,6 +3440,24 @@ func _MilvusService_CreateRole_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MilvusServiceServer).CreateRole(ctx, req.(*CreateRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_AlterRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AlterRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).AlterRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_AlterRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).AlterRole(ctx, req.(*AlterRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4906,6 +4939,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateRole",
 			Handler:    _MilvusService_CreateRole_Handler,
+		},
+		{
+			MethodName: "AlterRole",
+			Handler:    _MilvusService_AlterRole_Handler,
 		},
 		{
 			MethodName: "DropRole",
