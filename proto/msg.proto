@@ -45,6 +45,10 @@ message DeleteRequest {
   int64 num_rows = 11;
   schema.IDs primary_keys = 12;
   int64 segment_id = 13;
+
+  // Serialized predicate plan for non-simple delete expressions. When this field
+  // is set, timestamps[0] is the delete timestamp and partitionID is the delete scope.
+  bytes serialized_expr_plan = 14;
 }
 
 message MsgPosition {
