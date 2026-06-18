@@ -530,3 +530,61 @@ message TemplateArrayValue {
 message TemplateArrayValueArray {
   repeated TemplateArrayValue data = 1;
 }
+
+// RoutingMode is the algorithm mapping a routing key to a shard of a collection.
+enum RoutingMode {
+  RoutingModeHash = 0;  // hash(key) % shardNum, the default, bit-for-bit compatible with legacy collections.
+  RoutingModeRange = 1; // binary search over the shards' byte-comparable key ranges.
+}
+
+// ShardState is the lifecycle state of a shard during an online shard split.
+enum ShardState {
+  ShardNormal = 0;    // serving reads and writes, the default for compatibility.
+  ShardCreating = 1;  // split target: created but not yet adopted, invisible to querycoord.
+  ShardSplitting = 2; // split source: fenced at the switch time tick, rejecting new writes.
+  ShardDropped = 3;   // split source: released after all targets are adopted.
+}
+
+// CollectionShardInfo describes one shard (vchannel) of a collection: its
+// lifecycle state and the routing predicate that decides which keys it owns.
+// Shared definition used by the collection meta, the rootcoord responses and
+// the in-memory routing tables.
+message CollectionShardInfo {
+  uint64 last_truncate_time_tick = 1;
+  ShardState state = 2;
+  // The routing predicate of this shard. The variant matches the collection's
+  // routing_mode. A shard may own more than one piece (e.g. the cold remainder
+  // after a hot tenant in the middle is carved out into its own shard), so each
+  // variant carries a list; the lists of all shards tile the key space exactly.
+  oneof routing {
+    RangeRouting range_routing = 3;
+    HashRouting hash_routing = 4;
+  }
+}
+
+// RangeRouting: the shard owns the byte-comparable routing keys in the given
+// half-open ranges. Usually one range; more than one after a carve-out leaves a
+// shard with disjoint pieces.
+message RangeRouting {
+  repeated RoutingKeyRange ranges = 1;
+}
+
+// RoutingKeyRange is a half-open routing-key range [lower, upper). A nil bound
+// is unbounded (lower nil = -inf, upper nil = +inf).
+message RoutingKeyRange {
+  bytes lower = 1;
+  bytes upper = 2;
+}
+
+// HashRouting: the shard owns the keys whose hash satisfies
+// hash(key) % modulus == remainder for any of the given buckets. Usually one
+// bucket; more than one after non-buddy hash shards are consolidated.
+message HashRouting {
+  repeated HashBucket buckets = 1;
+}
+
+// HashBucket owns the keys where hash(key) % modulus == remainder.
+message HashBucket {
+  uint64 modulus = 1;
+  uint64 remainder = 2;
+}
