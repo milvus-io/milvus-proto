@@ -1180,10 +1180,13 @@ message SearchRequest {
   bool search_by_primary_keys = 16 [deprecated = true]; // use search_input instead
   repeated SubSearchRequest sub_reqs = 17;
   map<string, schema.TemplateValue> expr_template_values = 18;
-  schema.FunctionScore function_score = 19;  
+  // Mutually exclusive with function_chains. Milvus returns invalid argument if both are set.
+  schema.FunctionScore function_score = 19;
   optional string namespace = 20;
   common.Highlighter highlighter = 21;
   common.SearchAggregationSpec search_aggregation = 23;
+  // Mutually exclusive with function_score. Milvus returns invalid argument if both are set.
+  repeated schema.FunctionChain function_chains = 24;
 }
 
 message Hits {
@@ -1217,8 +1220,12 @@ message HybridSearchRequest {
   repeated string output_fields = 10;
   common.ConsistencyLevel consistency_level = 11;
   bool use_default_consistency = 12;
-  schema.FunctionScore function_score = 13;  
+  // Mutually exclusive with function_chains. Milvus returns invalid argument if both are set.
+  schema.FunctionScore function_score = 13;
   optional string namespace = 14;
+  // Function chains for top-level hybrid fusion/rerank.
+  // Mutually exclusive with function_score. Milvus returns invalid argument if both are set.
+  repeated schema.FunctionChain function_chains = 15;
 }
 
 message FlushRequest {
