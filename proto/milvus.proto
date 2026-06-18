@@ -484,6 +484,10 @@ message DescribeCollectionResponse {
   uint64 request_time = 17;
   uint64 update_timestamp = 18;
   string update_timestamp_str = 19;
+  // The per-shard routing facts, parallel to virtual_channel_names. System
+  // design related, users should not perceive.
+  repeated schema.CollectionShardInfo shard_infos = 20;
+  schema.RoutingMode routing_mode = 21;
 }
 
 
