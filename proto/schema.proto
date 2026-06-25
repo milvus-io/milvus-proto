@@ -106,6 +106,104 @@ message FunctionScore {
     repeated common.KeyValuePair params = 2;
 };
 
+// beta, api may change
+// Function chain APIs, including FunctionChainStage and related FunctionChain messages,
+// are experimental and may change in future releases.
+enum FunctionChainStage {
+  FunctionChainStageUnspecified = 0;
+  FunctionChainStageIngestion = 1;
+  FunctionChainStagePreProcess = 2;
+  FunctionChainStageL0Rerank = 3;
+  FunctionChainStageL1Rerank = 4;
+  FunctionChainStageL2Rerank = 5;
+  FunctionChainStagePostProcess = 6;
+}
+
+// FunctionChain is an ordered public plan for function-based processing.
+message FunctionChain {
+  // Optional SDK/debug name.
+  string name = 1;
+
+  // Function chain execution stage.
+  FunctionChainStage stage = 2;
+
+  // Ordered operations. The server executes ops in this order.
+  repeated FunctionChainOp ops = 3;
+}
+
+message FunctionChainOp {
+  // Operation name, e.g. "map", "filter", "sort", "limit", "merge".
+  string op = 1;
+
+  // Optional function expression configured for this operation.
+  // Expr-based ops such as map/filter use this field.
+  // Non-expr ops such as sort/limit may leave it empty.
+  FunctionChainExpr expr = 2;
+
+  // Optional op-level input names.
+  // Mainly used by non-expr ops that still need caller-declared inputs,
+  // for example sort.inputs = ["$score"].
+  // For expr-based ops, inputs are collected from expr.args column references.
+  repeated string inputs = 3;
+
+  // Optional operation output names.
+  // Outputs may be temporary variables or system names such as "$score".
+  // Writing collection fields is not supported.
+  repeated string outputs = 4;
+
+  // Optional operation-level typed parameters.
+  map<string, FunctionParamValue> params = 5;
+}
+
+message FunctionChainExpr {
+  // Expression implementation name, e.g. "decay", "sum", "expr", "rerank_model", "udf_xxx".
+  // For fn.expr(col("$score") * 100), name is "expr" and the inner expression
+  // can be carried by params, for example params["expr"] = "$0 * 100".
+  string name = 1;
+
+  // Ordered expression arguments. Args may be collection fields, temporary values,
+  // system names, or literals. Function expr implementations interpret args by position.
+  repeated FunctionChainExprArg args = 2;
+
+  // Optional expression-level typed parameters.
+  map<string, FunctionParamValue> params = 3;
+}
+
+message FunctionChainExprArg {
+  oneof arg {
+    // Collection field, temporary variable, or system name.
+    FunctionChainColumnArg column = 1;
+
+    // Literal argument.
+    FunctionParamValue literal = 2;
+  }
+}
+
+message FunctionChainColumnArg {
+  // Examples: "doc", "ts", "score1", "$score", "$seg_offset".
+  string name = 1;
+}
+
+message FunctionParamValue {
+  oneof value {
+    bool bool_value = 1;
+    int64 int64_value = 2;
+    double double_value = 3;
+    string string_value = 4;
+    FunctionParamArray array_value = 5;
+    FunctionParamObject object_value = 6;
+    bytes bytes_value = 7;
+  }
+}
+
+message FunctionParamArray {
+  repeated FunctionParamValue values = 1;
+}
+
+message FunctionParamObject {
+  map<string, FunctionParamValue> fields = 1;
+}
+
 /**
  * @brief Collection schema
  */
