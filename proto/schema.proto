@@ -534,6 +534,16 @@ enum ShardState {
 message CollectionShardInfo {
   uint64 last_truncate_time_tick = 1;
   ShardState state = 2;
+  // The shard's own vchannel name. Carried explicitly so a consumer can key a
+  // shard by its vchannel instead of relying on positional alignment with a
+  // parallel virtual_channel_names array (e.g. DescribeCollectionResponse).
+  string vchannel_name = 5;
+  // The split source this shard is being carved from. Set on a split target
+  // while it is ShardCreating and kept until the source is released, so a
+  // querynode/querycoord can group a source with exactly its own targets (and
+  // not mistake another concurrent split's targets for its own). Empty unless
+  // this shard is an in-progress split target.
+  string source_vchannel = 6;
   // The routing predicate of this shard. The variant matches the collection's
   // routing_mode. A shard may own more than one piece (e.g. the cold remainder
   // after a hot tenant in the middle is carved out into its own shard), so each
