@@ -4636,6 +4636,8 @@ type CollectionShardInfo struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// The time tick up to which this shard's WAL has been truncated; 0 when the
+	// shard has never been truncated. Unrelated to routing.
 	LastTruncateTimeTick uint64     `protobuf:"varint,1,opt,name=last_truncate_time_tick,json=lastTruncateTimeTick,proto3" json:"last_truncate_time_tick,omitempty"`
 	State                ShardState `protobuf:"varint,2,opt,name=state,proto3,enum=milvus.proto.schema.ShardState" json:"state,omitempty"`
 	// The shard's own vchannel name. Carried explicitly so a consumer can key a
@@ -4648,10 +4650,14 @@ type CollectionShardInfo struct {
 	// not mistake another concurrent split's targets for its own). Empty unless
 	// this shard is an in-progress split target.
 	SourceVchannel string `protobuf:"bytes,6,opt,name=source_vchannel,json=sourceVchannel,proto3" json:"source_vchannel,omitempty"`
-	// The routing predicate of this shard. The variant matches the collection's
-	// routing_mode. A shard may own more than one piece (e.g. the cold remainder
-	// after a hot tenant in the middle is carved out into its own shard), so each
-	// variant carries a list; the lists of all shards tile the key space exactly.
+	// The routing predicate of this shard. The variant is expected to match the
+	// collection's routing_mode, but proto cannot enforce that agreement, and the
+	// oneof may be unset on the wire (e.g. a legacy/hash-routed shard, which needs
+	// no predicate); consumers must defend against an unset routing and not assume
+	// the variant from routing_mode alone. A shard may own more than one piece
+	// (e.g. the cold remainder after a hot tenant in the middle is carved out into
+	// its own shard), so each variant carries a list; the lists of all shards tile
+	// the key space exactly.
 	//
 	// Types that are assignable to Routing:
 	//
@@ -4807,8 +4813,12 @@ func (x *RangeRouting) GetRanges() []*RoutingKeyRange {
 	return nil
 }
 
-// RoutingKeyRange is a half-open routing-key range [lower, upper). A nil bound
-// is unbounded (lower nil = -inf, upper nil = +inf).
+// RoutingKeyRange is a half-open routing-key range [lower, upper). A bound is
+// unbounded when it has length zero: an empty lower is -inf, an empty upper is
+// +inf. proto3 scalar bytes carry no field presence, so an unset bound and an
+// explicitly-empty []byte{} are indistinguishable on the wire and are both
+// treated as unbounded; consumers MUST test len(bound)==0, and the type cannot
+// represent an exactly-empty (zero-length, but present) bound.
 type RoutingKeyRange struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

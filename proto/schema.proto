@@ -532,6 +532,8 @@ enum ShardState {
 // Shared definition used by the collection meta, the rootcoord responses and
 // the in-memory routing tables.
 message CollectionShardInfo {
+  // The time tick up to which this shard's WAL has been truncated; 0 when the
+  // shard has never been truncated. Unrelated to routing.
   uint64 last_truncate_time_tick = 1;
   ShardState state = 2;
   // The shard's own vchannel name. Carried explicitly so a consumer can key a
@@ -544,10 +546,14 @@ message CollectionShardInfo {
   // not mistake another concurrent split's targets for its own). Empty unless
   // this shard is an in-progress split target.
   string source_vchannel = 6;
-  // The routing predicate of this shard. The variant matches the collection's
-  // routing_mode. A shard may own more than one piece (e.g. the cold remainder
-  // after a hot tenant in the middle is carved out into its own shard), so each
-  // variant carries a list; the lists of all shards tile the key space exactly.
+  // The routing predicate of this shard. The variant is expected to match the
+  // collection's routing_mode, but proto cannot enforce that agreement, and the
+  // oneof may be unset on the wire (e.g. a legacy/hash-routed shard, which needs
+  // no predicate); consumers must defend against an unset routing and not assume
+  // the variant from routing_mode alone. A shard may own more than one piece
+  // (e.g. the cold remainder after a hot tenant in the middle is carved out into
+  // its own shard), so each variant carries a list; the lists of all shards tile
+  // the key space exactly.
   oneof routing {
     RangeRouting range_routing = 3;
     HashRouting hash_routing = 4;
@@ -561,8 +567,12 @@ message RangeRouting {
   repeated RoutingKeyRange ranges = 1;
 }
 
-// RoutingKeyRange is a half-open routing-key range [lower, upper). A nil bound
-// is unbounded (lower nil = -inf, upper nil = +inf).
+// RoutingKeyRange is a half-open routing-key range [lower, upper). A bound is
+// unbounded when it has length zero: an empty lower is -inf, an empty upper is
+// +inf. proto3 scalar bytes carry no field presence, so an unset bound and an
+// explicitly-empty []byte{} are indistinguishable on the wire and are both
+// treated as unbounded; consumers MUST test len(bound)==0, and the type cannot
+// represent an exactly-empty (zero-length, but present) bound.
 message RoutingKeyRange {
   bytes lower = 1;
   bytes upper = 2;
