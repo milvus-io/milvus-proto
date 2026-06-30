@@ -38,7 +38,8 @@ service MilvusService {
   rpc DropPartition(DropPartitionRequest) returns (common.Status) {}
   rpc HasPartition(HasPartitionRequest) returns (BoolResponse) {}
   rpc LoadPartitions(LoadPartitionsRequest) returns (common.Status) {}
-  rpc Prewarm(PrewarmRequest) returns (common.Status) {}
+  rpc Prewarm(PrewarmRequest) returns (PrewarmResponse) {}
+  rpc DescribePrewarmTask(DescribePrewarmTaskRequest) returns (DescribePrewarmTaskResponse) {}
   rpc ReleasePartitions(ReleasePartitionsRequest) returns (common.Status) {}
   rpc GetPartitionStatistics(GetPartitionStatisticsRequest) returns (GetPartitionStatisticsResponse) {}
   rpc ShowPartitions(ShowPartitionsRequest) returns (ShowPartitionsResponse) {}
@@ -771,6 +772,38 @@ message PrewarmRequest {
   bool skip_load_dynamic_field = 8;
   // Additional parameters for load
   map<string, string> load_params = 9;
+  // Expected warm retention duration. Reserved for future support.
+  int64 ttl_seconds = 10;
+  // Prewarm priority. Currently supports "low"; other values use default priority.
+  string priority = 11;
+}
+
+enum PrewarmTaskState {
+  PrewarmTaskStateUnknown = 0;
+  PrewarmTaskStatePending = 1;
+  PrewarmTaskStateWarming = 2;
+  PrewarmTaskStateCompleted = 3;
+  PrewarmTaskStateFailed = 4;
+}
+
+message PrewarmResponse {
+  common.Status status = 1;
+  string taskID = 2;
+  optional string namespace = 3;
+}
+
+message DescribePrewarmTaskRequest {
+  // Not useful for now
+  common.MsgBase base = 1;
+  string taskID = 2;
+}
+
+message DescribePrewarmTaskResponse {
+  common.Status status = 1;
+  string taskID = 2;
+  PrewarmTaskState state = 3;
+  int32 progress = 4;
+  string error_message = 5;
 }
 
 /*
