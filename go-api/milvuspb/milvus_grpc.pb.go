@@ -40,6 +40,7 @@ const (
 	MilvusService_DropPartition_FullMethodName                        = "/milvus.proto.milvus.MilvusService/DropPartition"
 	MilvusService_HasPartition_FullMethodName                         = "/milvus.proto.milvus.MilvusService/HasPartition"
 	MilvusService_LoadPartitions_FullMethodName                       = "/milvus.proto.milvus.MilvusService/LoadPartitions"
+	MilvusService_Prewarm_FullMethodName                              = "/milvus.proto.milvus.MilvusService/Prewarm"
 	MilvusService_ReleasePartitions_FullMethodName                    = "/milvus.proto.milvus.MilvusService/ReleasePartitions"
 	MilvusService_GetPartitionStatistics_FullMethodName               = "/milvus.proto.milvus.MilvusService/GetPartitionStatistics"
 	MilvusService_ShowPartitions_FullMethodName                       = "/milvus.proto.milvus.MilvusService/ShowPartitions"
@@ -181,6 +182,7 @@ type MilvusServiceClient interface {
 	DropPartition(ctx context.Context, in *DropPartitionRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	HasPartition(ctx context.Context, in *HasPartitionRequest, opts ...grpc.CallOption) (*BoolResponse, error)
 	LoadPartitions(ctx context.Context, in *LoadPartitionsRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	Prewarm(ctx context.Context, in *PrewarmRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	ReleasePartitions(ctx context.Context, in *ReleasePartitionsRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	GetPartitionStatistics(ctx context.Context, in *GetPartitionStatisticsRequest, opts ...grpc.CallOption) (*GetPartitionStatisticsResponse, error)
 	ShowPartitions(ctx context.Context, in *ShowPartitionsRequest, opts ...grpc.CallOption) (*ShowPartitionsResponse, error)
@@ -516,6 +518,15 @@ func (c *milvusServiceClient) HasPartition(ctx context.Context, in *HasPartition
 func (c *milvusServiceClient) LoadPartitions(ctx context.Context, in *LoadPartitionsRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
 	out := new(commonpb.Status)
 	err := c.cc.Invoke(ctx, MilvusService_LoadPartitions_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) Prewarm(ctx context.Context, in *PrewarmRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_Prewarm_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1637,6 +1648,7 @@ type MilvusServiceServer interface {
 	DropPartition(context.Context, *DropPartitionRequest) (*commonpb.Status, error)
 	HasPartition(context.Context, *HasPartitionRequest) (*BoolResponse, error)
 	LoadPartitions(context.Context, *LoadPartitionsRequest) (*commonpb.Status, error)
+	Prewarm(context.Context, *PrewarmRequest) (*commonpb.Status, error)
 	ReleasePartitions(context.Context, *ReleasePartitionsRequest) (*commonpb.Status, error)
 	GetPartitionStatistics(context.Context, *GetPartitionStatisticsRequest) (*GetPartitionStatisticsResponse, error)
 	ShowPartitions(context.Context, *ShowPartitionsRequest) (*ShowPartitionsResponse, error)
@@ -1859,6 +1871,9 @@ func (UnimplementedMilvusServiceServer) HasPartition(context.Context, *HasPartit
 }
 func (UnimplementedMilvusServiceServer) LoadPartitions(context.Context, *LoadPartitionsRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoadPartitions not implemented")
+}
+func (UnimplementedMilvusServiceServer) Prewarm(context.Context, *PrewarmRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Prewarm not implemented")
 }
 func (UnimplementedMilvusServiceServer) ReleasePartitions(context.Context, *ReleasePartitionsRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReleasePartitions not implemented")
@@ -2558,6 +2573,24 @@ func _MilvusService_LoadPartitions_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MilvusServiceServer).LoadPartitions(ctx, req.(*LoadPartitionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_Prewarm_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PrewarmRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).Prewarm(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_Prewarm_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).Prewarm(ctx, req.(*PrewarmRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4743,6 +4776,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LoadPartitions",
 			Handler:    _MilvusService_LoadPartitions_Handler,
+		},
+		{
+			MethodName: "Prewarm",
+			Handler:    _MilvusService_Prewarm_Handler,
 		},
 		{
 			MethodName: "ReleasePartitions",

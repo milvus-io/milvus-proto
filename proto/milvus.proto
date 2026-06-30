@@ -38,6 +38,7 @@ service MilvusService {
   rpc DropPartition(DropPartitionRequest) returns (common.Status) {}
   rpc HasPartition(HasPartitionRequest) returns (BoolResponse) {}
   rpc LoadPartitions(LoadPartitionsRequest) returns (common.Status) {}
+  rpc Prewarm(PrewarmRequest) returns (common.Status) {}
   rpc ReleasePartitions(ReleasePartitionsRequest) returns (common.Status) {}
   rpc GetPartitionStatistics(GetPartitionStatisticsRequest) returns (GetPartitionStatisticsResponse) {}
   rpc ShowPartitions(ShowPartitionsRequest) returns (ShowPartitionsResponse) {}
@@ -742,6 +743,34 @@ message LoadPartitionsRequest {
   bool skip_load_dynamic_field = 9;
   // Additional parameters for load
   map<string, string> load_params = 10;
+}
+
+/*
+* Prewarm namespace partition data into query node memory/cache.
+*/
+message PrewarmRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeLoad
+    object_name_index: 3
+  };
+  // Not useful for now
+  common.MsgBase base = 1;
+  string db_name = 2;
+  // The collection name in milvus
+  string collection_name = 3;
+  // The namespace you want to prewarm. Only namespace.mode=partition is supported.
+  optional string namespace = 4;
+  // The replicas number you would load if the namespace partition is not loaded, 1 by default.
+  int32 replica_number = 5;
+  // create replica used resource group if the namespace partition is not loaded
+  repeated string resource_groups = 6;
+  // Field Partial Load fields list if the namespace partition is not loaded
+  repeated string load_fields = 7;
+  // Field Partial load skip load dynamic fields if the namespace partition is not loaded
+  bool skip_load_dynamic_field = 8;
+  // Additional parameters for load
+  map<string, string> load_params = 9;
 }
 
 /*
