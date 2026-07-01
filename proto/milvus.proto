@@ -44,6 +44,13 @@ service MilvusService {
   rpc GetPartitionStatistics(GetPartitionStatisticsRequest) returns (GetPartitionStatisticsResponse) {}
   rpc ShowPartitions(ShowPartitionsRequest) returns (ShowPartitionsResponse) {}
 
+  rpc CreateNamespace(CreateNamespaceRequest) returns (CreateNamespaceResponse) {}
+  rpc DescribeNamespace(DescribeNamespaceRequest) returns (DescribeNamespaceResponse) {}
+  rpc ListNamespaces(ListNamespacesRequest) returns (ListNamespacesResponse) {}
+  rpc DropNamespace(DropNamespaceRequest) returns (DropNamespaceResponse) {}
+  rpc HasNamespace(HasNamespaceRequest) returns (HasNamespaceResponse) {}
+  rpc GetNamespaceStats(GetNamespaceStatsRequest) returns (GetNamespaceStatsResponse) {}
+
   rpc GetLoadingProgress(GetLoadingProgressRequest) returns (GetLoadingProgressResponse) {}
   rpc GetLoadState(GetLoadStateRequest) returns (GetLoadStateResponse) {}
 
@@ -884,6 +891,132 @@ message ShowPartitionsResponse {
   // Load percentage on querynode
   // Deprecated: use GetLoadingProgress rpc instead
   repeated int64 inMemory_percentages = 6 [deprecated=true];
+}
+
+message NamespaceStats {
+  repeated common.KeyValuePair stats = 1;
+  int64 approx_entity_count = 2;
+  int64 entity_count = 3;
+  string entity_count_type = 4;
+  int64 logical_bytes = 5;
+  uint64 last_write_timestamp = 6;
+  uint64 last_write_utc_timestamp = 7;
+}
+
+message NamespaceInfo {
+  string collection_name = 1;
+  string namespace_name = 2;
+  uint64 created_timestamp = 3;
+  uint64 created_utc_timestamp = 4;
+  string state = 5;
+  NamespaceStats stats = 6;
+}
+
+message CreateNamespaceRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeCreatePartition
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string namespace_name = 4;
+}
+
+message CreateNamespaceResponse {
+  common.Status status = 1;
+  NamespaceInfo namespace = 2;
+}
+
+message DescribeNamespaceRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeShowPartitions
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string namespace_name = 4;
+}
+
+message DescribeNamespaceResponse {
+  common.Status status = 1;
+  NamespaceInfo namespace = 2;
+}
+
+message ListNamespacesRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeShowPartitions
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string prefix = 4;
+  int64 page_size = 5;
+  string page_token = 6;
+}
+
+message ListNamespacesResponse {
+  common.Status status = 1;
+  repeated NamespaceInfo namespaces = 2;
+  string next_page_token = 3;
+}
+
+message DropNamespaceRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeDropPartition
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string namespace_name = 4;
+}
+
+message DropNamespaceResponse {
+  common.Status status = 1;
+  NamespaceInfo namespace = 2;
+}
+
+message HasNamespaceRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeHasPartition
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string namespace_name = 4;
+}
+
+message HasNamespaceResponse {
+  common.Status status = 1;
+  bool value = 2;
+}
+
+message GetNamespaceStatsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeShowPartitions
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string namespace_name = 4;
+  bool exact = 5;
+}
+
+message GetNamespaceStatsResponse {
+  common.Status status = 1;
+  string namespace_name = 2;
+  NamespaceStats stats = 3;
 }
 
 message DescribeSegmentRequest {
