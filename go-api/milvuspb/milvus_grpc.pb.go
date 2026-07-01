@@ -43,6 +43,12 @@ const (
 	MilvusService_ReleasePartitions_FullMethodName                    = "/milvus.proto.milvus.MilvusService/ReleasePartitions"
 	MilvusService_GetPartitionStatistics_FullMethodName               = "/milvus.proto.milvus.MilvusService/GetPartitionStatistics"
 	MilvusService_ShowPartitions_FullMethodName                       = "/milvus.proto.milvus.MilvusService/ShowPartitions"
+	MilvusService_CreateNamespace_FullMethodName                      = "/milvus.proto.milvus.MilvusService/CreateNamespace"
+	MilvusService_DescribeNamespace_FullMethodName                    = "/milvus.proto.milvus.MilvusService/DescribeNamespace"
+	MilvusService_ListNamespaces_FullMethodName                       = "/milvus.proto.milvus.MilvusService/ListNamespaces"
+	MilvusService_DropNamespace_FullMethodName                        = "/milvus.proto.milvus.MilvusService/DropNamespace"
+	MilvusService_HasNamespace_FullMethodName                         = "/milvus.proto.milvus.MilvusService/HasNamespace"
+	MilvusService_GetNamespaceStats_FullMethodName                    = "/milvus.proto.milvus.MilvusService/GetNamespaceStats"
 	MilvusService_GetLoadingProgress_FullMethodName                   = "/milvus.proto.milvus.MilvusService/GetLoadingProgress"
 	MilvusService_GetLoadState_FullMethodName                         = "/milvus.proto.milvus.MilvusService/GetLoadState"
 	MilvusService_CreateAlias_FullMethodName                          = "/milvus.proto.milvus.MilvusService/CreateAlias"
@@ -181,6 +187,12 @@ type MilvusServiceClient interface {
 	ReleasePartitions(ctx context.Context, in *ReleasePartitionsRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	GetPartitionStatistics(ctx context.Context, in *GetPartitionStatisticsRequest, opts ...grpc.CallOption) (*GetPartitionStatisticsResponse, error)
 	ShowPartitions(ctx context.Context, in *ShowPartitionsRequest, opts ...grpc.CallOption) (*ShowPartitionsResponse, error)
+	CreateNamespace(ctx context.Context, in *CreateNamespaceRequest, opts ...grpc.CallOption) (*CreateNamespaceResponse, error)
+	DescribeNamespace(ctx context.Context, in *DescribeNamespaceRequest, opts ...grpc.CallOption) (*DescribeNamespaceResponse, error)
+	ListNamespaces(ctx context.Context, in *ListNamespacesRequest, opts ...grpc.CallOption) (*ListNamespacesResponse, error)
+	DropNamespace(ctx context.Context, in *DropNamespaceRequest, opts ...grpc.CallOption) (*DropNamespaceResponse, error)
+	HasNamespace(ctx context.Context, in *HasNamespaceRequest, opts ...grpc.CallOption) (*HasNamespaceResponse, error)
+	GetNamespaceStats(ctx context.Context, in *GetNamespaceStatsRequest, opts ...grpc.CallOption) (*GetNamespaceStatsResponse, error)
 	GetLoadingProgress(ctx context.Context, in *GetLoadingProgressRequest, opts ...grpc.CallOption) (*GetLoadingProgressResponse, error)
 	GetLoadState(ctx context.Context, in *GetLoadStateRequest, opts ...grpc.CallOption) (*GetLoadStateResponse, error)
 	CreateAlias(ctx context.Context, in *CreateAliasRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
@@ -537,6 +549,60 @@ func (c *milvusServiceClient) GetPartitionStatistics(ctx context.Context, in *Ge
 func (c *milvusServiceClient) ShowPartitions(ctx context.Context, in *ShowPartitionsRequest, opts ...grpc.CallOption) (*ShowPartitionsResponse, error) {
 	out := new(ShowPartitionsResponse)
 	err := c.cc.Invoke(ctx, MilvusService_ShowPartitions_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) CreateNamespace(ctx context.Context, in *CreateNamespaceRequest, opts ...grpc.CallOption) (*CreateNamespaceResponse, error) {
+	out := new(CreateNamespaceResponse)
+	err := c.cc.Invoke(ctx, MilvusService_CreateNamespace_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) DescribeNamespace(ctx context.Context, in *DescribeNamespaceRequest, opts ...grpc.CallOption) (*DescribeNamespaceResponse, error) {
+	out := new(DescribeNamespaceResponse)
+	err := c.cc.Invoke(ctx, MilvusService_DescribeNamespace_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) ListNamespaces(ctx context.Context, in *ListNamespacesRequest, opts ...grpc.CallOption) (*ListNamespacesResponse, error) {
+	out := new(ListNamespacesResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ListNamespaces_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) DropNamespace(ctx context.Context, in *DropNamespaceRequest, opts ...grpc.CallOption) (*DropNamespaceResponse, error) {
+	out := new(DropNamespaceResponse)
+	err := c.cc.Invoke(ctx, MilvusService_DropNamespace_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) HasNamespace(ctx context.Context, in *HasNamespaceRequest, opts ...grpc.CallOption) (*HasNamespaceResponse, error) {
+	out := new(HasNamespaceResponse)
+	err := c.cc.Invoke(ctx, MilvusService_HasNamespace_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) GetNamespaceStats(ctx context.Context, in *GetNamespaceStatsRequest, opts ...grpc.CallOption) (*GetNamespaceStatsResponse, error) {
+	out := new(GetNamespaceStatsResponse)
+	err := c.cc.Invoke(ctx, MilvusService_GetNamespaceStats_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1607,6 +1673,12 @@ type MilvusServiceServer interface {
 	ReleasePartitions(context.Context, *ReleasePartitionsRequest) (*commonpb.Status, error)
 	GetPartitionStatistics(context.Context, *GetPartitionStatisticsRequest) (*GetPartitionStatisticsResponse, error)
 	ShowPartitions(context.Context, *ShowPartitionsRequest) (*ShowPartitionsResponse, error)
+	CreateNamespace(context.Context, *CreateNamespaceRequest) (*CreateNamespaceResponse, error)
+	DescribeNamespace(context.Context, *DescribeNamespaceRequest) (*DescribeNamespaceResponse, error)
+	ListNamespaces(context.Context, *ListNamespacesRequest) (*ListNamespacesResponse, error)
+	DropNamespace(context.Context, *DropNamespaceRequest) (*DropNamespaceResponse, error)
+	HasNamespace(context.Context, *HasNamespaceRequest) (*HasNamespaceResponse, error)
+	GetNamespaceStats(context.Context, *GetNamespaceStatsRequest) (*GetNamespaceStatsResponse, error)
 	GetLoadingProgress(context.Context, *GetLoadingProgressRequest) (*GetLoadingProgressResponse, error)
 	GetLoadState(context.Context, *GetLoadStateRequest) (*GetLoadStateResponse, error)
 	CreateAlias(context.Context, *CreateAliasRequest) (*commonpb.Status, error)
@@ -1832,6 +1904,24 @@ func (UnimplementedMilvusServiceServer) GetPartitionStatistics(context.Context, 
 }
 func (UnimplementedMilvusServiceServer) ShowPartitions(context.Context, *ShowPartitionsRequest) (*ShowPartitionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ShowPartitions not implemented")
+}
+func (UnimplementedMilvusServiceServer) CreateNamespace(context.Context, *CreateNamespaceRequest) (*CreateNamespaceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateNamespace not implemented")
+}
+func (UnimplementedMilvusServiceServer) DescribeNamespace(context.Context, *DescribeNamespaceRequest) (*DescribeNamespaceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DescribeNamespace not implemented")
+}
+func (UnimplementedMilvusServiceServer) ListNamespaces(context.Context, *ListNamespacesRequest) (*ListNamespacesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListNamespaces not implemented")
+}
+func (UnimplementedMilvusServiceServer) DropNamespace(context.Context, *DropNamespaceRequest) (*DropNamespaceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DropNamespace not implemented")
+}
+func (UnimplementedMilvusServiceServer) HasNamespace(context.Context, *HasNamespaceRequest) (*HasNamespaceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HasNamespace not implemented")
+}
+func (UnimplementedMilvusServiceServer) GetNamespaceStats(context.Context, *GetNamespaceStatsRequest) (*GetNamespaceStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetNamespaceStats not implemented")
 }
 func (UnimplementedMilvusServiceServer) GetLoadingProgress(context.Context, *GetLoadingProgressRequest) (*GetLoadingProgressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLoadingProgress not implemented")
@@ -2567,6 +2657,114 @@ func _MilvusService_ShowPartitions_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MilvusServiceServer).ShowPartitions(ctx, req.(*ShowPartitionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_CreateNamespace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateNamespaceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).CreateNamespace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_CreateNamespace_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).CreateNamespace(ctx, req.(*CreateNamespaceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_DescribeNamespace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DescribeNamespaceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).DescribeNamespace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_DescribeNamespace_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).DescribeNamespace(ctx, req.(*DescribeNamespaceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_ListNamespaces_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListNamespacesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ListNamespaces(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ListNamespaces_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ListNamespaces(ctx, req.(*ListNamespacesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_DropNamespace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DropNamespaceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).DropNamespace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_DropNamespace_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).DropNamespace(ctx, req.(*DropNamespaceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_HasNamespace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HasNamespaceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).HasNamespace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_HasNamespace_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).HasNamespace(ctx, req.(*HasNamespaceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_GetNamespaceStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetNamespaceStatsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).GetNamespaceStats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_GetNamespaceStats_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).GetNamespaceStats(ctx, req.(*GetNamespaceStatsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4656,6 +4854,30 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ShowPartitions",
 			Handler:    _MilvusService_ShowPartitions_Handler,
+		},
+		{
+			MethodName: "CreateNamespace",
+			Handler:    _MilvusService_CreateNamespace_Handler,
+		},
+		{
+			MethodName: "DescribeNamespace",
+			Handler:    _MilvusService_DescribeNamespace_Handler,
+		},
+		{
+			MethodName: "ListNamespaces",
+			Handler:    _MilvusService_ListNamespaces_Handler,
+		},
+		{
+			MethodName: "DropNamespace",
+			Handler:    _MilvusService_DropNamespace_Handler,
+		},
+		{
+			MethodName: "HasNamespace",
+			Handler:    _MilvusService_HasNamespace_Handler,
+		},
+		{
+			MethodName: "GetNamespaceStats",
+			Handler:    _MilvusService_GetNamespaceStats_Handler,
 		},
 		{
 			MethodName: "GetLoadingProgress",
