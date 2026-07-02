@@ -347,6 +347,16 @@ enum MsgType {
     RefreshExternalCollection = 2300;
     GetRefreshExternalCollectionProgress = 2301;
     ListRefreshExternalCollectionJobs = 2302;
+
+    /* Row-Level Security */
+    CreateRowPolicy = 2400;
+    DropRowPolicy = 2401;
+    ListRowPolicies = 2402;
+    UpdateRowPolicy = 2403;
+    SetRLSPrincipalTags = 2404;
+    GetRLSPrincipalTags = 2405;
+    ListRLSPrincipals = 2406;
+    DeleteRLSPrincipalTags = 2407;
 }
 
 message MsgBase {
@@ -509,6 +519,7 @@ enum ObjectPrivilege {
     PrivilegeUnpinSnapshotData = 88;
     PrivilegeRestoreExternalSnapshot = 89;
     PrivilegeExportSnapshot = 90;
+    PrivilegeSkipRLS = 91;
 }
 
 message PrivilegeExt {

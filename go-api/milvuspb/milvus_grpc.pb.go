@@ -142,6 +142,11 @@ const (
 	MilvusService_CreateRowPolicy_FullMethodName                      = "/milvus.proto.milvus.MilvusService/CreateRowPolicy"
 	MilvusService_DropRowPolicy_FullMethodName                        = "/milvus.proto.milvus.MilvusService/DropRowPolicy"
 	MilvusService_ListRowPolicies_FullMethodName                      = "/milvus.proto.milvus.MilvusService/ListRowPolicies"
+	MilvusService_UpdateRowPolicy_FullMethodName                      = "/milvus.proto.milvus.MilvusService/UpdateRowPolicy"
+	MilvusService_SetRLSPrincipalTags_FullMethodName                  = "/milvus.proto.milvus.MilvusService/SetRLSPrincipalTags"
+	MilvusService_GetRLSPrincipalTags_FullMethodName                  = "/milvus.proto.milvus.MilvusService/GetRLSPrincipalTags"
+	MilvusService_ListRLSPrincipals_FullMethodName                    = "/milvus.proto.milvus.MilvusService/ListRLSPrincipals"
+	MilvusService_DeleteRLSPrincipalTags_FullMethodName               = "/milvus.proto.milvus.MilvusService/DeleteRLSPrincipalTags"
 	MilvusService_UpdateReplicateConfiguration_FullMethodName         = "/milvus.proto.milvus.MilvusService/UpdateReplicateConfiguration"
 	MilvusService_GetReplicateConfiguration_FullMethodName            = "/milvus.proto.milvus.MilvusService/GetReplicateConfiguration"
 	MilvusService_GetReplicateInfo_FullMethodName                     = "/milvus.proto.milvus.MilvusService/GetReplicateInfo"
@@ -295,7 +300,7 @@ type MilvusServiceClient interface {
 	AddFileResource(ctx context.Context, in *AddFileResourceRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	RemoveFileResource(ctx context.Context, in *RemoveFileResourceRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	ListFileResources(ctx context.Context, in *ListFileResourcesRequest, opts ...grpc.CallOption) (*ListFileResourcesResponse, error)
-	// Row Level Security (RLS) APIs
+	// Row-Level Security (RLS) APIs
 	AddUserTags(ctx context.Context, in *AddUserTagsRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DeleteUserTags(ctx context.Context, in *DeleteUserTagsRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	GetUserTags(ctx context.Context, in *GetUserTagsRequest, opts ...grpc.CallOption) (*GetUserTagsResponse, error)
@@ -303,6 +308,11 @@ type MilvusServiceClient interface {
 	CreateRowPolicy(ctx context.Context, in *CreateRowPolicyRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	DropRowPolicy(ctx context.Context, in *DropRowPolicyRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	ListRowPolicies(ctx context.Context, in *ListRowPoliciesRequest, opts ...grpc.CallOption) (*ListRowPoliciesResponse, error)
+	UpdateRowPolicy(ctx context.Context, in *UpdateRowPolicyRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	SetRLSPrincipalTags(ctx context.Context, in *SetRLSPrincipalTagsRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
+	GetRLSPrincipalTags(ctx context.Context, in *GetRLSPrincipalTagsRequest, opts ...grpc.CallOption) (*GetRLSPrincipalTagsResponse, error)
+	ListRLSPrincipals(ctx context.Context, in *ListRLSPrincipalsRequest, opts ...grpc.CallOption) (*ListRLSPrincipalsResponse, error)
+	DeleteRLSPrincipalTags(ctx context.Context, in *DeleteRLSPrincipalTagsRequest, opts ...grpc.CallOption) (*commonpb.Status, error)
 	// CDC v2 APIs
 	// UpdateReplicateConfiguration applies a full replacement of the current
 	// replication configuration across Milvus clusters.
@@ -1459,6 +1469,51 @@ func (c *milvusServiceClient) ListRowPolicies(ctx context.Context, in *ListRowPo
 	return out, nil
 }
 
+func (c *milvusServiceClient) UpdateRowPolicy(ctx context.Context, in *UpdateRowPolicyRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_UpdateRowPolicy_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) SetRLSPrincipalTags(ctx context.Context, in *SetRLSPrincipalTagsRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_SetRLSPrincipalTags_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) GetRLSPrincipalTags(ctx context.Context, in *GetRLSPrincipalTagsRequest, opts ...grpc.CallOption) (*GetRLSPrincipalTagsResponse, error) {
+	out := new(GetRLSPrincipalTagsResponse)
+	err := c.cc.Invoke(ctx, MilvusService_GetRLSPrincipalTags_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) ListRLSPrincipals(ctx context.Context, in *ListRLSPrincipalsRequest, opts ...grpc.CallOption) (*ListRLSPrincipalsResponse, error) {
+	out := new(ListRLSPrincipalsResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ListRLSPrincipals_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) DeleteRLSPrincipalTags(ctx context.Context, in *DeleteRLSPrincipalTagsRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
+	out := new(commonpb.Status)
+	err := c.cc.Invoke(ctx, MilvusService_DeleteRLSPrincipalTags_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *milvusServiceClient) UpdateReplicateConfiguration(ctx context.Context, in *UpdateReplicateConfigurationRequest, opts ...grpc.CallOption) (*commonpb.Status, error) {
 	out := new(commonpb.Status)
 	err := c.cc.Invoke(ctx, MilvusService_UpdateReplicateConfiguration_FullMethodName, in, out, opts...)
@@ -1831,7 +1886,7 @@ type MilvusServiceServer interface {
 	AddFileResource(context.Context, *AddFileResourceRequest) (*commonpb.Status, error)
 	RemoveFileResource(context.Context, *RemoveFileResourceRequest) (*commonpb.Status, error)
 	ListFileResources(context.Context, *ListFileResourcesRequest) (*ListFileResourcesResponse, error)
-	// Row Level Security (RLS) APIs
+	// Row-Level Security (RLS) APIs
 	AddUserTags(context.Context, *AddUserTagsRequest) (*commonpb.Status, error)
 	DeleteUserTags(context.Context, *DeleteUserTagsRequest) (*commonpb.Status, error)
 	GetUserTags(context.Context, *GetUserTagsRequest) (*GetUserTagsResponse, error)
@@ -1839,6 +1894,11 @@ type MilvusServiceServer interface {
 	CreateRowPolicy(context.Context, *CreateRowPolicyRequest) (*commonpb.Status, error)
 	DropRowPolicy(context.Context, *DropRowPolicyRequest) (*commonpb.Status, error)
 	ListRowPolicies(context.Context, *ListRowPoliciesRequest) (*ListRowPoliciesResponse, error)
+	UpdateRowPolicy(context.Context, *UpdateRowPolicyRequest) (*commonpb.Status, error)
+	SetRLSPrincipalTags(context.Context, *SetRLSPrincipalTagsRequest) (*commonpb.Status, error)
+	GetRLSPrincipalTags(context.Context, *GetRLSPrincipalTagsRequest) (*GetRLSPrincipalTagsResponse, error)
+	ListRLSPrincipals(context.Context, *ListRLSPrincipalsRequest) (*ListRLSPrincipalsResponse, error)
+	DeleteRLSPrincipalTags(context.Context, *DeleteRLSPrincipalTagsRequest) (*commonpb.Status, error)
 	// CDC v2 APIs
 	// UpdateReplicateConfiguration applies a full replacement of the current
 	// replication configuration across Milvus clusters.
@@ -2261,6 +2321,21 @@ func (UnimplementedMilvusServiceServer) DropRowPolicy(context.Context, *DropRowP
 }
 func (UnimplementedMilvusServiceServer) ListRowPolicies(context.Context, *ListRowPoliciesRequest) (*ListRowPoliciesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRowPolicies not implemented")
+}
+func (UnimplementedMilvusServiceServer) UpdateRowPolicy(context.Context, *UpdateRowPolicyRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRowPolicy not implemented")
+}
+func (UnimplementedMilvusServiceServer) SetRLSPrincipalTags(context.Context, *SetRLSPrincipalTagsRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetRLSPrincipalTags not implemented")
+}
+func (UnimplementedMilvusServiceServer) GetRLSPrincipalTags(context.Context, *GetRLSPrincipalTagsRequest) (*GetRLSPrincipalTagsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRLSPrincipalTags not implemented")
+}
+func (UnimplementedMilvusServiceServer) ListRLSPrincipals(context.Context, *ListRLSPrincipalsRequest) (*ListRLSPrincipalsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRLSPrincipals not implemented")
+}
+func (UnimplementedMilvusServiceServer) DeleteRLSPrincipalTags(context.Context, *DeleteRLSPrincipalTagsRequest) (*commonpb.Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteRLSPrincipalTags not implemented")
 }
 func (UnimplementedMilvusServiceServer) UpdateReplicateConfiguration(context.Context, *UpdateReplicateConfigurationRequest) (*commonpb.Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateReplicateConfiguration not implemented")
@@ -4518,6 +4593,96 @@ func _MilvusService_ListRowPolicies_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_UpdateRowPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRowPolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).UpdateRowPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_UpdateRowPolicy_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).UpdateRowPolicy(ctx, req.(*UpdateRowPolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_SetRLSPrincipalTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetRLSPrincipalTagsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).SetRLSPrincipalTags(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_SetRLSPrincipalTags_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).SetRLSPrincipalTags(ctx, req.(*SetRLSPrincipalTagsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_GetRLSPrincipalTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRLSPrincipalTagsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).GetRLSPrincipalTags(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_GetRLSPrincipalTags_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).GetRLSPrincipalTags(ctx, req.(*GetRLSPrincipalTagsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_ListRLSPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRLSPrincipalsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ListRLSPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ListRLSPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ListRLSPrincipals(ctx, req.(*ListRLSPrincipalsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_DeleteRLSPrincipalTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRLSPrincipalTagsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).DeleteRLSPrincipalTags(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_DeleteRLSPrincipalTags_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).DeleteRLSPrincipalTags(ctx, req.(*DeleteRLSPrincipalTagsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MilvusService_UpdateReplicateConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateReplicateConfigurationRequest)
 	if err := dec(in); err != nil {
@@ -5415,6 +5580,26 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListRowPolicies",
 			Handler:    _MilvusService_ListRowPolicies_Handler,
+		},
+		{
+			MethodName: "UpdateRowPolicy",
+			Handler:    _MilvusService_UpdateRowPolicy_Handler,
+		},
+		{
+			MethodName: "SetRLSPrincipalTags",
+			Handler:    _MilvusService_SetRLSPrincipalTags_Handler,
+		},
+		{
+			MethodName: "GetRLSPrincipalTags",
+			Handler:    _MilvusService_GetRLSPrincipalTags_Handler,
+		},
+		{
+			MethodName: "ListRLSPrincipals",
+			Handler:    _MilvusService_ListRLSPrincipals_Handler,
+		},
+		{
+			MethodName: "DeleteRLSPrincipalTags",
+			Handler:    _MilvusService_DeleteRLSPrincipalTags_Handler,
 		},
 		{
 			MethodName: "UpdateReplicateConfiguration",
