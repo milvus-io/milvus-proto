@@ -2629,6 +2629,7 @@ message DumpMessagesRequest {
   common.MessageID start_message_id = 2; // Start position in WAL (required) - typically from salvage_checkpoint.message_id
   uint64 start_timetick = 3;             // Start timetick filter (optional) - only dump messages with timetick >= start_timetick, typically from salvage_checkpoint.time_tick
   uint64 end_timetick = 4;               // End timetick filter (optional) - only dump messages with timetick <= end_timetick, 0 means no limit (stream until cancelled)
+  bool include_start_message = 5;        // If true, dump starts from start_message_id inclusively; otherwise starts after it.
 }
 
 // DumpMessagesResponse streams messages from the WAL.
