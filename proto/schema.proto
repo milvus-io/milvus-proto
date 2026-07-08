@@ -37,6 +37,7 @@ enum DataType {
   Mol = 27; // Molecular data type
   Date = 28;
   Time = 29;
+  Decimal = 30;
 
   BinaryVector = 100;
   FloatVector = 101;
@@ -250,7 +251,9 @@ message FloatArray { repeated float data = 1; }
 
 message DoubleArray { repeated double data = 1; }
 
-// For special fields such as bigdecimal, array...
+// General-purpose byte-string array.
+// Used for: Decimal (big-endian unscaled integer, 8 or 16 bytes per element),
+// and other variable-width binary fields such as Array and raw binary blobs.
 message BytesArray { repeated bytes data = 1; }
 
 message StringArray { repeated string data = 1; }
