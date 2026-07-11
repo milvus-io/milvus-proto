@@ -207,6 +207,21 @@ message FunctionParamObject {
 }
 
 /**
+ * @brief Tombstone for a dropped field. Kept on the collection schema after
+ * a field is dropped so that an explicit reference to the dropped name fails
+ * loudly (instead of silently resolving to the dynamic field) until a
+ * top-level field re-uses the name. Maintained by the server; read-only to
+ * clients.
+ */
+message DroppedFieldInfo {
+  string name = 1;              // dropped field name (struct sub-fields also store the prefixed "struct[sub]" form)
+  int64 fieldID = 2;            // field ID at drop time; never re-assigned
+  int32 dropped_at_version = 3; // collection schema version that committed the drop
+  bool sub_field = 4;           // true for struct-array sub-field tombstones: blocks identifier
+                                // resolution only, not dynamic-field ($meta) keys
+}
+
+/**
  * @brief Collection schema
  */
 message CollectionSchema {
@@ -219,7 +234,7 @@ message CollectionSchema {
   repeated FunctionSchema functions = 7;
   string dbName = 8;
   repeated StructArrayFieldSchema struct_array_fields = 9;
-  int32 version = 10; // The version of current collection schema updates, increment every time the schema content is updating, 
+  int32 version = 10; // The version of current collection schema updates, increment every time the schema content is updating,
                       // 0 when the collection is created or the collection schema is updated before 2.6.5.
                       // the name dbName and description take no effect to it.
   string external_source = 11;
@@ -227,6 +242,7 @@ message CollectionSchema {
   bool do_physical_backfill = 13;
   repeated int64 file_resource_ids = 14;
   bool enable_namespace = 15;
+  repeated DroppedFieldInfo dropped_fields = 16; // tombstones for dropped fields; server-maintained
 }
 
 message StructArrayFieldSchema {
