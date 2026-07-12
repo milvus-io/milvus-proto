@@ -505,6 +505,10 @@ message TemplateValue {
     double float_val = 3;
     string string_val = 4;
     TemplateArrayValue array_val = 5;
+    // Raw binary payload (proto3 bytes, no UTF-8 constraint). Used to carry a
+    // client pre-built filter blob (e.g. a bloom/roaring/bitset membership
+    // filter) into an expression without base64 inflation of a string field.
+    bytes bytes_val = 6;
   };
 }
 
