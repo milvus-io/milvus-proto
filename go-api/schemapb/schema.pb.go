@@ -43,6 +43,7 @@ const (
 	DataType_Text              DataType = 25
 	DataType_Timestamptz       DataType = 26
 	DataType_Mol               DataType = 27 // Molecular data type
+	DataType_UUID              DataType = 28 // Universally Unique Identifier, stored as 16 bytes
 	DataType_BinaryVector      DataType = 100
 	DataType_FloatVector       DataType = 101
 	DataType_Float16Vector     DataType = 102
@@ -73,6 +74,7 @@ var (
 		25:  "Text",
 		26:  "Timestamptz",
 		27:  "Mol",
+		28:  "UUID",
 		100: "BinaryVector",
 		101: "FloatVector",
 		102: "Float16Vector",
@@ -100,6 +102,7 @@ var (
 		"Text":              25,
 		"Timestamptz":       26,
 		"Mol":               27,
+		"UUID":              28,
 		"BinaryVector":      100,
 		"FloatVector":       101,
 		"Float16Vector":     102,
