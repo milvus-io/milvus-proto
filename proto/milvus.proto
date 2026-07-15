@@ -493,6 +493,14 @@ message DescribeCollectionResponse {
   uint64 request_time = 17;
   uint64 update_timestamp = 18;
   string update_timestamp_str = 19;
+  // DataViewGate: field ids currently read-gated on this collection (being dropped, or an
+  // add_function_field output still backfilling). A proxy that (re)describes the collection uses
+  // this to (re)build its per-collection read blocklist — the pull path for new/recovered proxies.
+  repeated int64 gated_field_ids = 20;
+  // DataViewGate: true while a field-drop is in progress on this collection, i.e. complex-deletes
+  // (delete-by-expr) must be paused. A new/recovered proxy uses this to pause complex-deletes for the
+  // drop window (the push only reaches already-connected proxies).
+  bool complex_delete_paused = 21;
 }
 
 
