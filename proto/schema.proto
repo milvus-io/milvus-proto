@@ -90,6 +90,7 @@ message FieldSchema {
   bool nullable = 15; // enable set null as field value
   bool is_function_output =16;
   string external_field = 17; // external field name 
+  TypeSchema element_schema = 18; // Recursive element schema for nested collection types, such as array<array<int64>>
 }
 
 message FunctionSchema {
@@ -529,4 +530,12 @@ message TemplateArrayValue {
 
 message TemplateArrayValueArray {
   repeated TemplateArrayValue data = 1;
+}
+
+message TypeSchema {
+  DataType data_type = 1;
+  DataType element_type = 2;
+  repeated common.KeyValuePair type_params = 3;
+  TypeSchema element_schema = 4;
+  bool nullable = 5;
 }
