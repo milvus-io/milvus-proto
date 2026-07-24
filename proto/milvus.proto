@@ -173,7 +173,7 @@ service MilvusService {
   rpc RemoveFileResource(RemoveFileResourceRequest) returns (common.Status) {}
   rpc ListFileResources(ListFileResourcesRequest) returns (ListFileResourcesResponse) {}
 
-  // Row Level Security (RLS) APIs
+  // Row-Level Security (RLS) APIs
   rpc AddUserTags(AddUserTagsRequest) returns (common.Status) {}
   rpc DeleteUserTags(DeleteUserTagsRequest) returns (common.Status) {}
   rpc GetUserTags(GetUserTagsRequest) returns (GetUserTagsResponse) {}
@@ -182,6 +182,11 @@ service MilvusService {
   rpc CreateRowPolicy(CreateRowPolicyRequest) returns (common.Status) {}
   rpc DropRowPolicy(DropRowPolicyRequest) returns (common.Status) {}
   rpc ListRowPolicies(ListRowPoliciesRequest) returns (ListRowPoliciesResponse) {}
+  rpc UpdateRowPolicy(UpdateRowPolicyRequest) returns (common.Status) {}
+  rpc SetRLSPrincipalTags(SetRLSPrincipalTagsRequest) returns (common.Status) {}
+  rpc GetRLSPrincipalTags(GetRLSPrincipalTagsRequest) returns (GetRLSPrincipalTagsResponse) {}
+  rpc ListRLSPrincipals(ListRLSPrincipalsRequest) returns (ListRLSPrincipalsResponse) {}
+  rpc DeleteRLSPrincipalTags(DeleteRLSPrincipalTagsRequest) returns (common.Status) {}
 
   // CDC v2 APIs
   // UpdateReplicateConfiguration applies a full replacement of the current
@@ -1215,6 +1220,8 @@ message InsertRequest {
   uint32 num_rows = 7;
   uint64 schema_timestamp = 8;
   optional string namespace = 9;
+  string rls_principal = 10;
+  bool skip_rls = 11;
 }
 
 message AddCollectionFieldRequest {
@@ -1305,6 +1312,8 @@ message UpsertRequest {
   // matched to fields_data entries by field_name. A non-REPLACE op implies
   // partial_update=true regardless of the partial_update flag.
   repeated schema.FieldPartialUpdateOp field_ops = 11;
+  string rls_principal = 12;
+  bool skip_rls = 13;
 }
 
 message MutationResult {
@@ -1334,6 +1343,8 @@ message DeleteRequest {
   common.ConsistencyLevel consistency_level = 7;
   map<string, schema.TemplateValue> expr_template_values = 8;
   optional string namespace = 9;
+  string rls_principal = 10;
+  bool skip_rls = 11;
 }
 
 
@@ -1382,6 +1393,8 @@ message SearchRequest {
   common.SearchAggregationSpec search_aggregation = 23;
   // Mutually exclusive with function_score. Milvus returns invalid argument if both are set.
   repeated schema.FunctionChain function_chains = 24;
+  string rls_principal = 25;
+  bool skip_rls = 26;
 }
 
 message Hits {
@@ -1421,6 +1434,8 @@ message HybridSearchRequest {
   // Function chains for top-level hybrid fusion/rerank.
   // Mutually exclusive with function_score. Milvus returns invalid argument if both are set.
   repeated schema.FunctionChain function_chains = 15;
+  string rls_principal = 16;
+  bool skip_rls = 17;
 }
 
 message FlushRequest {
@@ -1464,6 +1479,8 @@ message QueryRequest {
   bool use_default_consistency = 12;
   map<string, schema.TemplateValue> expr_template_values = 13;
   optional string namespace = 14;
+  string rls_principal = 15;
+  bool skip_rls = 16;
 }
 
 message ElementIndices {
@@ -2687,15 +2704,26 @@ message ListFileResourcesResponse {
   repeated FileResourceInfo resources = 2;
 }
 
-// ===== Row Level Security (RLS) Messages =====
+// ===== Row-Level Security (RLS) Messages =====
 
-// Row Policy Action enum
 enum RowPolicyAction {
-  Query = 0;
-  Search = 1;
-  Insert = 2;
-  Delete = 3;
-  Upsert = 4;
+  reserved 1;
+  reserved "RowPolicyActionGet";
+  RowPolicyActionUnknown = 0;
+  RowPolicyActionQuery = 2;
+  RowPolicyActionQueryIterator = 3;
+  RowPolicyActionSearch = 4;
+  RowPolicyActionSearchIterator = 5;
+  RowPolicyActionHybridSearch = 6;
+  RowPolicyActionDelete = 7;
+  RowPolicyActionInsert = 8;
+  RowPolicyActionUpsert = 9;
+}
+
+enum RowPolicyType {
+  RowPolicyTypeUnknown = 0;
+  RowPolicyTypePermissive = 1;
+  RowPolicyTypeRestrictive = 2;
 }
 
 // User Tag Management
@@ -2760,7 +2788,7 @@ message ListUsersWithTagResponse {
 message CreateRowPolicyRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeCreateOwnership
+    object_privilege: PrivilegeGroupCollectionReadWrite
     object_name_index: 3
   };
 
@@ -2768,17 +2796,17 @@ message CreateRowPolicyRequest {
   string db_name = 2;
   string collection_name = 3;
   string policy_name = 4;
-  repeated RowPolicyAction actions = 5; // actions this policy controls
-  repeated string roles = 6;   // role names that this policy applies to
-  string using_expr = 7;       // expression for filtering data during queries
-  string check_expr = 8;       // expression for validating data during mutations
-  string description = 9;      // optional description
+  RowPolicyType policy_type = 5;
+  repeated RowPolicyAction actions = 6;
+  string using_expr = 7;
+  string check_expr = 8;
+  string description = 9;
 }
 
 message DropRowPolicyRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeDropOwnership
+    object_privilege: PrivilegeGroupCollectionReadWrite
     object_name_index: 3
   };
 
@@ -2788,10 +2816,28 @@ message DropRowPolicyRequest {
   string policy_name = 4;
 }
 
+message UpdateRowPolicyRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeGroupCollectionReadWrite
+    object_name_index: 3
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string policy_name = 4;
+  RowPolicyType policy_type = 5;
+  repeated RowPolicyAction actions = 6;
+  string using_expr = 7;
+  string check_expr = 8;
+  string description = 9;
+}
+
 message ListRowPoliciesRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeSelectOwnership
+    object_privilege: PrivilegeGroupCollectionReadOnly
     object_name_index: 3
   };
 
@@ -2802,12 +2848,12 @@ message ListRowPoliciesRequest {
 
 message RowPolicy {
   string policy_name = 1;
-  repeated RowPolicyAction actions = 2;
-  repeated string roles = 3;
+  RowPolicyType policy_type = 2;
+  repeated RowPolicyAction actions = 3;
   string using_expr = 4;
   string check_expr = 5;
   string description = 6;
-  int64 created_at = 7;
+  int64 policy_id = 7;
 }
 
 message ListRowPoliciesResponse {
@@ -2815,6 +2861,74 @@ message ListRowPoliciesResponse {
   repeated RowPolicy policies = 2;
   string db_name = 3;
   string collection_name = 4;
+}
+
+message SetRLSPrincipalTagsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeGroupCollectionReadWrite
+    object_name_index: 3
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string principal_name = 4;
+  map<string, string> tags = 5;
+}
+
+message GetRLSPrincipalTagsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeGroupCollectionReadOnly
+    object_name_index: 3
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string principal_name = 4;
+}
+
+message GetRLSPrincipalTagsResponse {
+  common.Status status = 1;
+  map<string, string> tags = 2;
+  string db_name = 3;
+  string collection_name = 4;
+  string principal_name = 5;
+}
+
+message ListRLSPrincipalsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeGroupCollectionReadOnly
+    object_name_index: 3
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+}
+
+message ListRLSPrincipalsResponse {
+  common.Status status = 1;
+  repeated string principal_names = 2;
+  string db_name = 3;
+  string collection_name = 4;
+}
+
+message DeleteRLSPrincipalTagsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeGroupCollectionReadWrite
+    object_name_index: 3
+  };
+
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  string principal_name = 4;
+  repeated string tag_keys = 5;
 }
 
 message UpdateReplicateConfigurationRequest {
