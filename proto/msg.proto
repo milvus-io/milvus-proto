@@ -128,6 +128,11 @@ message ImportFile {
   int64 id = 1;
   // A singular row-based file or multiple column-based files.
   repeated string paths = 2;
+  // Primary-allocated autoID PK range for this file, replicated via CDC so the
+  // secondary derives identical primary keys from these literal values instead
+  // of allocating its own. Unset (nil) for legacy senders / non-autoID / backup
+  // imports.
+  common.IDRange pk_id_range = 3;
 }
 message ImportMsg {
   common.MsgBase base = 1;

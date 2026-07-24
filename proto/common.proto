@@ -718,3 +718,9 @@ message SearchAggregationSpec {
     SearchAggregationSpec sub_aggregation = 6;         // recursive nesting
     int64 search_size = 7;                             // candidate buckets searched at this level; 0 means size
 }
+
+// IDRange is a half-open range of int64 ids [begin, end).
+message IDRange {
+  int64 begin = 1;
+  int64 end = 2;
+}
