@@ -128,6 +128,12 @@ message ImportFile {
   int64 id = 1;
   // A singular row-based file or multiple column-based files.
   repeated string paths = 2;
+  // Pre-allocated autoID range for this file's rows; the i-th row takes begin+i.
+  // Only meaningful when the primary key has autoID enabled; for a VarChar
+  // primary key the id is materialized as its decimal string form.
+  // end - begin is an upper bound on the file's row count, not necessarily equal.
+  // Unset means the ids are allocated during the import.
+  common.IDRange pre_allocated_auto_ids = 3;
 }
 message ImportMsg {
   common.MsgBase base = 1;
