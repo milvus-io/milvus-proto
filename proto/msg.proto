@@ -139,4 +139,5 @@ message ImportMsg {
   repeated ImportFile files = 7;
   schema.CollectionSchema schema = 8;
   int64 jobID = 9;
+  string idempotency_key = 10;
 }

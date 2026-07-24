@@ -1802,6 +1802,7 @@ message ImportRequest {
   repeated common.KeyValuePair options = 6;  // import options, bucket, etc.
   string db_name = 7;                        // target database
   bytes clustering_info = 8;                 // serialized `schema.ClusteringInfo`
+  string idempotency_key = 9;                // client-provided key for safely retrying an import request
 }
 
 message ImportResponse {
