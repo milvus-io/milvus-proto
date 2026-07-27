@@ -357,6 +357,9 @@ enum MsgType {
     GetRLSPrincipalTags = 2405;
     ListRLSPrincipals = 2406;
     DeleteRLSPrincipalTags = 2407;
+
+    /* Async Snapshot Export */
+    GetExportSnapshotState = 2111;
 }
 
 message MsgBase {
