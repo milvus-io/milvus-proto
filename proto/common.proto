@@ -523,6 +523,8 @@ enum ObjectPrivilege {
     PrivilegeRestoreExternalSnapshot = 89;
     PrivilegeExportSnapshot = 90;
     PrivilegeSkipRLS = 91;
+    PrivilegeViewRLS = 92;
+    PrivilegeManageRLS = 93;
 }
 
 message PrivilegeExt {
