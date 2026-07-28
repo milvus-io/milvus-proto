@@ -90,6 +90,9 @@ message FieldSchema {
   bool nullable = 15; // enable set null as field value
   bool is_function_output =16;
   string external_field = 17; // external field name 
+  // Recursive type definition. When data_type/element_type fields are also populated,
+  // they must describe the same type.
+  TypeSchema type_schema = 18;
 }
 
 message FunctionSchema {
@@ -532,4 +535,17 @@ message TemplateArrayValue {
 
 message TemplateArrayValueArray {
   repeated TemplateArrayValue data = 1;
+}
+
+message TypeSchema {
+  oneof kind {
+    // Non-container types, such as Int64, VarChar, and FloatVector.
+    DataType leaf_type = 1;
+    // Selecting this member means the current node is an Array; its value
+    // describes the element type.
+    TypeSchema array_element = 2;
+  }
+
+  repeated common.KeyValuePair type_params = 3;
+  bool nullable = 4;
 }
