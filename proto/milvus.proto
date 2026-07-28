@@ -3477,6 +3477,7 @@ message ExportSnapshotInfo {
   int64 total_files = 10;
   int64 copied_files = 11;
   string snapshot_metadata_uri = 12; // populated only for completed jobs
+  int64 total_bytes = 13; // total object bytes referenced by the completed export bundle
 }
 
 message GetExportSnapshotStateRequest {
