@@ -3373,10 +3373,21 @@ message GetClientTelemetryResponse {
 message PushClientCommandRequest {
     string command_type = 1;
     bytes payload = 2;
+    // target_client_id addresses one running client process. Client IDs do not survive a
+    // client restart, so this scope is for one-time commands only.
     string target_client_id = 3;
     string target_database = 4;
     int64 ttl_seconds = 5;
     bool persistent = 6;
+    // target_label addresses every client carrying a matching label, as "key=value".
+    // Clients declare labels in ClientInfo.reserved using "label.<key>" entries.
+    //
+    // Unlike target_client_id, a label names a workload rather than a process, so it keeps
+    // matching after a client restarts. This is the scope to use for persistent config.
+    //
+    // If several target fields are set, the most specific wins: target_client_id, then
+    // target_label, then target_database.
+    string target_label = 7;
 }
 
 message PushClientCommandResponse {
