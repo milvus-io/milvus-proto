@@ -238,6 +238,7 @@ service MilvusService {
   rpc RestoreSnapshot(RestoreSnapshotRequest) returns (RestoreSnapshotResponse) {}
   rpc RestoreExternalSnapshot(RestoreExternalSnapshotRequest) returns (RestoreExternalSnapshotResponse) {}
   rpc ExportSnapshot(ExportSnapshotRequest) returns (ExportSnapshotResponse) {}
+  rpc GetExportSnapshotState(GetExportSnapshotStateRequest) returns (GetExportSnapshotStateResponse) {}
   rpc GetRestoreSnapshotState(GetRestoreSnapshotStateRequest) returns (GetRestoreSnapshotStateResponse) {}
   rpc ListRestoreSnapshotJobs(ListRestoreSnapshotJobsRequest) returns (ListRestoreSnapshotJobsResponse) {}
   rpc PinSnapshotData(PinSnapshotDataRequest) returns (PinSnapshotDataResponse) {}
@@ -3183,7 +3184,8 @@ message ExportSnapshotRequest {
 
 message ExportSnapshotResponse {
   common.Status status = 1;
-  string snapshot_metadata_uri = 2;
+  string snapshot_metadata_uri = 2 [deprecated = true];
+  int64 job_id = 3;
 }
 
 enum RestoreSnapshotState {
@@ -3451,4 +3453,45 @@ message ListRefreshExternalCollectionJobsRequest {
 message ListRefreshExternalCollectionJobsResponse {
   common.Status status = 1;
   repeated RefreshExternalCollectionJobInfo jobs = 2;
+}
+
+// Async snapshot export job state and query APIs.
+enum ExportSnapshotState {
+  ExportSnapshotNone = 0;
+  ExportSnapshotPending = 1;   // Job created, waiting to start
+  ExportSnapshotExecuting = 2; // Executing export snapshot job
+  ExportSnapshotCompleted = 3; // All done
+  ExportSnapshotFailed = 4;    // Failed
+}
+
+message ExportSnapshotInfo {
+  int64 job_id = 1;
+  string snapshot_name = 2;
+  string db_name = 3;
+  string collection_name = 4;
+  ExportSnapshotState state = 5;
+  int32 progress = 6; // progress percentage (0-100)
+  string reason = 7;
+  uint64 start_time = 8; // start timestamp in milliseconds
+  uint64 time_cost = 9; // time cost in milliseconds
+  int64 total_files = 10;
+  int64 copied_files = 11;
+  string snapshot_metadata_uri = 12; // populated only for completed jobs
+  int64 total_bytes = 13; // total object bytes referenced by the completed export bundle
+}
+
+message GetExportSnapshotStateRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeExportSnapshot
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  int64 job_id = 2; // export job ID
+}
+
+message GetExportSnapshotStateResponse {
+  common.Status status = 1;
+  ExportSnapshotInfo info = 2;
 }

@@ -160,6 +160,7 @@ const (
 	MilvusService_RestoreSnapshot_FullMethodName                      = "/milvus.proto.milvus.MilvusService/RestoreSnapshot"
 	MilvusService_RestoreExternalSnapshot_FullMethodName              = "/milvus.proto.milvus.MilvusService/RestoreExternalSnapshot"
 	MilvusService_ExportSnapshot_FullMethodName                       = "/milvus.proto.milvus.MilvusService/ExportSnapshot"
+	MilvusService_GetExportSnapshotState_FullMethodName               = "/milvus.proto.milvus.MilvusService/GetExportSnapshotState"
 	MilvusService_GetRestoreSnapshotState_FullMethodName              = "/milvus.proto.milvus.MilvusService/GetRestoreSnapshotState"
 	MilvusService_ListRestoreSnapshotJobs_FullMethodName              = "/milvus.proto.milvus.MilvusService/ListRestoreSnapshotJobs"
 	MilvusService_PinSnapshotData_FullMethodName                      = "/milvus.proto.milvus.MilvusService/PinSnapshotData"
@@ -357,6 +358,7 @@ type MilvusServiceClient interface {
 	RestoreSnapshot(ctx context.Context, in *RestoreSnapshotRequest, opts ...grpc.CallOption) (*RestoreSnapshotResponse, error)
 	RestoreExternalSnapshot(ctx context.Context, in *RestoreExternalSnapshotRequest, opts ...grpc.CallOption) (*RestoreExternalSnapshotResponse, error)
 	ExportSnapshot(ctx context.Context, in *ExportSnapshotRequest, opts ...grpc.CallOption) (*ExportSnapshotResponse, error)
+	GetExportSnapshotState(ctx context.Context, in *GetExportSnapshotStateRequest, opts ...grpc.CallOption) (*GetExportSnapshotStateResponse, error)
 	GetRestoreSnapshotState(ctx context.Context, in *GetRestoreSnapshotStateRequest, opts ...grpc.CallOption) (*GetRestoreSnapshotStateResponse, error)
 	ListRestoreSnapshotJobs(ctx context.Context, in *ListRestoreSnapshotJobsRequest, opts ...grpc.CallOption) (*ListRestoreSnapshotJobsResponse, error)
 	PinSnapshotData(ctx context.Context, in *PinSnapshotDataRequest, opts ...grpc.CallOption) (*PinSnapshotDataResponse, error)
@@ -1676,6 +1678,15 @@ func (c *milvusServiceClient) ExportSnapshot(ctx context.Context, in *ExportSnap
 	return out, nil
 }
 
+func (c *milvusServiceClient) GetExportSnapshotState(ctx context.Context, in *GetExportSnapshotStateRequest, opts ...grpc.CallOption) (*GetExportSnapshotStateResponse, error) {
+	out := new(GetExportSnapshotStateResponse)
+	err := c.cc.Invoke(ctx, MilvusService_GetExportSnapshotState_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *milvusServiceClient) GetRestoreSnapshotState(ctx context.Context, in *GetRestoreSnapshotStateRequest, opts ...grpc.CallOption) (*GetRestoreSnapshotStateResponse, error) {
 	out := new(GetRestoreSnapshotStateResponse)
 	err := c.cc.Invoke(ctx, MilvusService_GetRestoreSnapshotState_FullMethodName, in, out, opts...)
@@ -1943,6 +1954,7 @@ type MilvusServiceServer interface {
 	RestoreSnapshot(context.Context, *RestoreSnapshotRequest) (*RestoreSnapshotResponse, error)
 	RestoreExternalSnapshot(context.Context, *RestoreExternalSnapshotRequest) (*RestoreExternalSnapshotResponse, error)
 	ExportSnapshot(context.Context, *ExportSnapshotRequest) (*ExportSnapshotResponse, error)
+	GetExportSnapshotState(context.Context, *GetExportSnapshotStateRequest) (*GetExportSnapshotStateResponse, error)
 	GetRestoreSnapshotState(context.Context, *GetRestoreSnapshotStateRequest) (*GetRestoreSnapshotStateResponse, error)
 	ListRestoreSnapshotJobs(context.Context, *ListRestoreSnapshotJobsRequest) (*ListRestoreSnapshotJobsResponse, error)
 	PinSnapshotData(context.Context, *PinSnapshotDataRequest) (*PinSnapshotDataResponse, error)
@@ -2375,6 +2387,9 @@ func (UnimplementedMilvusServiceServer) RestoreExternalSnapshot(context.Context,
 }
 func (UnimplementedMilvusServiceServer) ExportSnapshot(context.Context, *ExportSnapshotRequest) (*ExportSnapshotResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExportSnapshot not implemented")
+}
+func (UnimplementedMilvusServiceServer) GetExportSnapshotState(context.Context, *GetExportSnapshotStateRequest) (*GetExportSnapshotStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetExportSnapshotState not implemented")
 }
 func (UnimplementedMilvusServiceServer) GetRestoreSnapshotState(context.Context, *GetRestoreSnapshotStateRequest) (*GetRestoreSnapshotStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRestoreSnapshotState not implemented")
@@ -4928,6 +4943,24 @@ func _MilvusService_ExportSnapshot_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_GetExportSnapshotState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetExportSnapshotStateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).GetExportSnapshotState(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_GetExportSnapshotState_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).GetExportSnapshotState(ctx, req.(*GetExportSnapshotStateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MilvusService_GetRestoreSnapshotState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetRestoreSnapshotStateRequest)
 	if err := dec(in); err != nil {
@@ -5644,6 +5677,10 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ExportSnapshot",
 			Handler:    _MilvusService_ExportSnapshot_Handler,
+		},
+		{
+			MethodName: "GetExportSnapshotState",
+			Handler:    _MilvusService_GetExportSnapshotState_Handler,
 		},
 		{
 			MethodName: "GetRestoreSnapshotState",
