@@ -1394,7 +1394,13 @@ message SearchRequest {
   common.SearchAggregationSpec search_aggregation = 23;
   // Mutually exclusive with function_score. Milvus returns invalid argument if both are set.
   repeated schema.FunctionChain function_chains = 24;
+  // Used by standalone search. When this request is embedded in
+  // HybridSearchRequest.requests, HybridSearchRequest.rls_principal is
+  // authoritative and this field is currently ignored.
   string rls_principal = 25;
+  // Used by standalone search. When this request is embedded in
+  // HybridSearchRequest.requests, HybridSearchRequest.skip_rls is
+  // authoritative and this field is currently ignored.
   bool skip_rls = 26;
 }
 
@@ -1435,7 +1441,11 @@ message HybridSearchRequest {
   // Function chains for top-level hybrid fusion/rerank.
   // Mutually exclusive with function_score. Milvus returns invalid argument if both are set.
   repeated schema.FunctionChain function_chains = 15;
+  // Applies to every sub-search and takes precedence over rls_principal on
+  // nested SearchRequest messages.
   string rls_principal = 16;
+  // Applies to every sub-search and takes precedence over skip_rls on nested
+  // SearchRequest messages.
   bool skip_rls = 17;
 }
 
@@ -2789,7 +2799,7 @@ message ListUsersWithTagResponse {
 message CreateRowPolicyRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeGroupCollectionReadWrite
+    object_privilege: PrivilegeManageRLS
     object_name_index: 3
   };
 
@@ -2807,7 +2817,7 @@ message CreateRowPolicyRequest {
 message DropRowPolicyRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeGroupCollectionReadWrite
+    object_privilege: PrivilegeManageRLS
     object_name_index: 3
   };
 
@@ -2820,7 +2830,7 @@ message DropRowPolicyRequest {
 message UpdateRowPolicyRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeGroupCollectionReadWrite
+    object_privilege: PrivilegeManageRLS
     object_name_index: 3
   };
 
@@ -2838,7 +2848,7 @@ message UpdateRowPolicyRequest {
 message ListRowPoliciesRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeGroupCollectionReadOnly
+    object_privilege: PrivilegeViewRLS
     object_name_index: 3
   };
 
@@ -2867,7 +2877,7 @@ message ListRowPoliciesResponse {
 message SetRLSPrincipalTagsRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeGroupCollectionReadWrite
+    object_privilege: PrivilegeManageRLS
     object_name_index: 3
   };
 
@@ -2881,7 +2891,7 @@ message SetRLSPrincipalTagsRequest {
 message GetRLSPrincipalTagsRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeGroupCollectionReadOnly
+    object_privilege: PrivilegeViewRLS
     object_name_index: 3
   };
 
@@ -2902,7 +2912,7 @@ message GetRLSPrincipalTagsResponse {
 message ListRLSPrincipalsRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeGroupCollectionReadOnly
+    object_privilege: PrivilegeViewRLS
     object_name_index: 3
   };
 
@@ -2921,7 +2931,7 @@ message ListRLSPrincipalsResponse {
 message DeleteRLSPrincipalTagsRequest {
   option (common.privilege_ext_obj) = {
     object_type: Collection
-    object_privilege: PrivilegeGroupCollectionReadWrite
+    object_privilege: PrivilegeManageRLS
     object_name_index: 3
   };
 
