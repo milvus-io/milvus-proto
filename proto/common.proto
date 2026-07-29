@@ -327,6 +327,7 @@ enum MsgType {
     AddCollectionField = 1900;
     /* WAL group */
     AlterWAL = 2000;
+    SplitShard = 2001;
 
     /* Snapshot */
     CreateSnapshot = 2100;
