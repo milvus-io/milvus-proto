@@ -3365,6 +3365,11 @@ message GetClientTelemetryRequest {
     string database = 1;
     string client_id = 2;
     bool include_metrics = 3;
+    // When set, only the reply to this command is returned, instead of every reply the
+    // matching clients have accumulated. A client retains its most recent 50 replies and a
+    // reply payload can reach 1MiB, so a caller polling for one specific answer would
+    // otherwise transfer the whole history on every attempt.
+    string command_id = 4;
 }
 
 message ClientTelemetry {
@@ -3387,7 +3392,14 @@ message PushClientCommandRequest {
     bytes payload = 2;
     string target_client_id = 3;
     string target_database = 4;
-    int64 ttl_seconds = 5;
+    // How long an unanswered command survives. 0 means never expire; a positive value
+    // expires it that many seconds after the push.
+    //
+    // Declared optional so the server can tell an omitted field from an explicit 0 and
+    // apply a default only to the former. Without presence the two are indistinguishable,
+    // and any server-side default silently redefines what an existing caller's 0 means,
+    // with no way for that caller to ask for the old behavior.
+    optional int64 ttl_seconds = 5;
     bool persistent = 6;
 }
 
