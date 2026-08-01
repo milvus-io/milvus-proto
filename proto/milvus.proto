@@ -3395,11 +3395,14 @@ message PushClientCommandRequest {
     // How long an unanswered command survives. 0 means never expire; a positive value
     // expires it that many seconds after the push.
     //
-    // Declared optional so the server can tell an omitted field from an explicit 0 and
-    // apply a default only to the former. Without presence the two are indistinguishable,
-    // and any server-side default silently redefines what an existing caller's 0 means,
-    // with no way for that caller to ask for the old behavior.
-    optional int64 ttl_seconds = 5;
+    // Intentionally not `optional`. Presence would only help senders that know about it:
+    // proto3 implicit presence means a client built against this definition emits nothing
+    // at all for an explicit 0, so a server cannot distinguish that deliberate "never
+    // expire" from an unspecified field no matter how the field is declared. A server-side
+    // default keyed on absence would therefore silently give every existing caller an
+    // expiry it never asked for. Defaulting belongs to layers that can observe absence --
+    // the REST handler decodes ttl_seconds into a pointer and applies its default there.
+    int64 ttl_seconds = 5;
     bool persistent = 6;
 }
 
