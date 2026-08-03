@@ -525,6 +525,7 @@ enum ObjectPrivilege {
     PrivilegeSkipRLS = 91;
     PrivilegeViewRLS = 92;
     PrivilegeManageRLS = 93;
+    PrivilegeImportBinlog = 94;
 }
 
 message PrivilegeExt {
