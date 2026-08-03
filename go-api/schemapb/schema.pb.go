@@ -1828,8 +1828,11 @@ func (x *DoubleArray) GetData() []float64 {
 }
 
 // General-purpose byte-string array.
-// Used for: Decimal (big-endian unscaled integer, 8 or 16 bytes per element),
-// and other variable-width binary fields such as Array and raw binary blobs.
+// Used for: Decimal — each element is the signed unscaled integer
+// (value * 10^scale) encoded as exactly 8 bytes, little-endian, two's
+// complement (precision <= 18 always fits int64). Null rows carry an empty
+// bytes placeholder and are marked invalid via FieldData.valid_data.
+// Also used for other variable-width binary fields such as raw binary blobs.
 type BytesArray struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
