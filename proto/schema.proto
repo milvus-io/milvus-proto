@@ -93,6 +93,7 @@ message FieldSchema {
   // Recursive type definition. When data_type/element_type fields are also populated,
   // they must describe the same type.
   TypeSchema type_schema = 18;
+  bool element_nullable = 19; // enable null elements for Array and ArrayOfVector fields
 }
 
 message FunctionSchema {
@@ -324,6 +325,10 @@ message ScalarField {
     DateArray date_data = 15;
     TimeArray time_data = 16;
   }
+  // Per-value validity for the immediate logical values represented by data.
+  // valid_data[i] is true when logical value i is present and false when it is
+  // null.
+  repeated bool valid_data = 17;
 }
 
 // beta, api may change
@@ -345,6 +350,12 @@ message VectorField {
     bytes int8_vector = 7;
     VectorArray vector_array = 8;
   }
+  // Per-value validity for the immediate logical values represented by data.
+  // It follows the same rules as ScalarField.valid_data: at the top level it
+  // describes field rows and replaces FieldData.valid_data; in VectorArray it
+  // describes the immediate vector or nested-array elements at the current
+  // level. The rule applies recursively at every nested level.
+  repeated bool valid_data = 9;
 }
 
 message VectorArray {
@@ -401,6 +412,10 @@ message FieldData {
   }
   int64 field_id = 5;
   bool is_dynamic = 6;
+  // Legacy top-level validity for scalar and vector fields. New writers must
+  // use ScalarField.valid_data or VectorField.valid_data instead. Readers
+  // should prefer the field-specific validity and fall back to this field only
+  // for payloads produced by legacy writers.
   repeated bool valid_data = 7;
 }
 
