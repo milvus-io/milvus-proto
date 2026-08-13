@@ -347,6 +347,8 @@ enum MsgType {
     RefreshExternalCollection = 2300;
     GetRefreshExternalCollectionProgress = 2301;
     ListRefreshExternalCollectionJobs = 2302;
+    /* Async Snapshot Export */
+    GetExportSnapshotState = 2111;
 }
 
 message MsgBase {
