@@ -2900,7 +2900,10 @@ message SetRLSPrincipalTagsRequest {
   string db_name = 2;
   string collection_name = 3;
   string principal_name = 4;
-  map<string, string> tags = 5;
+  // JSON object containing the principal's tags. Using one opaque JSON value
+  // keeps the wire contract extensible without adding fields for every tag
+  // value type.
+  string tags = 5;
 }
 
 message GetRLSPrincipalTagsRequest {
@@ -2918,7 +2921,8 @@ message GetRLSPrincipalTagsRequest {
 
 message GetRLSPrincipalTagsResponse {
   common.Status status = 1;
-  map<string, string> tags = 2;
+  // JSON object containing the principal's tags.
+  string tags = 2;
   string db_name = 3;
   string collection_name = 4;
   string principal_name = 5;
