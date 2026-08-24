@@ -1363,6 +1363,8 @@ message SubSearchRequest {
   int64 nq = 5;
   map<string, schema.TemplateValue> expr_template_values = 6;
   optional string namespace = 7;
+  // Function chains for this individual sub-search.
+  repeated schema.FunctionChain function_chains = 8;
 }
 
 message SearchRequest {
