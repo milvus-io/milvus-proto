@@ -3091,6 +3091,7 @@ message CreateSnapshotRequest {
   string db_name = 4; // db name
   string collection_name = 5; // collection name
   int64 compaction_protection_seconds = 6; // duration in seconds to protect referenced segments from compaction, 0 = no protection
+  bool skip_index = 7; // if true, omit reusable index definitions and artifacts from the snapshot
 }
 
 message DropSnapshotRequest {
@@ -3145,6 +3146,7 @@ message DescribeSnapshotResponse {
   repeated string partition_names = 5; // the partition names in the snapshot.
   int64 create_ts = 6; // create timestamp, all stream data before this timestamp will be flushed to segment list.
   string s3_location = 7; // s3 location of the snapshot meta file if snapshot is exported to s3.
+  bool skip_index = 8; // whether this snapshot was created without reusable index definitions and artifacts
 }
 
 // restore a snapshot to a new collection
@@ -3162,6 +3164,7 @@ message RestoreSnapshotRequest {
   bool rewrite_data = 5; // if true, use import to rewrite data to collection
   string target_db_name = 6; // target db name (where to restore to)
   string target_collection_name = 7; // target collection name (must not exist)
+  bool skip_index = 8; // if true, restore data without creating or copying indexes
 }
 
 message RestoreSnapshotResponse {
@@ -3185,6 +3188,7 @@ message RestoreExternalSnapshotRequest {
   // Snapshot APIs consume the extfs section for provider, endpoint, region,
   // SSL, IAM, and credential settings.
   string external_spec = 5;
+  bool skip_index = 6; // if true, restore data without creating or copying indexes
 }
 
 message RestoreExternalSnapshotResponse {
