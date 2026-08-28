@@ -198,6 +198,10 @@ enum MsgType {
     AlterCollectionFunction = 117;
     DropCollectionFunction = 118;
     TruncateCollection = 119;
+    // The legacy msgstream type the SplitShard WAL message maps to. Numbered
+    // with the collection DDL above it, since it changes a collection's shard
+    // set rather than administering the WAL.
+    SplitShard = 120;
 
     /* DEFINITION REQUESTS: PARTITION */
     CreatePartition = 200;

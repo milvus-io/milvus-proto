@@ -325,6 +325,75 @@ func (FunctionChainStage) EnumDescriptor() ([]byte, []int) {
 	return file_schema_proto_rawDescGZIP(), []int{3}
 }
 
+// ShardState is where a shard stands in an online shard split. It decides
+// whether a shard takes writes, serves reads, and owns keys, so a consumer that
+// reads nothing else from CollectionShardInfo still reads this.
+//
+// A value this enum does not define may own keys. Fail that shard's keys rather
+// than mapping it onto the zero value or dropping the entry, either of which
+// silently re-routes live keys.
+type ShardState int32
+
+const (
+	// Serving reads and writes, and owning keys. The default, and what every
+	// shard of a collection that has never been split is.
+	ShardState_ShardNormal ShardState = 0
+	// Split target, created but not yet adopted. Takes writes and owns keys, but
+	// is not serviceable for reads: its reads are served by the source that
+	// fronts it until adoption.
+	ShardState_ShardCreating ShardState = 1
+	// Split source, fenced. Rejects writes and owns no keys, but still serves
+	// reads, its own and its targets'.
+	ShardState_ShardSplitting ShardState = 2
+	// Split source, released once its targets are adopted. Serves nothing and
+	// owns no keys; it stays in the vchannel list until a later commit reclaims
+	// it.
+	ShardState_ShardDropped ShardState = 3
+)
+
+// Enum value maps for ShardState.
+var (
+	ShardState_name = map[int32]string{
+		0: "ShardNormal",
+		1: "ShardCreating",
+		2: "ShardSplitting",
+		3: "ShardDropped",
+	}
+	ShardState_value = map[string]int32{
+		"ShardNormal":    0,
+		"ShardCreating":  1,
+		"ShardSplitting": 2,
+		"ShardDropped":   3,
+	}
+)
+
+func (x ShardState) Enum() *ShardState {
+	p := new(ShardState)
+	*p = x
+	return p
+}
+
+func (x ShardState) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ShardState) Descriptor() protoreflect.EnumDescriptor {
+	return file_schema_proto_enumTypes[4].Descriptor()
+}
+
+func (ShardState) Type() protoreflect.EnumType {
+	return &file_schema_proto_enumTypes[4]
+}
+
+func (x ShardState) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ShardState.Descriptor instead.
+func (ShardState) EnumDescriptor() ([]byte, []int) {
+	return file_schema_proto_rawDescGZIP(), []int{4}
+}
+
 type FieldPartialUpdateOp_OpType int32
 
 const (
@@ -366,11 +435,11 @@ func (x FieldPartialUpdateOp_OpType) String() string {
 }
 
 func (FieldPartialUpdateOp_OpType) Descriptor() protoreflect.EnumDescriptor {
-	return file_schema_proto_enumTypes[4].Descriptor()
+	return file_schema_proto_enumTypes[5].Descriptor()
 }
 
 func (FieldPartialUpdateOp_OpType) Type() protoreflect.EnumType {
-	return &file_schema_proto_enumTypes[4]
+	return &file_schema_proto_enumTypes[5]
 }
 
 func (x FieldPartialUpdateOp_OpType) Number() protoreflect.EnumNumber {
@@ -4918,6 +4987,183 @@ func (*TypeSchema_LeafType) isTypeSchema_Kind() {}
 
 func (*TypeSchema_ArrayElement) isTypeSchema_Kind() {}
 
+// CollectionShardInfo describes one shard (vchannel) of a collection. Shared by
+// the collection meta, the rootcoord responses and the in-memory routing
+// tables.
+//
+// Only what is true of the shard itself. A split is a relation between shards
+// and belongs to the split task, which ends; the shards do not.
+type CollectionShardInfo struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The time tick this shard's WAL is truncated up to, 0 if never. Nothing to
+	// do with routing; the truncate API keeps it here.
+	//
+	// Its number is pinned. A separate message that happens to share this one's
+	// name, etcdpb.CollectionShardInfo, holds this field and nothing else in the
+	// collection meta today, and the meta swaps that message for this one at the
+	// same field number -- so records written before the swap must still decode.
+	LastTruncateTimeTick uint64     `protobuf:"varint,1,opt,name=last_truncate_time_tick,json=lastTruncateTimeTick,proto3" json:"last_truncate_time_tick,omitempty"`
+	State                ShardState `protobuf:"varint,2,opt,name=state,proto3,enum=milvus.proto.schema.ShardState" json:"state,omitempty"`
+	// The shard's own vchannel, so a consumer can key by it rather than by
+	// position in a parallel virtual_channel_names array. The server fills it in
+	// on load, so it is always set in a response; a tool reading the meta
+	// directly may find it empty on a record older than the field.
+	VchannelName string `protobuf:"bytes,3,opt,name=vchannel_name,json=vchannelName,proto3" json:"vchannel_name,omitempty"`
+	// Which keys this shard owns. Unset means the collection has never been
+	// split, or this shard is a split source, whose predicate the write switch
+	// strips when it fences.
+	//
+	// A oneof with one member, so a second placement scheme has somewhere to
+	// arrive. It would not be additive: a reader built today sees an unknown
+	// variant as unset and takes that for never-split, so whatever makes the two
+	// distinguishable has to arrive with the variant.
+	//
+	// Types that are assignable to Routing:
+	//
+	//	*CollectionShardInfo_HashRouting
+	Routing isCollectionShardInfo_Routing `protobuf_oneof:"routing"`
+}
+
+func (x *CollectionShardInfo) Reset() {
+	*x = CollectionShardInfo{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_schema_proto_msgTypes[53]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CollectionShardInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CollectionShardInfo) ProtoMessage() {}
+
+func (x *CollectionShardInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_proto_msgTypes[53]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CollectionShardInfo.ProtoReflect.Descriptor instead.
+func (*CollectionShardInfo) Descriptor() ([]byte, []int) {
+	return file_schema_proto_rawDescGZIP(), []int{53}
+}
+
+func (x *CollectionShardInfo) GetLastTruncateTimeTick() uint64 {
+	if x != nil {
+		return x.LastTruncateTimeTick
+	}
+	return 0
+}
+
+func (x *CollectionShardInfo) GetState() ShardState {
+	if x != nil {
+		return x.State
+	}
+	return ShardState_ShardNormal
+}
+
+func (x *CollectionShardInfo) GetVchannelName() string {
+	if x != nil {
+		return x.VchannelName
+	}
+	return ""
+}
+
+func (m *CollectionShardInfo) GetRouting() isCollectionShardInfo_Routing {
+	if m != nil {
+		return m.Routing
+	}
+	return nil
+}
+
+func (x *CollectionShardInfo) GetHashRouting() *HashRouting {
+	if x, ok := x.GetRouting().(*CollectionShardInfo_HashRouting); ok {
+		return x.HashRouting
+	}
+	return nil
+}
+
+type isCollectionShardInfo_Routing interface {
+	isCollectionShardInfo_Routing()
+}
+
+type CollectionShardInfo_HashRouting struct {
+	HashRouting *HashRouting `protobuf:"bytes,4,opt,name=hash_routing,json=hashRouting,proto3,oneof"`
+}
+
+func (*CollectionShardInfo_HashRouting) isCollectionShardInfo_Routing() {}
+
+// HashRouting: the buckets this shard owns.
+//
+// A routing value falls in the bucket it leaves as a remainder modulo the
+// collection's modulus -- one number for the whole collection, held beside the
+// shard infos in the collection meta and reported as routing_modulus on
+// DescribeCollectionResponse. A shard names only its own remainders, so a shard
+// info on its own does not say which keys the shard holds.
+//
+// A list rather than one value, because a shard's share spans more remainders
+// as that modulus grows. Across the shards that carry a predicate the buckets
+// are distinct and cover every remainder below the modulus exactly once --
+// worth checking once per shard table, and not before a collection's first
+// split, when no shard carries one.
+type HashRouting struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Buckets []uint64 `protobuf:"varint,1,rep,packed,name=buckets,proto3" json:"buckets,omitempty"`
+}
+
+func (x *HashRouting) Reset() {
+	*x = HashRouting{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_schema_proto_msgTypes[54]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *HashRouting) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HashRouting) ProtoMessage() {}
+
+func (x *HashRouting) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_proto_msgTypes[54]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HashRouting.ProtoReflect.Descriptor instead.
+func (*HashRouting) Descriptor() ([]byte, []int) {
+	return file_schema_proto_rawDescGZIP(), []int{54}
+}
+
+func (x *HashRouting) GetBuckets() []uint64 {
+	if x != nil {
+		return x.Buckets
+	}
+	return nil
+}
+
 var File_schema_proto protoreflect.FileDescriptor
 
 var file_schema_proto_rawDesc = []byte{
@@ -5631,67 +5877,91 @@ var file_schema_proto_rawDesc = []byte{
 	0x65, 0x50, 0x61, 0x69, 0x72, 0x52, 0x0a, 0x74, 0x79, 0x70, 0x65, 0x50, 0x61, 0x72, 0x61, 0x6d,
 	0x73, 0x12, 0x1a, 0x0a, 0x08, 0x6e, 0x75, 0x6c, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x18, 0x04, 0x20,
 	0x01, 0x28, 0x08, 0x52, 0x08, 0x6e, 0x75, 0x6c, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x42, 0x06, 0x0a,
-	0x04, 0x6b, 0x69, 0x6e, 0x64, 0x2a, 0x90, 0x03, 0x0a, 0x08, 0x44, 0x61, 0x74, 0x61, 0x54, 0x79,
-	0x70, 0x65, 0x12, 0x08, 0x0a, 0x04, 0x4e, 0x6f, 0x6e, 0x65, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04,
-	0x42, 0x6f, 0x6f, 0x6c, 0x10, 0x01, 0x12, 0x08, 0x0a, 0x04, 0x49, 0x6e, 0x74, 0x38, 0x10, 0x02,
-	0x12, 0x09, 0x0a, 0x05, 0x49, 0x6e, 0x74, 0x31, 0x36, 0x10, 0x03, 0x12, 0x09, 0x0a, 0x05, 0x49,
-	0x6e, 0x74, 0x33, 0x32, 0x10, 0x04, 0x12, 0x09, 0x0a, 0x05, 0x49, 0x6e, 0x74, 0x36, 0x34, 0x10,
-	0x05, 0x12, 0x09, 0x0a, 0x05, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x10, 0x0a, 0x12, 0x0a, 0x0a, 0x06,
-	0x44, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x10, 0x0b, 0x12, 0x0a, 0x0a, 0x06, 0x53, 0x74, 0x72, 0x69,
-	0x6e, 0x67, 0x10, 0x14, 0x12, 0x0b, 0x0a, 0x07, 0x56, 0x61, 0x72, 0x43, 0x68, 0x61, 0x72, 0x10,
-	0x15, 0x12, 0x09, 0x0a, 0x05, 0x41, 0x72, 0x72, 0x61, 0x79, 0x10, 0x16, 0x12, 0x08, 0x0a, 0x04,
-	0x4a, 0x53, 0x4f, 0x4e, 0x10, 0x17, 0x12, 0x0c, 0x0a, 0x08, 0x47, 0x65, 0x6f, 0x6d, 0x65, 0x74,
-	0x72, 0x79, 0x10, 0x18, 0x12, 0x08, 0x0a, 0x04, 0x54, 0x65, 0x78, 0x74, 0x10, 0x19, 0x12, 0x0f,
-	0x0a, 0x0b, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x74, 0x7a, 0x10, 0x1a, 0x12,
-	0x07, 0x0a, 0x03, 0x4d, 0x6f, 0x6c, 0x10, 0x1b, 0x12, 0x08, 0x0a, 0x04, 0x44, 0x61, 0x74, 0x65,
-	0x10, 0x1c, 0x12, 0x08, 0x0a, 0x04, 0x54, 0x69, 0x6d, 0x65, 0x10, 0x1d, 0x12, 0x0b, 0x0a, 0x07,
-	0x44, 0x65, 0x63, 0x69, 0x6d, 0x61, 0x6c, 0x10, 0x1e, 0x12, 0x08, 0x0a, 0x04, 0x55, 0x55, 0x49,
-	0x44, 0x10, 0x1f, 0x12, 0x10, 0x0a, 0x0c, 0x42, 0x69, 0x6e, 0x61, 0x72, 0x79, 0x56, 0x65, 0x63,
-	0x74, 0x6f, 0x72, 0x10, 0x64, 0x12, 0x0f, 0x0a, 0x0b, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x56, 0x65,
-	0x63, 0x74, 0x6f, 0x72, 0x10, 0x65, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x31,
-	0x36, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x66, 0x12, 0x12, 0x0a, 0x0e, 0x42, 0x46, 0x6c,
-	0x6f, 0x61, 0x74, 0x31, 0x36, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x67, 0x12, 0x15, 0x0a,
-	0x11, 0x53, 0x70, 0x61, 0x72, 0x73, 0x65, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x56, 0x65, 0x63, 0x74,
-	0x6f, 0x72, 0x10, 0x68, 0x12, 0x0e, 0x0a, 0x0a, 0x49, 0x6e, 0x74, 0x38, 0x56, 0x65, 0x63, 0x74,
-	0x6f, 0x72, 0x10, 0x69, 0x12, 0x11, 0x0a, 0x0d, 0x41, 0x72, 0x72, 0x61, 0x79, 0x4f, 0x66, 0x56,
-	0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x6a, 0x12, 0x12, 0x0a, 0x0d, 0x41, 0x72, 0x72, 0x61, 0x79,
-	0x4f, 0x66, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x10, 0xc8, 0x01, 0x12, 0x0b, 0x0a, 0x06, 0x53,
-	0x74, 0x72, 0x75, 0x63, 0x74, 0x10, 0xc9, 0x01, 0x2a, 0x65, 0x0a, 0x0c, 0x46, 0x75, 0x6e, 0x63,
-	0x74, 0x69, 0x6f, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x6e, 0x6b, 0x6e,
-	0x6f, 0x77, 0x6e, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x42, 0x4d, 0x32, 0x35, 0x10, 0x01, 0x12,
-	0x11, 0x0a, 0x0d, 0x54, 0x65, 0x78, 0x74, 0x45, 0x6d, 0x62, 0x65, 0x64, 0x64, 0x69, 0x6e, 0x67,
-	0x10, 0x02, 0x12, 0x0a, 0x0a, 0x06, 0x52, 0x65, 0x72, 0x61, 0x6e, 0x6b, 0x10, 0x03, 0x12, 0x0b,
-	0x0a, 0x07, 0x4d, 0x69, 0x6e, 0x48, 0x61, 0x73, 0x68, 0x10, 0x04, 0x12, 0x12, 0x0a, 0x0e, 0x4d,
-	0x6f, 0x6c, 0x46, 0x69, 0x6e, 0x67, 0x65, 0x72, 0x70, 0x72, 0x69, 0x6e, 0x74, 0x10, 0x05, 0x2a,
-	0x56, 0x0a, 0x0a, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x10, 0x0a,
-	0x0c, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x10, 0x00, 0x12,
-	0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72, 0x65, 0x61, 0x74, 0x69, 0x6e, 0x67,
-	0x10, 0x01, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x44, 0x72, 0x6f, 0x70, 0x70,
-	0x69, 0x6e, 0x67, 0x10, 0x02, 0x12, 0x10, 0x0a, 0x0c, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x44, 0x72,
-	0x6f, 0x70, 0x70, 0x65, 0x64, 0x10, 0x03, 0x2a, 0xfd, 0x01, 0x0a, 0x12, 0x46, 0x75, 0x6e, 0x63,
-	0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65, 0x12, 0x21,
-	0x0a, 0x1d, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x53,
-	0x74, 0x61, 0x67, 0x65, 0x55, 0x6e, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x65, 0x64, 0x10,
-	0x00, 0x12, 0x1f, 0x0a, 0x1b, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61,
-	0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65, 0x49, 0x6e, 0x67, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e,
-	0x10, 0x01, 0x12, 0x20, 0x0a, 0x1c, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68,
-	0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65, 0x50, 0x72, 0x65, 0x50, 0x72, 0x6f, 0x63, 0x65,
-	0x73, 0x73, 0x10, 0x02, 0x12, 0x1e, 0x0a, 0x1a, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e,
-	0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65, 0x4c, 0x30, 0x52, 0x65, 0x72, 0x61,
-	0x6e, 0x6b, 0x10, 0x03, 0x12, 0x1e, 0x0a, 0x1a, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e,
-	0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65, 0x4c, 0x31, 0x52, 0x65, 0x72, 0x61,
-	0x6e, 0x6b, 0x10, 0x04, 0x12, 0x1e, 0x0a, 0x1a, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e,
-	0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65, 0x4c, 0x32, 0x52, 0x65, 0x72, 0x61,
-	0x6e, 0x6b, 0x10, 0x05, 0x12, 0x21, 0x0a, 0x1d, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e,
-	0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65, 0x50, 0x6f, 0x73, 0x74, 0x50, 0x72,
-	0x6f, 0x63, 0x65, 0x73, 0x73, 0x10, 0x06, 0x42, 0x6d, 0x0a, 0x0e, 0x69, 0x6f, 0x2e, 0x6d, 0x69,
-	0x6c, 0x76, 0x75, 0x73, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x42, 0x0b, 0x53, 0x63, 0x68, 0x65, 0x6d,
-	0x61, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
-	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x69, 0x6f, 0x2f, 0x6d,
-	0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2d, 0x61,
-	0x70, 0x69, 0x2f, 0x76, 0x33, 0x2f, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x70, 0x62, 0xa0, 0x01,
-	0x01, 0xaa, 0x02, 0x12, 0x4d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e,
-	0x74, 0x2e, 0x47, 0x72, 0x70, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x04, 0x6b, 0x69, 0x6e, 0x64, 0x22, 0xfa, 0x01, 0x0a, 0x13, 0x43, 0x6f, 0x6c, 0x6c, 0x65, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x53, 0x68, 0x61, 0x72, 0x64, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x35, 0x0a,
+	0x17, 0x6c, 0x61, 0x73, 0x74, 0x5f, 0x74, 0x72, 0x75, 0x6e, 0x63, 0x61, 0x74, 0x65, 0x5f, 0x74,
+	0x69, 0x6d, 0x65, 0x5f, 0x74, 0x69, 0x63, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x14,
+	0x6c, 0x61, 0x73, 0x74, 0x54, 0x72, 0x75, 0x6e, 0x63, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65,
+	0x54, 0x69, 0x63, 0x6b, 0x12, 0x35, 0x0a, 0x05, 0x73, 0x74, 0x61, 0x74, 0x65, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x0e, 0x32, 0x1f, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x2e, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2e, 0x53, 0x68, 0x61, 0x72, 0x64, 0x53,
+	0x74, 0x61, 0x74, 0x65, 0x52, 0x05, 0x73, 0x74, 0x61, 0x74, 0x65, 0x12, 0x23, 0x0a, 0x0d, 0x76,
+	0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0c, 0x76, 0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x4e, 0x61, 0x6d, 0x65,
+	0x12, 0x45, 0x0a, 0x0c, 0x68, 0x61, 0x73, 0x68, 0x5f, 0x72, 0x6f, 0x75, 0x74, 0x69, 0x6e, 0x67,
+	0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2e, 0x48, 0x61, 0x73,
+	0x68, 0x52, 0x6f, 0x75, 0x74, 0x69, 0x6e, 0x67, 0x48, 0x00, 0x52, 0x0b, 0x68, 0x61, 0x73, 0x68,
+	0x52, 0x6f, 0x75, 0x74, 0x69, 0x6e, 0x67, 0x42, 0x09, 0x0a, 0x07, 0x72, 0x6f, 0x75, 0x74, 0x69,
+	0x6e, 0x67, 0x22, 0x27, 0x0a, 0x0b, 0x48, 0x61, 0x73, 0x68, 0x52, 0x6f, 0x75, 0x74, 0x69, 0x6e,
+	0x67, 0x12, 0x18, 0x0a, 0x07, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03,
+	0x28, 0x04, 0x52, 0x07, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x73, 0x2a, 0x90, 0x03, 0x0a, 0x08,
+	0x44, 0x61, 0x74, 0x61, 0x54, 0x79, 0x70, 0x65, 0x12, 0x08, 0x0a, 0x04, 0x4e, 0x6f, 0x6e, 0x65,
+	0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x42, 0x6f, 0x6f, 0x6c, 0x10, 0x01, 0x12, 0x08, 0x0a, 0x04,
+	0x49, 0x6e, 0x74, 0x38, 0x10, 0x02, 0x12, 0x09, 0x0a, 0x05, 0x49, 0x6e, 0x74, 0x31, 0x36, 0x10,
+	0x03, 0x12, 0x09, 0x0a, 0x05, 0x49, 0x6e, 0x74, 0x33, 0x32, 0x10, 0x04, 0x12, 0x09, 0x0a, 0x05,
+	0x49, 0x6e, 0x74, 0x36, 0x34, 0x10, 0x05, 0x12, 0x09, 0x0a, 0x05, 0x46, 0x6c, 0x6f, 0x61, 0x74,
+	0x10, 0x0a, 0x12, 0x0a, 0x0a, 0x06, 0x44, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x10, 0x0b, 0x12, 0x0a,
+	0x0a, 0x06, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x10, 0x14, 0x12, 0x0b, 0x0a, 0x07, 0x56, 0x61,
+	0x72, 0x43, 0x68, 0x61, 0x72, 0x10, 0x15, 0x12, 0x09, 0x0a, 0x05, 0x41, 0x72, 0x72, 0x61, 0x79,
+	0x10, 0x16, 0x12, 0x08, 0x0a, 0x04, 0x4a, 0x53, 0x4f, 0x4e, 0x10, 0x17, 0x12, 0x0c, 0x0a, 0x08,
+	0x47, 0x65, 0x6f, 0x6d, 0x65, 0x74, 0x72, 0x79, 0x10, 0x18, 0x12, 0x08, 0x0a, 0x04, 0x54, 0x65,
+	0x78, 0x74, 0x10, 0x19, 0x12, 0x0f, 0x0a, 0x0b, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
+	0x70, 0x74, 0x7a, 0x10, 0x1a, 0x12, 0x07, 0x0a, 0x03, 0x4d, 0x6f, 0x6c, 0x10, 0x1b, 0x12, 0x08,
+	0x0a, 0x04, 0x44, 0x61, 0x74, 0x65, 0x10, 0x1c, 0x12, 0x08, 0x0a, 0x04, 0x54, 0x69, 0x6d, 0x65,
+	0x10, 0x1d, 0x12, 0x0b, 0x0a, 0x07, 0x44, 0x65, 0x63, 0x69, 0x6d, 0x61, 0x6c, 0x10, 0x1e, 0x12,
+	0x08, 0x0a, 0x04, 0x55, 0x55, 0x49, 0x44, 0x10, 0x1f, 0x12, 0x10, 0x0a, 0x0c, 0x42, 0x69, 0x6e,
+	0x61, 0x72, 0x79, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x64, 0x12, 0x0f, 0x0a, 0x0b, 0x46,
+	0x6c, 0x6f, 0x61, 0x74, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x65, 0x12, 0x11, 0x0a, 0x0d,
+	0x46, 0x6c, 0x6f, 0x61, 0x74, 0x31, 0x36, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x66, 0x12,
+	0x12, 0x0a, 0x0e, 0x42, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x31, 0x36, 0x56, 0x65, 0x63, 0x74, 0x6f,
+	0x72, 0x10, 0x67, 0x12, 0x15, 0x0a, 0x11, 0x53, 0x70, 0x61, 0x72, 0x73, 0x65, 0x46, 0x6c, 0x6f,
+	0x61, 0x74, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x68, 0x12, 0x0e, 0x0a, 0x0a, 0x49, 0x6e,
+	0x74, 0x38, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x69, 0x12, 0x11, 0x0a, 0x0d, 0x41, 0x72,
+	0x72, 0x61, 0x79, 0x4f, 0x66, 0x56, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x10, 0x6a, 0x12, 0x12, 0x0a,
+	0x0d, 0x41, 0x72, 0x72, 0x61, 0x79, 0x4f, 0x66, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x10, 0xc8,
+	0x01, 0x12, 0x0b, 0x0a, 0x06, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x10, 0xc9, 0x01, 0x2a, 0x65,
+	0x0a, 0x0c, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0b,
+	0x0a, 0x07, 0x55, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x6e, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x42,
+	0x4d, 0x32, 0x35, 0x10, 0x01, 0x12, 0x11, 0x0a, 0x0d, 0x54, 0x65, 0x78, 0x74, 0x45, 0x6d, 0x62,
+	0x65, 0x64, 0x64, 0x69, 0x6e, 0x67, 0x10, 0x02, 0x12, 0x0a, 0x0a, 0x06, 0x52, 0x65, 0x72, 0x61,
+	0x6e, 0x6b, 0x10, 0x03, 0x12, 0x0b, 0x0a, 0x07, 0x4d, 0x69, 0x6e, 0x48, 0x61, 0x73, 0x68, 0x10,
+	0x04, 0x12, 0x12, 0x0a, 0x0e, 0x4d, 0x6f, 0x6c, 0x46, 0x69, 0x6e, 0x67, 0x65, 0x72, 0x70, 0x72,
+	0x69, 0x6e, 0x74, 0x10, 0x05, 0x2a, 0x56, 0x0a, 0x0a, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x53, 0x74,
+	0x61, 0x74, 0x65, 0x12, 0x10, 0x0a, 0x0c, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x65, 0x64, 0x10, 0x00, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x72,
+	0x65, 0x61, 0x74, 0x69, 0x6e, 0x67, 0x10, 0x01, 0x12, 0x11, 0x0a, 0x0d, 0x46, 0x69, 0x65, 0x6c,
+	0x64, 0x44, 0x72, 0x6f, 0x70, 0x70, 0x69, 0x6e, 0x67, 0x10, 0x02, 0x12, 0x10, 0x0a, 0x0c, 0x46,
+	0x69, 0x65, 0x6c, 0x64, 0x44, 0x72, 0x6f, 0x70, 0x70, 0x65, 0x64, 0x10, 0x03, 0x2a, 0xfd, 0x01,
+	0x0a, 0x12, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x53,
+	0x74, 0x61, 0x67, 0x65, 0x12, 0x21, 0x0a, 0x1d, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65, 0x55, 0x6e, 0x73, 0x70, 0x65, 0x63,
+	0x69, 0x66, 0x69, 0x65, 0x64, 0x10, 0x00, 0x12, 0x1f, 0x0a, 0x1b, 0x46, 0x75, 0x6e, 0x63, 0x74,
+	0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65, 0x49, 0x6e, 0x67,
+	0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x10, 0x01, 0x12, 0x20, 0x0a, 0x1c, 0x46, 0x75, 0x6e, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65, 0x50, 0x72,
+	0x65, 0x50, 0x72, 0x6f, 0x63, 0x65, 0x73, 0x73, 0x10, 0x02, 0x12, 0x1e, 0x0a, 0x1a, 0x46, 0x75,
+	0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65,
+	0x4c, 0x30, 0x52, 0x65, 0x72, 0x61, 0x6e, 0x6b, 0x10, 0x03, 0x12, 0x1e, 0x0a, 0x1a, 0x46, 0x75,
+	0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65,
+	0x4c, 0x31, 0x52, 0x65, 0x72, 0x61, 0x6e, 0x6b, 0x10, 0x04, 0x12, 0x1e, 0x0a, 0x1a, 0x46, 0x75,
+	0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65,
+	0x4c, 0x32, 0x52, 0x65, 0x72, 0x61, 0x6e, 0x6b, 0x10, 0x05, 0x12, 0x21, 0x0a, 0x1d, 0x46, 0x75,
+	0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x67, 0x65,
+	0x50, 0x6f, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x63, 0x65, 0x73, 0x73, 0x10, 0x06, 0x2a, 0x56, 0x0a,
+	0x0a, 0x53, 0x68, 0x61, 0x72, 0x64, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x0f, 0x0a, 0x0b, 0x53,
+	0x68, 0x61, 0x72, 0x64, 0x4e, 0x6f, 0x72, 0x6d, 0x61, 0x6c, 0x10, 0x00, 0x12, 0x11, 0x0a, 0x0d,
+	0x53, 0x68, 0x61, 0x72, 0x64, 0x43, 0x72, 0x65, 0x61, 0x74, 0x69, 0x6e, 0x67, 0x10, 0x01, 0x12,
+	0x12, 0x0a, 0x0e, 0x53, 0x68, 0x61, 0x72, 0x64, 0x53, 0x70, 0x6c, 0x69, 0x74, 0x74, 0x69, 0x6e,
+	0x67, 0x10, 0x02, 0x12, 0x10, 0x0a, 0x0c, 0x53, 0x68, 0x61, 0x72, 0x64, 0x44, 0x72, 0x6f, 0x70,
+	0x70, 0x65, 0x64, 0x10, 0x03, 0x42, 0x6d, 0x0a, 0x0e, 0x69, 0x6f, 0x2e, 0x6d, 0x69, 0x6c, 0x76,
+	0x75, 0x73, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x42, 0x0b, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x50,
+	0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
+	0x6f, 0x6d, 0x2f, 0x6d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2d, 0x69, 0x6f, 0x2f, 0x6d, 0x69, 0x6c,
+	0x76, 0x75, 0x73, 0x2d, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2d, 0x61, 0x70, 0x69,
+	0x2f, 0x76, 0x33, 0x2f, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x70, 0x62, 0xa0, 0x01, 0x01, 0xaa,
+	0x02, 0x12, 0x4d, 0x69, 0x6c, 0x76, 0x75, 0x73, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2e,
+	0x47, 0x72, 0x70, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -5706,172 +5976,177 @@ func file_schema_proto_rawDescGZIP() []byte {
 	return file_schema_proto_rawDescData
 }
 
-var file_schema_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_schema_proto_msgTypes = make([]protoimpl.MessageInfo, 57)
+var file_schema_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
+var file_schema_proto_msgTypes = make([]protoimpl.MessageInfo, 59)
 var file_schema_proto_goTypes = []interface{}{
 	(DataType)(0),                    // 0: milvus.proto.schema.DataType
 	(FunctionType)(0),                // 1: milvus.proto.schema.FunctionType
 	(FieldState)(0),                  // 2: milvus.proto.schema.FieldState
 	(FunctionChainStage)(0),          // 3: milvus.proto.schema.FunctionChainStage
-	(FieldPartialUpdateOp_OpType)(0), // 4: milvus.proto.schema.FieldPartialUpdateOp.OpType
-	(*FieldSchema)(nil),              // 5: milvus.proto.schema.FieldSchema
-	(*FunctionSchema)(nil),           // 6: milvus.proto.schema.FunctionSchema
-	(*FunctionScore)(nil),            // 7: milvus.proto.schema.FunctionScore
-	(*FunctionChain)(nil),            // 8: milvus.proto.schema.FunctionChain
-	(*FunctionChainOp)(nil),          // 9: milvus.proto.schema.FunctionChainOp
-	(*FunctionChainExpr)(nil),        // 10: milvus.proto.schema.FunctionChainExpr
-	(*FunctionChainExprArg)(nil),     // 11: milvus.proto.schema.FunctionChainExprArg
-	(*FunctionChainColumnArg)(nil),   // 12: milvus.proto.schema.FunctionChainColumnArg
-	(*FunctionParamValue)(nil),       // 13: milvus.proto.schema.FunctionParamValue
-	(*FunctionParamArray)(nil),       // 14: milvus.proto.schema.FunctionParamArray
-	(*FunctionParamObject)(nil),      // 15: milvus.proto.schema.FunctionParamObject
-	(*CollectionSchema)(nil),         // 16: milvus.proto.schema.CollectionSchema
-	(*StructArrayFieldSchema)(nil),   // 17: milvus.proto.schema.StructArrayFieldSchema
-	(*BoolArray)(nil),                // 18: milvus.proto.schema.BoolArray
-	(*IntArray)(nil),                 // 19: milvus.proto.schema.IntArray
-	(*LongArray)(nil),                // 20: milvus.proto.schema.LongArray
-	(*FloatArray)(nil),               // 21: milvus.proto.schema.FloatArray
-	(*DoubleArray)(nil),              // 22: milvus.proto.schema.DoubleArray
-	(*BytesArray)(nil),               // 23: milvus.proto.schema.BytesArray
-	(*StringArray)(nil),              // 24: milvus.proto.schema.StringArray
-	(*UUIDArray)(nil),                // 25: milvus.proto.schema.UUIDArray
-	(*ArrayArray)(nil),               // 26: milvus.proto.schema.ArrayArray
-	(*JSONArray)(nil),                // 27: milvus.proto.schema.JSONArray
-	(*GeometryArray)(nil),            // 28: milvus.proto.schema.GeometryArray
-	(*TimestamptzArray)(nil),         // 29: milvus.proto.schema.TimestamptzArray
-	(*DateArray)(nil),                // 30: milvus.proto.schema.DateArray
-	(*TimeArray)(nil),                // 31: milvus.proto.schema.TimeArray
-	(*GeometryWktArray)(nil),         // 32: milvus.proto.schema.GeometryWktArray
-	(*MolArray)(nil),                 // 33: milvus.proto.schema.MolArray
-	(*MolSmilesArray)(nil),           // 34: milvus.proto.schema.MolSmilesArray
-	(*ValueField)(nil),               // 35: milvus.proto.schema.ValueField
-	(*ScalarField)(nil),              // 36: milvus.proto.schema.ScalarField
-	(*SparseFloatArray)(nil),         // 37: milvus.proto.schema.SparseFloatArray
-	(*VectorField)(nil),              // 38: milvus.proto.schema.VectorField
-	(*VectorArray)(nil),              // 39: milvus.proto.schema.VectorArray
-	(*StructArrayField)(nil),         // 40: milvus.proto.schema.StructArrayField
-	(*FieldPartialUpdateOp)(nil),     // 41: milvus.proto.schema.FieldPartialUpdateOp
-	(*FieldData)(nil),                // 42: milvus.proto.schema.FieldData
-	(*IDs)(nil),                      // 43: milvus.proto.schema.IDs
-	(*SearchIteratorV2Results)(nil),  // 44: milvus.proto.schema.SearchIteratorV2Results
-	(*SearchResultData)(nil),         // 45: milvus.proto.schema.SearchResultData
-	(*AggBucket)(nil),                // 46: milvus.proto.schema.AggBucket
-	(*MetricValue)(nil),              // 47: milvus.proto.schema.MetricValue
-	(*BucketKeyEntry)(nil),           // 48: milvus.proto.schema.BucketKeyEntry
-	(*AggHit)(nil),                   // 49: milvus.proto.schema.AggHit
-	(*AggHitField)(nil),              // 50: milvus.proto.schema.AggHitField
-	(*VectorClusteringInfo)(nil),     // 51: milvus.proto.schema.VectorClusteringInfo
-	(*ScalarClusteringInfo)(nil),     // 52: milvus.proto.schema.ScalarClusteringInfo
-	(*ClusteringInfo)(nil),           // 53: milvus.proto.schema.ClusteringInfo
-	(*TemplateValue)(nil),            // 54: milvus.proto.schema.TemplateValue
-	(*TemplateArrayValue)(nil),       // 55: milvus.proto.schema.TemplateArrayValue
-	(*TemplateArrayValueArray)(nil),  // 56: milvus.proto.schema.TemplateArrayValueArray
-	(*TypeSchema)(nil),               // 57: milvus.proto.schema.TypeSchema
-	nil,                              // 58: milvus.proto.schema.FunctionChainOp.ParamsEntry
-	nil,                              // 59: milvus.proto.schema.FunctionChainExpr.ParamsEntry
-	nil,                              // 60: milvus.proto.schema.FunctionParamObject.FieldsEntry
-	nil,                              // 61: milvus.proto.schema.AggBucket.MetricsEntry
-	(*commonpb.KeyValuePair)(nil),    // 62: milvus.proto.common.KeyValuePair
-	(*commonpb.HighlightResult)(nil), // 63: milvus.proto.common.HighlightResult
+	(ShardState)(0),                  // 4: milvus.proto.schema.ShardState
+	(FieldPartialUpdateOp_OpType)(0), // 5: milvus.proto.schema.FieldPartialUpdateOp.OpType
+	(*FieldSchema)(nil),              // 6: milvus.proto.schema.FieldSchema
+	(*FunctionSchema)(nil),           // 7: milvus.proto.schema.FunctionSchema
+	(*FunctionScore)(nil),            // 8: milvus.proto.schema.FunctionScore
+	(*FunctionChain)(nil),            // 9: milvus.proto.schema.FunctionChain
+	(*FunctionChainOp)(nil),          // 10: milvus.proto.schema.FunctionChainOp
+	(*FunctionChainExpr)(nil),        // 11: milvus.proto.schema.FunctionChainExpr
+	(*FunctionChainExprArg)(nil),     // 12: milvus.proto.schema.FunctionChainExprArg
+	(*FunctionChainColumnArg)(nil),   // 13: milvus.proto.schema.FunctionChainColumnArg
+	(*FunctionParamValue)(nil),       // 14: milvus.proto.schema.FunctionParamValue
+	(*FunctionParamArray)(nil),       // 15: milvus.proto.schema.FunctionParamArray
+	(*FunctionParamObject)(nil),      // 16: milvus.proto.schema.FunctionParamObject
+	(*CollectionSchema)(nil),         // 17: milvus.proto.schema.CollectionSchema
+	(*StructArrayFieldSchema)(nil),   // 18: milvus.proto.schema.StructArrayFieldSchema
+	(*BoolArray)(nil),                // 19: milvus.proto.schema.BoolArray
+	(*IntArray)(nil),                 // 20: milvus.proto.schema.IntArray
+	(*LongArray)(nil),                // 21: milvus.proto.schema.LongArray
+	(*FloatArray)(nil),               // 22: milvus.proto.schema.FloatArray
+	(*DoubleArray)(nil),              // 23: milvus.proto.schema.DoubleArray
+	(*BytesArray)(nil),               // 24: milvus.proto.schema.BytesArray
+	(*StringArray)(nil),              // 25: milvus.proto.schema.StringArray
+	(*UUIDArray)(nil),                // 26: milvus.proto.schema.UUIDArray
+	(*ArrayArray)(nil),               // 27: milvus.proto.schema.ArrayArray
+	(*JSONArray)(nil),                // 28: milvus.proto.schema.JSONArray
+	(*GeometryArray)(nil),            // 29: milvus.proto.schema.GeometryArray
+	(*TimestamptzArray)(nil),         // 30: milvus.proto.schema.TimestamptzArray
+	(*DateArray)(nil),                // 31: milvus.proto.schema.DateArray
+	(*TimeArray)(nil),                // 32: milvus.proto.schema.TimeArray
+	(*GeometryWktArray)(nil),         // 33: milvus.proto.schema.GeometryWktArray
+	(*MolArray)(nil),                 // 34: milvus.proto.schema.MolArray
+	(*MolSmilesArray)(nil),           // 35: milvus.proto.schema.MolSmilesArray
+	(*ValueField)(nil),               // 36: milvus.proto.schema.ValueField
+	(*ScalarField)(nil),              // 37: milvus.proto.schema.ScalarField
+	(*SparseFloatArray)(nil),         // 38: milvus.proto.schema.SparseFloatArray
+	(*VectorField)(nil),              // 39: milvus.proto.schema.VectorField
+	(*VectorArray)(nil),              // 40: milvus.proto.schema.VectorArray
+	(*StructArrayField)(nil),         // 41: milvus.proto.schema.StructArrayField
+	(*FieldPartialUpdateOp)(nil),     // 42: milvus.proto.schema.FieldPartialUpdateOp
+	(*FieldData)(nil),                // 43: milvus.proto.schema.FieldData
+	(*IDs)(nil),                      // 44: milvus.proto.schema.IDs
+	(*SearchIteratorV2Results)(nil),  // 45: milvus.proto.schema.SearchIteratorV2Results
+	(*SearchResultData)(nil),         // 46: milvus.proto.schema.SearchResultData
+	(*AggBucket)(nil),                // 47: milvus.proto.schema.AggBucket
+	(*MetricValue)(nil),              // 48: milvus.proto.schema.MetricValue
+	(*BucketKeyEntry)(nil),           // 49: milvus.proto.schema.BucketKeyEntry
+	(*AggHit)(nil),                   // 50: milvus.proto.schema.AggHit
+	(*AggHitField)(nil),              // 51: milvus.proto.schema.AggHitField
+	(*VectorClusteringInfo)(nil),     // 52: milvus.proto.schema.VectorClusteringInfo
+	(*ScalarClusteringInfo)(nil),     // 53: milvus.proto.schema.ScalarClusteringInfo
+	(*ClusteringInfo)(nil),           // 54: milvus.proto.schema.ClusteringInfo
+	(*TemplateValue)(nil),            // 55: milvus.proto.schema.TemplateValue
+	(*TemplateArrayValue)(nil),       // 56: milvus.proto.schema.TemplateArrayValue
+	(*TemplateArrayValueArray)(nil),  // 57: milvus.proto.schema.TemplateArrayValueArray
+	(*TypeSchema)(nil),               // 58: milvus.proto.schema.TypeSchema
+	(*CollectionShardInfo)(nil),      // 59: milvus.proto.schema.CollectionShardInfo
+	(*HashRouting)(nil),              // 60: milvus.proto.schema.HashRouting
+	nil,                              // 61: milvus.proto.schema.FunctionChainOp.ParamsEntry
+	nil,                              // 62: milvus.proto.schema.FunctionChainExpr.ParamsEntry
+	nil,                              // 63: milvus.proto.schema.FunctionParamObject.FieldsEntry
+	nil,                              // 64: milvus.proto.schema.AggBucket.MetricsEntry
+	(*commonpb.KeyValuePair)(nil),    // 65: milvus.proto.common.KeyValuePair
+	(*commonpb.HighlightResult)(nil), // 66: milvus.proto.common.HighlightResult
 }
 var file_schema_proto_depIdxs = []int32{
 	0,  // 0: milvus.proto.schema.FieldSchema.data_type:type_name -> milvus.proto.schema.DataType
-	62, // 1: milvus.proto.schema.FieldSchema.type_params:type_name -> milvus.proto.common.KeyValuePair
-	62, // 2: milvus.proto.schema.FieldSchema.index_params:type_name -> milvus.proto.common.KeyValuePair
+	65, // 1: milvus.proto.schema.FieldSchema.type_params:type_name -> milvus.proto.common.KeyValuePair
+	65, // 2: milvus.proto.schema.FieldSchema.index_params:type_name -> milvus.proto.common.KeyValuePair
 	2,  // 3: milvus.proto.schema.FieldSchema.state:type_name -> milvus.proto.schema.FieldState
 	0,  // 4: milvus.proto.schema.FieldSchema.element_type:type_name -> milvus.proto.schema.DataType
-	35, // 5: milvus.proto.schema.FieldSchema.default_value:type_name -> milvus.proto.schema.ValueField
-	57, // 6: milvus.proto.schema.FieldSchema.type_schema:type_name -> milvus.proto.schema.TypeSchema
+	36, // 5: milvus.proto.schema.FieldSchema.default_value:type_name -> milvus.proto.schema.ValueField
+	58, // 6: milvus.proto.schema.FieldSchema.type_schema:type_name -> milvus.proto.schema.TypeSchema
 	1,  // 7: milvus.proto.schema.FunctionSchema.type:type_name -> milvus.proto.schema.FunctionType
-	62, // 8: milvus.proto.schema.FunctionSchema.params:type_name -> milvus.proto.common.KeyValuePair
-	6,  // 9: milvus.proto.schema.FunctionScore.functions:type_name -> milvus.proto.schema.FunctionSchema
-	62, // 10: milvus.proto.schema.FunctionScore.params:type_name -> milvus.proto.common.KeyValuePair
+	65, // 8: milvus.proto.schema.FunctionSchema.params:type_name -> milvus.proto.common.KeyValuePair
+	7,  // 9: milvus.proto.schema.FunctionScore.functions:type_name -> milvus.proto.schema.FunctionSchema
+	65, // 10: milvus.proto.schema.FunctionScore.params:type_name -> milvus.proto.common.KeyValuePair
 	3,  // 11: milvus.proto.schema.FunctionChain.stage:type_name -> milvus.proto.schema.FunctionChainStage
-	9,  // 12: milvus.proto.schema.FunctionChain.ops:type_name -> milvus.proto.schema.FunctionChainOp
-	10, // 13: milvus.proto.schema.FunctionChainOp.expr:type_name -> milvus.proto.schema.FunctionChainExpr
-	58, // 14: milvus.proto.schema.FunctionChainOp.params:type_name -> milvus.proto.schema.FunctionChainOp.ParamsEntry
-	11, // 15: milvus.proto.schema.FunctionChainExpr.args:type_name -> milvus.proto.schema.FunctionChainExprArg
-	59, // 16: milvus.proto.schema.FunctionChainExpr.params:type_name -> milvus.proto.schema.FunctionChainExpr.ParamsEntry
-	12, // 17: milvus.proto.schema.FunctionChainExprArg.column:type_name -> milvus.proto.schema.FunctionChainColumnArg
-	13, // 18: milvus.proto.schema.FunctionChainExprArg.literal:type_name -> milvus.proto.schema.FunctionParamValue
-	14, // 19: milvus.proto.schema.FunctionParamValue.array_value:type_name -> milvus.proto.schema.FunctionParamArray
-	15, // 20: milvus.proto.schema.FunctionParamValue.object_value:type_name -> milvus.proto.schema.FunctionParamObject
-	13, // 21: milvus.proto.schema.FunctionParamArray.values:type_name -> milvus.proto.schema.FunctionParamValue
-	60, // 22: milvus.proto.schema.FunctionParamObject.fields:type_name -> milvus.proto.schema.FunctionParamObject.FieldsEntry
-	5,  // 23: milvus.proto.schema.CollectionSchema.fields:type_name -> milvus.proto.schema.FieldSchema
-	62, // 24: milvus.proto.schema.CollectionSchema.properties:type_name -> milvus.proto.common.KeyValuePair
-	6,  // 25: milvus.proto.schema.CollectionSchema.functions:type_name -> milvus.proto.schema.FunctionSchema
-	17, // 26: milvus.proto.schema.CollectionSchema.struct_array_fields:type_name -> milvus.proto.schema.StructArrayFieldSchema
-	5,  // 27: milvus.proto.schema.StructArrayFieldSchema.fields:type_name -> milvus.proto.schema.FieldSchema
-	62, // 28: milvus.proto.schema.StructArrayFieldSchema.type_params:type_name -> milvus.proto.common.KeyValuePair
-	36, // 29: milvus.proto.schema.ArrayArray.data:type_name -> milvus.proto.schema.ScalarField
+	10, // 12: milvus.proto.schema.FunctionChain.ops:type_name -> milvus.proto.schema.FunctionChainOp
+	11, // 13: milvus.proto.schema.FunctionChainOp.expr:type_name -> milvus.proto.schema.FunctionChainExpr
+	61, // 14: milvus.proto.schema.FunctionChainOp.params:type_name -> milvus.proto.schema.FunctionChainOp.ParamsEntry
+	12, // 15: milvus.proto.schema.FunctionChainExpr.args:type_name -> milvus.proto.schema.FunctionChainExprArg
+	62, // 16: milvus.proto.schema.FunctionChainExpr.params:type_name -> milvus.proto.schema.FunctionChainExpr.ParamsEntry
+	13, // 17: milvus.proto.schema.FunctionChainExprArg.column:type_name -> milvus.proto.schema.FunctionChainColumnArg
+	14, // 18: milvus.proto.schema.FunctionChainExprArg.literal:type_name -> milvus.proto.schema.FunctionParamValue
+	15, // 19: milvus.proto.schema.FunctionParamValue.array_value:type_name -> milvus.proto.schema.FunctionParamArray
+	16, // 20: milvus.proto.schema.FunctionParamValue.object_value:type_name -> milvus.proto.schema.FunctionParamObject
+	14, // 21: milvus.proto.schema.FunctionParamArray.values:type_name -> milvus.proto.schema.FunctionParamValue
+	63, // 22: milvus.proto.schema.FunctionParamObject.fields:type_name -> milvus.proto.schema.FunctionParamObject.FieldsEntry
+	6,  // 23: milvus.proto.schema.CollectionSchema.fields:type_name -> milvus.proto.schema.FieldSchema
+	65, // 24: milvus.proto.schema.CollectionSchema.properties:type_name -> milvus.proto.common.KeyValuePair
+	7,  // 25: milvus.proto.schema.CollectionSchema.functions:type_name -> milvus.proto.schema.FunctionSchema
+	18, // 26: milvus.proto.schema.CollectionSchema.struct_array_fields:type_name -> milvus.proto.schema.StructArrayFieldSchema
+	6,  // 27: milvus.proto.schema.StructArrayFieldSchema.fields:type_name -> milvus.proto.schema.FieldSchema
+	65, // 28: milvus.proto.schema.StructArrayFieldSchema.type_params:type_name -> milvus.proto.common.KeyValuePair
+	37, // 29: milvus.proto.schema.ArrayArray.data:type_name -> milvus.proto.schema.ScalarField
 	0,  // 30: milvus.proto.schema.ArrayArray.element_type:type_name -> milvus.proto.schema.DataType
-	18, // 31: milvus.proto.schema.ScalarField.bool_data:type_name -> milvus.proto.schema.BoolArray
-	19, // 32: milvus.proto.schema.ScalarField.int_data:type_name -> milvus.proto.schema.IntArray
-	20, // 33: milvus.proto.schema.ScalarField.long_data:type_name -> milvus.proto.schema.LongArray
-	21, // 34: milvus.proto.schema.ScalarField.float_data:type_name -> milvus.proto.schema.FloatArray
-	22, // 35: milvus.proto.schema.ScalarField.double_data:type_name -> milvus.proto.schema.DoubleArray
-	24, // 36: milvus.proto.schema.ScalarField.string_data:type_name -> milvus.proto.schema.StringArray
-	23, // 37: milvus.proto.schema.ScalarField.bytes_data:type_name -> milvus.proto.schema.BytesArray
-	26, // 38: milvus.proto.schema.ScalarField.array_data:type_name -> milvus.proto.schema.ArrayArray
-	27, // 39: milvus.proto.schema.ScalarField.json_data:type_name -> milvus.proto.schema.JSONArray
-	28, // 40: milvus.proto.schema.ScalarField.geometry_data:type_name -> milvus.proto.schema.GeometryArray
-	29, // 41: milvus.proto.schema.ScalarField.timestamptz_data:type_name -> milvus.proto.schema.TimestamptzArray
-	32, // 42: milvus.proto.schema.ScalarField.geometry_wkt_data:type_name -> milvus.proto.schema.GeometryWktArray
-	33, // 43: milvus.proto.schema.ScalarField.mol_data:type_name -> milvus.proto.schema.MolArray
-	34, // 44: milvus.proto.schema.ScalarField.mol_smiles_data:type_name -> milvus.proto.schema.MolSmilesArray
-	30, // 45: milvus.proto.schema.ScalarField.date_data:type_name -> milvus.proto.schema.DateArray
-	31, // 46: milvus.proto.schema.ScalarField.time_data:type_name -> milvus.proto.schema.TimeArray
-	21, // 47: milvus.proto.schema.VectorField.float_vector:type_name -> milvus.proto.schema.FloatArray
-	37, // 48: milvus.proto.schema.VectorField.sparse_float_vector:type_name -> milvus.proto.schema.SparseFloatArray
-	39, // 49: milvus.proto.schema.VectorField.vector_array:type_name -> milvus.proto.schema.VectorArray
-	38, // 50: milvus.proto.schema.VectorArray.data:type_name -> milvus.proto.schema.VectorField
+	19, // 31: milvus.proto.schema.ScalarField.bool_data:type_name -> milvus.proto.schema.BoolArray
+	20, // 32: milvus.proto.schema.ScalarField.int_data:type_name -> milvus.proto.schema.IntArray
+	21, // 33: milvus.proto.schema.ScalarField.long_data:type_name -> milvus.proto.schema.LongArray
+	22, // 34: milvus.proto.schema.ScalarField.float_data:type_name -> milvus.proto.schema.FloatArray
+	23, // 35: milvus.proto.schema.ScalarField.double_data:type_name -> milvus.proto.schema.DoubleArray
+	25, // 36: milvus.proto.schema.ScalarField.string_data:type_name -> milvus.proto.schema.StringArray
+	24, // 37: milvus.proto.schema.ScalarField.bytes_data:type_name -> milvus.proto.schema.BytesArray
+	27, // 38: milvus.proto.schema.ScalarField.array_data:type_name -> milvus.proto.schema.ArrayArray
+	28, // 39: milvus.proto.schema.ScalarField.json_data:type_name -> milvus.proto.schema.JSONArray
+	29, // 40: milvus.proto.schema.ScalarField.geometry_data:type_name -> milvus.proto.schema.GeometryArray
+	30, // 41: milvus.proto.schema.ScalarField.timestamptz_data:type_name -> milvus.proto.schema.TimestamptzArray
+	33, // 42: milvus.proto.schema.ScalarField.geometry_wkt_data:type_name -> milvus.proto.schema.GeometryWktArray
+	34, // 43: milvus.proto.schema.ScalarField.mol_data:type_name -> milvus.proto.schema.MolArray
+	35, // 44: milvus.proto.schema.ScalarField.mol_smiles_data:type_name -> milvus.proto.schema.MolSmilesArray
+	31, // 45: milvus.proto.schema.ScalarField.date_data:type_name -> milvus.proto.schema.DateArray
+	32, // 46: milvus.proto.schema.ScalarField.time_data:type_name -> milvus.proto.schema.TimeArray
+	22, // 47: milvus.proto.schema.VectorField.float_vector:type_name -> milvus.proto.schema.FloatArray
+	38, // 48: milvus.proto.schema.VectorField.sparse_float_vector:type_name -> milvus.proto.schema.SparseFloatArray
+	40, // 49: milvus.proto.schema.VectorField.vector_array:type_name -> milvus.proto.schema.VectorArray
+	39, // 50: milvus.proto.schema.VectorArray.data:type_name -> milvus.proto.schema.VectorField
 	0,  // 51: milvus.proto.schema.VectorArray.element_type:type_name -> milvus.proto.schema.DataType
-	42, // 52: milvus.proto.schema.StructArrayField.fields:type_name -> milvus.proto.schema.FieldData
-	4,  // 53: milvus.proto.schema.FieldPartialUpdateOp.op:type_name -> milvus.proto.schema.FieldPartialUpdateOp.OpType
+	43, // 52: milvus.proto.schema.StructArrayField.fields:type_name -> milvus.proto.schema.FieldData
+	5,  // 53: milvus.proto.schema.FieldPartialUpdateOp.op:type_name -> milvus.proto.schema.FieldPartialUpdateOp.OpType
 	0,  // 54: milvus.proto.schema.FieldData.type:type_name -> milvus.proto.schema.DataType
-	36, // 55: milvus.proto.schema.FieldData.scalars:type_name -> milvus.proto.schema.ScalarField
-	38, // 56: milvus.proto.schema.FieldData.vectors:type_name -> milvus.proto.schema.VectorField
-	40, // 57: milvus.proto.schema.FieldData.struct_arrays:type_name -> milvus.proto.schema.StructArrayField
-	20, // 58: milvus.proto.schema.IDs.int_id:type_name -> milvus.proto.schema.LongArray
-	24, // 59: milvus.proto.schema.IDs.str_id:type_name -> milvus.proto.schema.StringArray
-	25, // 60: milvus.proto.schema.IDs.uuid_id:type_name -> milvus.proto.schema.UUIDArray
-	42, // 61: milvus.proto.schema.SearchResultData.fields_data:type_name -> milvus.proto.schema.FieldData
-	43, // 62: milvus.proto.schema.SearchResultData.ids:type_name -> milvus.proto.schema.IDs
-	42, // 63: milvus.proto.schema.SearchResultData.group_by_field_value:type_name -> milvus.proto.schema.FieldData
-	44, // 64: milvus.proto.schema.SearchResultData.search_iterator_v2_results:type_name -> milvus.proto.schema.SearchIteratorV2Results
-	63, // 65: milvus.proto.schema.SearchResultData.highlight_results:type_name -> milvus.proto.common.HighlightResult
-	20, // 66: milvus.proto.schema.SearchResultData.element_indices:type_name -> milvus.proto.schema.LongArray
-	42, // 67: milvus.proto.schema.SearchResultData.group_by_field_values:type_name -> milvus.proto.schema.FieldData
-	46, // 68: milvus.proto.schema.SearchResultData.agg_buckets:type_name -> milvus.proto.schema.AggBucket
-	48, // 69: milvus.proto.schema.AggBucket.key:type_name -> milvus.proto.schema.BucketKeyEntry
-	61, // 70: milvus.proto.schema.AggBucket.metrics:type_name -> milvus.proto.schema.AggBucket.MetricsEntry
-	49, // 71: milvus.proto.schema.AggBucket.hits:type_name -> milvus.proto.schema.AggHit
-	46, // 72: milvus.proto.schema.AggBucket.sub_groups:type_name -> milvus.proto.schema.AggBucket
-	50, // 73: milvus.proto.schema.AggHit.fields:type_name -> milvus.proto.schema.AggHitField
-	38, // 74: milvus.proto.schema.VectorClusteringInfo.centroid:type_name -> milvus.proto.schema.VectorField
-	51, // 75: milvus.proto.schema.ClusteringInfo.vector_clustering_infos:type_name -> milvus.proto.schema.VectorClusteringInfo
-	52, // 76: milvus.proto.schema.ClusteringInfo.scalar_clustering_infos:type_name -> milvus.proto.schema.ScalarClusteringInfo
-	55, // 77: milvus.proto.schema.TemplateValue.array_val:type_name -> milvus.proto.schema.TemplateArrayValue
-	18, // 78: milvus.proto.schema.TemplateArrayValue.bool_data:type_name -> milvus.proto.schema.BoolArray
-	20, // 79: milvus.proto.schema.TemplateArrayValue.long_data:type_name -> milvus.proto.schema.LongArray
-	22, // 80: milvus.proto.schema.TemplateArrayValue.double_data:type_name -> milvus.proto.schema.DoubleArray
-	24, // 81: milvus.proto.schema.TemplateArrayValue.string_data:type_name -> milvus.proto.schema.StringArray
-	56, // 82: milvus.proto.schema.TemplateArrayValue.array_data:type_name -> milvus.proto.schema.TemplateArrayValueArray
-	27, // 83: milvus.proto.schema.TemplateArrayValue.json_data:type_name -> milvus.proto.schema.JSONArray
-	55, // 84: milvus.proto.schema.TemplateArrayValueArray.data:type_name -> milvus.proto.schema.TemplateArrayValue
+	37, // 55: milvus.proto.schema.FieldData.scalars:type_name -> milvus.proto.schema.ScalarField
+	39, // 56: milvus.proto.schema.FieldData.vectors:type_name -> milvus.proto.schema.VectorField
+	41, // 57: milvus.proto.schema.FieldData.struct_arrays:type_name -> milvus.proto.schema.StructArrayField
+	21, // 58: milvus.proto.schema.IDs.int_id:type_name -> milvus.proto.schema.LongArray
+	25, // 59: milvus.proto.schema.IDs.str_id:type_name -> milvus.proto.schema.StringArray
+	26, // 60: milvus.proto.schema.IDs.uuid_id:type_name -> milvus.proto.schema.UUIDArray
+	43, // 61: milvus.proto.schema.SearchResultData.fields_data:type_name -> milvus.proto.schema.FieldData
+	44, // 62: milvus.proto.schema.SearchResultData.ids:type_name -> milvus.proto.schema.IDs
+	43, // 63: milvus.proto.schema.SearchResultData.group_by_field_value:type_name -> milvus.proto.schema.FieldData
+	45, // 64: milvus.proto.schema.SearchResultData.search_iterator_v2_results:type_name -> milvus.proto.schema.SearchIteratorV2Results
+	66, // 65: milvus.proto.schema.SearchResultData.highlight_results:type_name -> milvus.proto.common.HighlightResult
+	21, // 66: milvus.proto.schema.SearchResultData.element_indices:type_name -> milvus.proto.schema.LongArray
+	43, // 67: milvus.proto.schema.SearchResultData.group_by_field_values:type_name -> milvus.proto.schema.FieldData
+	47, // 68: milvus.proto.schema.SearchResultData.agg_buckets:type_name -> milvus.proto.schema.AggBucket
+	49, // 69: milvus.proto.schema.AggBucket.key:type_name -> milvus.proto.schema.BucketKeyEntry
+	64, // 70: milvus.proto.schema.AggBucket.metrics:type_name -> milvus.proto.schema.AggBucket.MetricsEntry
+	50, // 71: milvus.proto.schema.AggBucket.hits:type_name -> milvus.proto.schema.AggHit
+	47, // 72: milvus.proto.schema.AggBucket.sub_groups:type_name -> milvus.proto.schema.AggBucket
+	51, // 73: milvus.proto.schema.AggHit.fields:type_name -> milvus.proto.schema.AggHitField
+	39, // 74: milvus.proto.schema.VectorClusteringInfo.centroid:type_name -> milvus.proto.schema.VectorField
+	52, // 75: milvus.proto.schema.ClusteringInfo.vector_clustering_infos:type_name -> milvus.proto.schema.VectorClusteringInfo
+	53, // 76: milvus.proto.schema.ClusteringInfo.scalar_clustering_infos:type_name -> milvus.proto.schema.ScalarClusteringInfo
+	56, // 77: milvus.proto.schema.TemplateValue.array_val:type_name -> milvus.proto.schema.TemplateArrayValue
+	19, // 78: milvus.proto.schema.TemplateArrayValue.bool_data:type_name -> milvus.proto.schema.BoolArray
+	21, // 79: milvus.proto.schema.TemplateArrayValue.long_data:type_name -> milvus.proto.schema.LongArray
+	23, // 80: milvus.proto.schema.TemplateArrayValue.double_data:type_name -> milvus.proto.schema.DoubleArray
+	25, // 81: milvus.proto.schema.TemplateArrayValue.string_data:type_name -> milvus.proto.schema.StringArray
+	57, // 82: milvus.proto.schema.TemplateArrayValue.array_data:type_name -> milvus.proto.schema.TemplateArrayValueArray
+	28, // 83: milvus.proto.schema.TemplateArrayValue.json_data:type_name -> milvus.proto.schema.JSONArray
+	56, // 84: milvus.proto.schema.TemplateArrayValueArray.data:type_name -> milvus.proto.schema.TemplateArrayValue
 	0,  // 85: milvus.proto.schema.TypeSchema.leaf_type:type_name -> milvus.proto.schema.DataType
-	57, // 86: milvus.proto.schema.TypeSchema.array_element:type_name -> milvus.proto.schema.TypeSchema
-	62, // 87: milvus.proto.schema.TypeSchema.type_params:type_name -> milvus.proto.common.KeyValuePair
-	13, // 88: milvus.proto.schema.FunctionChainOp.ParamsEntry.value:type_name -> milvus.proto.schema.FunctionParamValue
-	13, // 89: milvus.proto.schema.FunctionChainExpr.ParamsEntry.value:type_name -> milvus.proto.schema.FunctionParamValue
-	13, // 90: milvus.proto.schema.FunctionParamObject.FieldsEntry.value:type_name -> milvus.proto.schema.FunctionParamValue
-	47, // 91: milvus.proto.schema.AggBucket.MetricsEntry.value:type_name -> milvus.proto.schema.MetricValue
-	92, // [92:92] is the sub-list for method output_type
-	92, // [92:92] is the sub-list for method input_type
-	92, // [92:92] is the sub-list for extension type_name
-	92, // [92:92] is the sub-list for extension extendee
-	0,  // [0:92] is the sub-list for field type_name
+	58, // 86: milvus.proto.schema.TypeSchema.array_element:type_name -> milvus.proto.schema.TypeSchema
+	65, // 87: milvus.proto.schema.TypeSchema.type_params:type_name -> milvus.proto.common.KeyValuePair
+	4,  // 88: milvus.proto.schema.CollectionShardInfo.state:type_name -> milvus.proto.schema.ShardState
+	60, // 89: milvus.proto.schema.CollectionShardInfo.hash_routing:type_name -> milvus.proto.schema.HashRouting
+	14, // 90: milvus.proto.schema.FunctionChainOp.ParamsEntry.value:type_name -> milvus.proto.schema.FunctionParamValue
+	14, // 91: milvus.proto.schema.FunctionChainExpr.ParamsEntry.value:type_name -> milvus.proto.schema.FunctionParamValue
+	14, // 92: milvus.proto.schema.FunctionParamObject.FieldsEntry.value:type_name -> milvus.proto.schema.FunctionParamValue
+	48, // 93: milvus.proto.schema.AggBucket.MetricsEntry.value:type_name -> milvus.proto.schema.MetricValue
+	94, // [94:94] is the sub-list for method output_type
+	94, // [94:94] is the sub-list for method input_type
+	94, // [94:94] is the sub-list for extension type_name
+	94, // [94:94] is the sub-list for extension extendee
+	0,  // [0:94] is the sub-list for field type_name
 }
 
 func init() { file_schema_proto_init() }
@@ -6516,6 +6791,30 @@ func file_schema_proto_init() {
 				return nil
 			}
 		}
+		file_schema_proto_msgTypes[53].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CollectionShardInfo); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_schema_proto_msgTypes[54].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*HashRouting); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_schema_proto_msgTypes[6].OneofWrappers = []interface{}{
 		(*FunctionChainExprArg_Column)(nil),
@@ -6623,13 +6922,16 @@ func file_schema_proto_init() {
 		(*TypeSchema_LeafType)(nil),
 		(*TypeSchema_ArrayElement)(nil),
 	}
+	file_schema_proto_msgTypes[53].OneofWrappers = []interface{}{
+		(*CollectionShardInfo_HashRouting)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_schema_proto_rawDesc,
-			NumEnums:      5,
-			NumMessages:   57,
+			NumEnums:      6,
+			NumMessages:   59,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
