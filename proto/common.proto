@@ -511,6 +511,7 @@ enum ObjectPrivilege {
     PrivilegeUnpinSnapshotData = 88;
     PrivilegeRestoreExternalSnapshot = 89;
     PrivilegeExportSnapshot = 90;
+    PrivilegeImportBinlog = 94;
 }
 
 message PrivilegeExt {
