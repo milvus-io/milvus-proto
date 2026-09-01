@@ -1,5 +1,6 @@
 .idea
 .vscode
 **/cmake-build/*
+cmake-build
 
 bin/

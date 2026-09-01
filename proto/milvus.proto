@@ -360,8 +360,14 @@ message CreateCollectionRequest {
   string collection_name = 3;
   // The serialized `schema.CollectionSchema`(Required)
   bytes schema = 4;
-  // Once set, no modification is allowed (Optional)
+  // The shard count to create the collection with (Optional). <= 0, the
+  // default in most SDKs, means the server's default.
   // https://github.com/milvus-io/milvus/issues/6690
+  //
+  // There is no API to change it afterwards, but it is not the count for the
+  // collection's lifetime: an online shard split changes how many shards the
+  // collection has, and DescribeCollectionResponse.shards_num reports that
+  // current count rather than this argument.
   int32 shards_num = 5;
   // The consistency level that the collection used, modification is not supported now.
   common.ConsistencyLevel consistency_level = 6;
@@ -482,7 +488,23 @@ message DescribeCollectionResponse {
   uint64 created_timestamp = 6;
   // The utc timestamp calculated by created_timestamp
   uint64 created_utc_timestamp = 7;
-  // The shards number you set.
+  // The number of shards the collection has now: its ShardNormal and
+  // ShardCreating entries in shard_infos. An online shard split moves this, so
+  // it is not the CreateCollection argument once a collection has been split,
+  // and a tool that recreates a collection from it does so at the current
+  // count.
+  //
+  // Mid-split it is smaller than len(virtual_channel_names), which also lists
+  // the fenced source and any dropped shard not yet reclaimed. The two agree
+  // again once that source is reclaimed, which is a later commit of its own.
+  //
+  // Never a routing input, and never a bound over virtual_channel_names:
+  // walking that array as `for i < shards_num` covers a prefix that mid-split
+  // is neither the key-owning shards nor all of them.
+  //
+  // A record persisted before this count was stored decodes to 0, and the
+  // server then derives the value from the vchannel list, which mid-split is
+  // the wrong count.
   int32 shards_num = 8;
   // The aliases of this collection
   repeated string aliases = 9;
@@ -499,6 +521,98 @@ message DescribeCollectionResponse {
   uint64 request_time = 17;
   uint64 update_timestamp = 18;
   string update_timestamp_str = 19;
+  // One entry per virtual_channel_names[i], in the same order, describing that
+  // shard's state and which keys it owns. Empty means the peer predates shard
+  // split.
+  //
+  // READ schema.ShardState EVEN IF NOTHING ELSE. It says which shards take
+  // writes, which serve reads, and which own keys, and those differ during a
+  // split: a ShardCreating target takes writes but is not yet readable, a
+  // ShardSplitting source is fenced for writes but still serves reads, a
+  // ShardDropped source serves nothing while it waits to be reclaimed.
+  //
+  // TO ROUTE A KEY, take the shard whose predicate holds it. A collection that
+  // has never been split carries no predicate at all and routes by the legacy
+  // placement instead, hash(key) % len(virtual_channel_names) over the list in
+  // order -- a valid modulus there and nowhere else, since the first split
+  // gives every key-owning shard a predicate. Test that over the whole table,
+  // ignoring ShardSplitting and ShardDropped entries: a fenced source is
+  // predicate-less by design and sits beside predicated targets for the whole
+  // of a split, so one unset oneof does not mean the collection is unsplit.
+  //
+  // A router that keeps applying the legacy rule to a split collection
+  // mis-places, and only partly runs into anything that stops it: a write to
+  // the fenced source is refused and surfaces, while every other key is
+  // accepted by a shard that does not own it, nothing checking ownership at
+  // write time. Rejecting such a peer needs a signal this response does not
+  // carry.
+  //
+  // AFTER A SPLIT THE VCHANNEL LIST IS NOT A SHARD COUNT -- it also holds the
+  // fenced source and any dropped shard not yet reclaimed. It grows when the
+  // write switch adds the targets and shrinks when a later commit reclaims the
+  // source, which are different moments. physical_channel_names stays
+  // index-parallel through both.
+  //
+  // ORDER TWO OF THESE TABLES BY update_timestamp, which every routing commit
+  // advances: never replace a cached one with a table carrying a lower value.
+  // There is no separate routing version, so it says "not older" rather than
+  // "the routing changed".
+  //
+  // System design related, users should not perceive.
+  repeated schema.CollectionShardInfo shard_infos = 20;
+  // How a row's routing value is computed -- the integer the predicates above
+  // then place. It says nothing about placement: hash(pk) does NOT mean
+  // hash(pk) % shards_num, which stops holding once a collection is split.
+  //
+  //   shard_by := <function> "(" <field> ")"
+  //   <function> := "hash"
+  //   <field>    := every byte up to the closing parenthesis
+  //
+  // <field> IS NOT LEXED AS A USER FIELD NAME. It is taken whole and matched
+  // against the collection's fields and the system fields, one of which begins
+  // with '$' and so does not fit the rules a user field name follows. A reader
+  // that lexes it instead rejects a string the server emits. The spelling is
+  // canonical and compared bytewise: no space, no quoting, no case folding. A
+  // system field may be absent from this response's schema; there is one today,
+  // $namespace_id.
+  //
+  // Test for empty before parsing -- an empty string is not a grammar
+  // violation. A non-empty string that does not match must be rejected whole
+  // and this collection's keys failed, rather than parsed in part or routed by
+  // a guess.
+  //
+  // EMPTY means the routing was never declared, which is every collection until
+  // its first split; the legacy rule above applies. It hashes the NAMESPACE
+  // only when schema.enable_namespace is set AND the property
+  // namespace.sharding.enabled is "true" -- it defaults to false -- AND
+  // namespace.mode is "partition_key", its default. Otherwise the primary key.
+  //
+  // IMMUTABLE: changing which field is hashed changes where every existing row
+  // belongs, and no split expresses that. The named field must belong to this
+  // collection, and its value must be a deterministic function of what the row
+  // stores, since a split recomputes it from the row.
+  string shard_by = 21;
+  // The modulus every routing value is taken against, one number for the whole
+  // collection; a shard lists only which residues of it are its own, and the
+  // residues listed across shard_infos always sum to it.
+  //
+  // 0 on a collection that has never been split, where the legacy rule above
+  // applies and the modulus is len(virtual_channel_names) instead.
+  //
+  // IT DOUBLES ONLY WHEN THE SHARD BEING HALVED OWNS A SINGLE RESIDUE -- the
+  // only case where its share cannot be divided at the current modulus. A shard
+  // owning several is halved by splitting that set, leaving the modulus alone.
+  // So from four shards at modulus 4: splitting one shard four times doubles
+  // every time and ends at 64, while splitting each of the four once doubles
+  // only on the first, which leaves the other three holding two residues apiece
+  // to divide, and ends at 8.
+  //
+  // It stays small because a collection holds at most one vchannel per
+  // pchannel, so its vchannel list cannot outgrow the cluster's pchannel count
+  // -- 16 by default -- and mid-split that list holds the targets as well as
+  // the source they came from. Fifteen doublings on one shard would already
+  // exceed it, so the modulus stays under 2^15.
+  uint64 routing_modulus = 22;
 }
 
 
@@ -671,6 +785,13 @@ message ShowCollectionsResponse {
   repeated int64 inMemory_percentages = 6 [deprecated=true];
   // Indicate whether query service is available
   repeated bool query_service_available = 7;
+  // Per collection, the number of shards it has now, moving with an online
+  // shard split the way DescribeCollectionResponse.shards_num does.
+  //
+  // One difference: a record persisted before the count was stored decodes to
+  // 0, and DescribeCollection derives a value from the vchannel list where this
+  // RPC reports the 0 unchanged. A 0 here means the collection predates the
+  // stored count, not that it has no shards.
   repeated int32 shards_num = 8;
 }
 

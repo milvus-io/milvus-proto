@@ -567,3 +567,78 @@ message TypeSchema {
   repeated common.KeyValuePair type_params = 3;
   bool nullable = 4;
 }
+
+// ShardState is where a shard stands in an online shard split. It decides
+// whether a shard takes writes, serves reads, and owns keys, so a consumer that
+// reads nothing else from CollectionShardInfo still reads this.
+//
+// A value this enum does not define may own keys. Fail that shard's keys rather
+// than mapping it onto the zero value or dropping the entry, either of which
+// silently re-routes live keys.
+enum ShardState {
+  // Serving reads and writes, and owning keys. The default, and what every
+  // shard of a collection that has never been split is.
+  ShardNormal = 0;
+  // Split target, created but not yet adopted. Takes writes and owns keys, but
+  // is not serviceable for reads: its reads are served by the source that
+  // fronts it until adoption.
+  ShardCreating = 1;
+  // Split source, fenced. Rejects writes and owns no keys, but still serves
+  // reads, its own and its targets'.
+  ShardSplitting = 2;
+  // Split source, released once its targets are adopted. Serves nothing and
+  // owns no keys; it stays in the vchannel list until a later commit reclaims
+  // it.
+  ShardDropped = 3;
+}
+
+// CollectionShardInfo describes one shard (vchannel) of a collection. Shared by
+// the collection meta, the rootcoord responses and the in-memory routing
+// tables.
+//
+// Only what is true of the shard itself. A split is a relation between shards
+// and belongs to the split task, which ends; the shards do not.
+message CollectionShardInfo {
+  // The time tick this shard's WAL is truncated up to, 0 if never. Nothing to
+  // do with routing; the truncate API keeps it here.
+  //
+  // Its number is pinned. A separate message that happens to share this one's
+  // name, etcdpb.CollectionShardInfo, holds this field and nothing else in the
+  // collection meta today, and the meta swaps that message for this one at the
+  // same field number -- so records written before the swap must still decode.
+  uint64 last_truncate_time_tick = 1;
+  ShardState state = 2;
+  // The shard's own vchannel, so a consumer can key by it rather than by
+  // position in a parallel virtual_channel_names array. The server fills it in
+  // on load, so it is always set in a response; a tool reading the meta
+  // directly may find it empty on a record older than the field.
+  string vchannel_name = 3;
+  // Which keys this shard owns. Unset means the collection has never been
+  // split, or this shard is a split source, whose predicate the write switch
+  // strips when it fences.
+  //
+  // A oneof with one member, so a second placement scheme has somewhere to
+  // arrive. It would not be additive: a reader built today sees an unknown
+  // variant as unset and takes that for never-split, so whatever makes the two
+  // distinguishable has to arrive with the variant.
+  oneof routing {
+    HashRouting hash_routing = 4;
+  }
+}
+
+// HashRouting: the buckets this shard owns.
+//
+// A routing value falls in the bucket it leaves as a remainder modulo the
+// collection's modulus -- one number for the whole collection, held beside the
+// shard infos in the collection meta and reported as routing_modulus on
+// DescribeCollectionResponse. A shard names only its own remainders, so a shard
+// info on its own does not say which keys the shard holds.
+//
+// A list rather than one value, because a shard's share spans more remainders
+// as that modulus grows. Across the shards that carry a predicate the buckets
+// are distinct and cover every remainder below the modulus exactly once --
+// worth checking once per shard table, and not before a collection's first
+// split, when no shard carries one.
+message HashRouting {
+  repeated uint64 buckets = 1;
+}
