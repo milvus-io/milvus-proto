@@ -146,4 +146,10 @@ message ImportMsg {
   schema.CollectionSchema schema = 8;
   int64 jobID = 9;
   string idempotency_key = 10;
+  // Internal execution compatibility marker preserved by pending broadcaster
+  // tasks, WAL recovery, and CDC forwarding during rolling upgrades.
+  // 0: unspecified or absent; interpreted by Milvus as the legacy V2 path.
+  // 2: execute with ImportTaskV2.
+  // 3: execute with ReshardTask and ImportTaskV3.
+  int64 version = 11;
 }
