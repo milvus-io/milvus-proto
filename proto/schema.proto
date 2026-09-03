@@ -394,12 +394,18 @@ message FieldPartialUpdateOp {
     // the existing array. Requires DataType_Array. No-op when the base
     // array is empty or no element matches.
     ARRAY_REMOVE = 2;
+    // PATH_REPLACE replaces an existing value selected by path. The
+    // supported paths are relative to field_name and use either [index]
+    // or [index][child] syntax.
+    PATH_REPLACE = 3;
   }
   // field_name identifies the FieldData this op targets. Must match a
   // field carried by UpsertRequest.fields_data; unknown field names are
   // rejected by the server.
   string field_name = 1;
   OpType op = 2;
+  // path is required for PATH_REPLACE and must be empty for other ops.
+  string path = 3;
 }
 
 message FieldData {
