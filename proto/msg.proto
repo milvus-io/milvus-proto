@@ -29,6 +29,11 @@ message InsertRequest {
   uint64 num_rows = 14;
   InsertDataVersion version = 15;
   optional string namespace = 16;
+  // Analyzer terms grouped by the source text field that produced them.
+  // Producers emit at most one batch per input field. Consumers merge duplicate
+  // batches for the same input field by byte-wise set union if they encounter
+  // them, which keeps WAL replay deterministic.
+  repeated TextTermBatch text_term_batches = 17;
 }
 
 message DeleteRequest {
@@ -146,4 +151,16 @@ message ImportMsg {
   schema.CollectionSchema schema = 8;
   int64 jobID = 9;
   string idempotency_key = 10;
+}
+
+// TextTermBatch preserves the original analyzer output used to materialize a
+// text function field. Multi-analyzer row dispatch does not partition the field
+// vocabulary: every emitted term belongs to the same BM25 term space.
+message TextTermBatch {
+  // The ID of the source text field in CollectionSchema, never the generated
+  // BM25 sparse-vector output field.
+  int64 input_field_id = 1;
+  // Terms are sorted by raw analyzer-output bytes and deduplicated within this
+  // batch.
+  repeated bytes terms = 2;
 }
