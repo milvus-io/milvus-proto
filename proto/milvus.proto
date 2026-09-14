@@ -1597,12 +1597,17 @@ message PersistentSegmentInfo {
   common.SegmentLevel level = 6;
   bool is_sorted = 7;
   int64 storage_version = 8;
+  string insert_channel = 9;
+  // Direct source segments consumed to create this segment; empty for original segments.
+  repeated int64 compaction_from = 10;
 }
 
 message GetPersistentSegmentInfoRequest {
   common.MsgBase base = 1; // must
   string dbName = 2;
   string collectionName = 3; // must
+  // Empty preserves the legacy behavior and returns persistent segment states.
+  repeated common.SegmentState states = 4;
 }
 
 message GetPersistentSegmentInfoResponse {
@@ -1736,7 +1741,20 @@ message GetCompactionStateResponse {
 }
 
 message GetCompactionPlansRequest {
+  // Selects the plans produced by one manual compaction job when collection_name is empty.
+  // Ignored when collection_name is provided.
   int64 compactionID = 1;
+  // Database containing collection_name; unused when collection_name is empty.
+  string db_name = 2;
+  // When non-empty, selects all retained tasks for this collection, whether
+  // automatically or manually triggered, instead of selecting by compactionID.
+  // Proxy resolves (db_name, collection_name) to collection_id; resolution errors
+  // are returned without falling back to compactionID.
+  string collection_name = 3;
+  // Internal Proxy-to-DataCoord field; clients should leave it unset.
+  // Proxy discards any client-supplied value and populates it only by resolving
+  // collection_name; DataCoord selects by this ID when nonzero, otherwise by compactionID.
+  int64 collection_id = 4;
 }
 
 message GetCompactionPlansResponse {
@@ -1747,7 +1765,18 @@ message GetCompactionPlansResponse {
 
 message CompactionMergeInfo {
   repeated int64 sources = 1;
+  // Legacy first output; use targets for the complete output set.
   int64 target = 2;
+  // plan_id is the server-side compaction task identifier.
+  int64 plan_id = 3;
+  int64 trigger_id = 4;
+  int64 collection_id = 5;
+  int64 partition_id = 6;
+  string channel = 7;
+  common.CompactionType type = 8;
+  common.CompactionTaskState state = 9;
+  string failure_reason = 10;
+  repeated int64 targets = 11;
 }
 
 message GetFlushStateRequest {
