@@ -1891,12 +1891,19 @@ message GetCompactionStateResponse {
 }
 
 message GetCompactionPlansRequest {
-  // Selects the plans produced by one manual compaction job.
+  // Selects the plans produced by one manual compaction job when collection_name is empty.
+  // Ignored when collection_name is provided.
   int64 compactionID = 1;
-  // collection_name selects every compaction task retained for the collection.
+  // Database containing collection_name; unused when collection_name is empty.
   string db_name = 2;
+  // When non-empty, selects all retained tasks for this collection, whether
+  // automatically or manually triggered, instead of selecting by compactionID.
+  // Proxy resolves (db_name, collection_name) to collection_id; resolution errors
+  // are returned without falling back to compactionID.
   string collection_name = 3;
-  // Resolved by the server-side proxy; when set it takes precedence over compactionID.
+  // Internal Proxy-to-DataCoord field; clients should leave it unset.
+  // Proxy discards any client-supplied value and populates it only by resolving
+  // collection_name; DataCoord selects by this ID when nonzero, otherwise by compactionID.
   int64 collection_id = 4;
 }
 
@@ -1916,8 +1923,8 @@ message CompactionMergeInfo {
   int64 collection_id = 5;
   int64 partition_id = 6;
   string channel = 7;
-  string type = 8;
-  string state = 9;
+  common.CompactionType type = 8;
+  common.CompactionTaskState state = 9;
   string failure_reason = 10;
   repeated int64 targets = 11;
 }
