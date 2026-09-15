@@ -390,6 +390,39 @@ enum CompactionState {
     Completed = 2;
 }
 
+// State of one compaction task, distinct from the aggregate CompactionState.
+enum CompactionTaskState {
+    CompactionTaskStateUnknown = 0;
+    CompactionTaskStateExecuting = 1;
+    CompactionTaskStatePipelining = 2;
+    CompactionTaskStateCompleted = 3;
+    CompactionTaskStateFailed = 4;
+    CompactionTaskStateTimeout = 5;
+    CompactionTaskStateAnalyzing = 6;
+    CompactionTaskStateIndexing = 7;
+    // Cleanup does not by itself indicate whether the task succeeded.
+    CompactionTaskStateCleaned = 8;
+    CompactionTaskStateMetaSaved = 9;
+    CompactionTaskStateStatistic = 10;
+}
+
+// Type of one compaction task.
+enum CompactionType {
+    CompactionTypeUndefined = 0;
+    reserved 1;
+    CompactionTypeMerge = 2;
+    CompactionTypeMix = 3;
+    CompactionTypeSingle = 4;
+    CompactionTypeMinor = 5;
+    CompactionTypeMajor = 6;
+    CompactionTypeLevel0Delete = 7;
+    CompactionTypeClustering = 8;
+    CompactionTypeSort = 9;
+    CompactionTypePartitionKeySort = 10;
+    CompactionTypeClusteringPartitionKeySort = 11;
+    CompactionTypeBumpSchemaVersion = 12;
+}
+
 enum ConsistencyLevel {
     Strong = 0;
     Session = 1; // default in PyMilvus
