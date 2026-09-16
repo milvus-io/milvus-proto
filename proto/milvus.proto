@@ -250,6 +250,10 @@ service MilvusService {
   rpc RefreshExternalCollection(RefreshExternalCollectionRequest) returns (RefreshExternalCollectionResponse) {}
   rpc GetRefreshExternalCollectionProgress(GetRefreshExternalCollectionProgressRequest) returns (GetRefreshExternalCollectionProgressResponse) {}
   rpc ListRefreshExternalCollectionJobs(ListRefreshExternalCollectionJobsRequest) returns (ListRefreshExternalCollectionJobsResponse) {}
+
+  // Running request APIs
+  rpc ListRunningRequests(ListRunningRequestsRequest) returns (ListRunningRequestsResponse) {}
+  rpc CancelRequests(CancelRequestsRequest) returns (CancelRequestsResponse) {}
 }
 
 // Client Telemetry Service
@@ -3693,4 +3697,101 @@ message GetExportSnapshotStateRequest {
 message GetExportSnapshotStateResponse {
   common.Status status = 1;
   ExportSnapshotInfo info = 2;
+}
+
+// Running request APIs: observe the requests a cluster is currently serving
+// and stop one of them.
+//
+// The pair is defined over the requests registered on a proxy, not over one
+// request type: `type` says what each row is. Only read requests (Search,
+// HybridSearch, Query) are registered today, and all of them are cancellable.
+// A type that is listed but cannot be stopped reports cancellable = false.
+
+message RunningRequestInfo {
+  // Cluster-unique id of the request, the handle CancelRequests takes.
+  int64 request_id = 1;
+  // Proxy serving the request.
+  int64 proxy_id = 2;
+  // Search | HybridSearch | Query
+  string type = 3;
+  string db_name = 4;
+  string collection_name = 5;
+  string user = 6;
+  // Address of the client that issued the request.
+  string client_addr = 7;
+  int64 nq = 8;
+  int64 topk = 9;
+  // Filter expression, truncated to a bounded prefix.
+  string expr = 10;
+  // When the proxy received the request, in milliseconds since the epoch.
+  int64 start_time_ms = 11;
+  // Scheduler queue wait of the request's first task; 0 before it starts.
+  int64 queued_ms = 12;
+  // How long the request has been running, computed when the row is produced.
+  int64 elapsed_ms = 13;
+  // Queued | Running
+  string state = 14;
+  // Scheduler task ids the request has spawned, for correlating with logs.
+  repeated int64 task_ids = 15;
+  string trace_id = 16;
+  // False for a request type that is listed but cannot be cancelled.
+  bool cancellable = 17;
+}
+
+// Per-node outcome of a cluster-wide call, so that one unreachable or
+// not-yet-upgraded proxy does not hide the results of the others.
+message RunningRequestNodeResult {
+  int64 node_id = 1;
+  common.Status status = 2;
+  // True when the node does not implement the call, i.e. a rolling upgrade is
+  // in progress and its requests could neither be listed nor cancelled.
+  bool unimplemented = 3;
+}
+
+message ListRunningRequestsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeListRunningRequests
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  // Filters, combined with AND. An empty string or 0 means no constraint;
+  // db_name and collection_name match exactly.
+  string db_name = 2;
+  string collection_name = 3;
+  string user = 4;
+  int64 min_elapsed_ms = 5;
+}
+
+message ListRunningRequestsResponse {
+  common.Status status = 1;
+  repeated RunningRequestInfo requests = 2;
+  repeated RunningRequestNodeResult node_results = 3;
+}
+
+message CancelRequestsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCancelRequests
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  // Ids to cancel, as reported by ListRunningRequests. Empty is an error.
+  repeated int64 request_ids = 2;
+  // Free-text reason, recorded in the audit log and returned to the client
+  // whose request was cancelled.
+  string reason = 3;
+}
+
+message CancelRequestsResponse {
+  common.Status status = 1;
+  // One entry per cancelled request, describing it as it was at the moment of
+  // cancellation: elapsed_ms is how long it had been running when it was
+  // stopped.
+  repeated RunningRequestInfo cancelled = 2;
+  // Ids no proxy holds: already finished, or never existed.
+  repeated int64 not_found = 3;
+  repeated RunningRequestNodeResult node_results = 4;
 }

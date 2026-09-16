@@ -563,6 +563,8 @@ enum ObjectPrivilege {
     PrivilegeViewRLS = 92;
     PrivilegeManageRLS = 93;
     PrivilegeImportBinlog = 94;
+    PrivilegeListRunningRequests = 95;
+    PrivilegeCancelRequests = 96;
 }
 
 message PrivilegeExt {
