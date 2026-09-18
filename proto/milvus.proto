@@ -3787,10 +3787,10 @@ message CancelRequestsRequest {
 
 message CancelRequestsResponse {
   common.Status status = 1;
-  // One entry per cancelled request, describing it as it was at the moment of
+  // One entry per canceled request, describing it as it was at the moment of
   // cancellation: elapsed_ms is how long it had been running when it was
   // stopped.
-  repeated RunningRequestInfo cancelled = 2;
+  repeated RunningRequestInfo canceled = 2;
   // Ids no proxy holds: already finished, or never existed.
   repeated int64 not_found = 3;
   repeated RunningRequestNodeResult node_results = 4;
