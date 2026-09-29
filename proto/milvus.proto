@@ -1987,6 +1987,8 @@ message ImportRequest {
   repeated common.KeyValuePair options = 6;  // import options, bucket, etc.
   string db_name = 7;                        // target database
   bytes clustering_info = 8;                 // serialized `schema.ClusteringInfo`
+  string rls_principal = 9;                 // application-level principal used for RLS evaluation
+  bool skip_rls = 10;                       // request an authorized RLS bypass
 }
 
 message ImportResponse {

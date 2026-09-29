@@ -151,4 +151,8 @@ message ImportMsg {
   // 2: execute with ImportTaskV2.
   // 3: execute with ReshardTask and ImportTaskV3.
   int64 version = 10;
+  // Request-level RLS context persisted in the import command. skip_rls is
+  // set only after the submitting Proxy authorizes the bypass.
+  string rls_principal = 11;
+  bool skip_rls = 12;
 }
