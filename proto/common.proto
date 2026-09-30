@@ -328,6 +328,16 @@ enum MsgType {
 
     /* WAL group */
     AlterWAL = 2000;
+
+    /* Row-Level Security */
+    CreateRowPolicy = 2400;
+    DropRowPolicy = 2401;
+    ListRowPolicies = 2402;
+    UpdateRowPolicy = 2403;
+    SetRLSPrincipalTags = 2404;
+    GetRLSPrincipalTags = 2405;
+    ListRLSPrincipals = 2406;
+    DeleteRLSPrincipalTags = 2407;
 }
 
 message MsgBase {
@@ -478,6 +488,9 @@ enum ObjectPrivilege {
     PrivilegeListFileResources = 74;
     PrivilegeUpdateReplicateConfiguration = 78;
     PrivilegeGetReplicateConfiguration = 85;
+    PrivilegeSkipRLS = 91;
+    PrivilegeViewRLS = 92;
+    PrivilegeManageRLS = 93;
     PrivilegeImportBinlog = 94;
 }
 
