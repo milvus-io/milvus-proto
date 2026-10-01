@@ -3765,6 +3765,9 @@ message ListRunningRequestsRequest {
 }
 
 message ListRunningRequestsResponse {
+  // Success as long as at least one proxy answered; a proxy that did not is
+  // reported in node_results, and its requests are missing from requests.
+  // An error only when the call itself was rejected or no proxy answered.
   common.Status status = 1;
   repeated RunningRequestInfo requests = 2;
   repeated RunningRequestNodeResult node_results = 3;
@@ -3781,17 +3784,29 @@ message CancelRequestsRequest {
   // Ids to cancel, as reported by ListRunningRequests. Empty is an error.
   repeated int64 request_ids = 2;
   // Free-text reason, recorded in the audit log and returned to the client
-  // whose request was cancelled.
+  // whose request was canceled.
   string reason = 3;
 }
 
 message CancelRequestsResponse {
+  // Success as long as at least one proxy answered; a proxy that did not is
+  // reported in node_results. An error only when the call itself was rejected
+  // or no proxy answered.
   common.Status status = 1;
   // One entry per canceled request, describing it as it was at the moment of
   // cancellation: elapsed_ms is how long it had been running when it was
-  // stopped.
+  // stopped, and state is the state it was in before it was canceled (queued
+  // or running), not a canceled state.
   repeated RunningRequestInfo canceled = 2;
-  // Ids no proxy holds: already finished, or never existed.
+  // Ids that no proxy holds, known because every proxy answered: the request
+  // already finished, or never existed. A proxy too old to serve this call
+  // counts as having answered, since it registers no requests. Empty whenever
+  // some proxy did not answer; those ids are reported in undetermined instead.
   repeated int64 not_found = 3;
   repeated RunningRequestNodeResult node_results = 4;
+  // Ids not canceled while some proxy did not answer (see node_results): a
+  // request id does not say which proxy holds it, so each of these may be
+  // running on a proxy that was not reached, or may have finished. Retry the
+  // cancel, or list again, once that proxy is back.
+  repeated int64 undetermined = 5;
 }
