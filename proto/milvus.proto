@@ -3702,6 +3702,11 @@ message GetExportSnapshotStateResponse {
 // Running request APIs: observe the requests a cluster is currently serving
 // and stop one of them.
 //
+// Any user may list and cancel the requests they issued themselves.
+// Listing other users' requests needs PrivilegeListRunningRequests, and
+// canceling them needs PrivilegeCancelRequests; a caller without the
+// privilege is held to their own requests (see the user fields below).
+//
 // The pair is defined over the requests registered on a proxy, not over one
 // request type: `type` says what each row is. Only read requests (Search,
 // HybridSearch, Query) are registered today, and all of them are cancellable.
@@ -3734,7 +3739,7 @@ message RunningRequestInfo {
   // Scheduler task ids the request has spawned, for correlating with logs.
   repeated int64 task_ids = 15;
   string trace_id = 16;
-  // False for a request type that is listed but cannot be cancelled.
+  // False for a request type that is listed but cannot be canceled.
   bool cancellable = 17;
 }
 
@@ -3744,7 +3749,7 @@ message RunningRequestNodeResult {
   int64 node_id = 1;
   common.Status status = 2;
   // True when the node does not implement the call, i.e. a rolling upgrade is
-  // in progress and its requests could neither be listed nor cancelled.
+  // in progress and its requests could neither be listed nor canceled.
   bool unimplemented = 3;
 }
 
@@ -3760,6 +3765,8 @@ message ListRunningRequestsRequest {
   // db_name and collection_name match exactly.
   string db_name = 2;
   string collection_name = 3;
+  // For a caller without PrivilegeListRunningRequests, empty means the
+  // caller's own name, and any other name is denied.
   string user = 4;
   int64 min_elapsed_ms = 5;
 }
@@ -3786,6 +3793,11 @@ message CancelRequestsRequest {
   // Free-text reason, recorded in the audit log and returned to the client
   // whose request was canceled.
   string reason = 3;
+  // When set, only requests issued by this user are canceled; the ids of
+  // other users' requests are reported as not found, so their existence is
+  // not revealed. For a caller without PrivilegeCancelRequests, empty means
+  // the caller's own name, and any other name is denied.
+  string user = 4;
 }
 
 message CancelRequestsResponse {
@@ -3799,7 +3811,8 @@ message CancelRequestsResponse {
   // or running), not a canceled state.
   repeated RunningRequestInfo canceled = 2;
   // Ids that no proxy holds, known because every proxy answered: the request
-  // already finished, or never existed. A proxy too old to serve this call
+  // already finished, never existed, or (when user is set) was issued by
+  // another user. A proxy too old to serve this call
   // counts as having answered, since it registers no requests. Empty whenever
   // some proxy did not answer; those ids are reported in undetermined instead.
   repeated int64 not_found = 3;
