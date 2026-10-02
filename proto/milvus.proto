@@ -250,6 +250,10 @@ service MilvusService {
   rpc RefreshExternalCollection(RefreshExternalCollectionRequest) returns (RefreshExternalCollectionResponse) {}
   rpc GetRefreshExternalCollectionProgress(GetRefreshExternalCollectionProgressRequest) returns (GetRefreshExternalCollectionProgressResponse) {}
   rpc ListRefreshExternalCollectionJobs(ListRefreshExternalCollectionJobsRequest) returns (ListRefreshExternalCollectionJobsResponse) {}
+
+  // Running request APIs
+  rpc ListRunningRequests(ListRunningRequestsRequest) returns (ListRunningRequestsResponse) {}
+  rpc CancelRequests(CancelRequestsRequest) returns (CancelRequestsResponse) {}
 }
 
 // Client Telemetry Service
@@ -3693,4 +3697,129 @@ message GetExportSnapshotStateRequest {
 message GetExportSnapshotStateResponse {
   common.Status status = 1;
   ExportSnapshotInfo info = 2;
+}
+
+// Running request APIs: observe the requests a cluster is currently serving
+// and stop one of them.
+//
+// Any user may list and cancel the requests they issued themselves.
+// Listing other users' requests needs PrivilegeListRunningRequests, and
+// canceling them needs PrivilegeCancelRequests; a caller without the
+// privilege is held to their own requests (see the user fields below).
+//
+// The pair is defined over the requests registered on a proxy, not over one
+// request type: `type` says what each row is. Only read requests (Search,
+// HybridSearch, Query) are registered today, and all of them are cancellable.
+// A type that is listed but cannot be stopped reports cancellable = false.
+
+message RunningRequestInfo {
+  // Cluster-unique id of the request, the handle CancelRequests takes.
+  int64 request_id = 1;
+  // Proxy serving the request.
+  int64 proxy_id = 2;
+  // Search | HybridSearch | Query
+  string type = 3;
+  string db_name = 4;
+  string collection_name = 5;
+  string user = 6;
+  // Address of the client that issued the request.
+  string client_addr = 7;
+  int64 nq = 8;
+  int64 topk = 9;
+  // Filter expression, truncated to a bounded prefix.
+  string expr = 10;
+  // When the proxy received the request, in milliseconds since the epoch.
+  int64 start_time_ms = 11;
+  // Scheduler queue wait of the request's first task; 0 before it starts.
+  int64 queued_ms = 12;
+  // How long the request has been running, computed when the row is produced.
+  int64 elapsed_ms = 13;
+  // Queued | Running
+  string state = 14;
+  // Scheduler task ids the request has spawned, for correlating with logs.
+  repeated int64 task_ids = 15;
+  string trace_id = 16;
+  // False for a request type that is listed but cannot be canceled.
+  bool cancellable = 17;
+}
+
+// Per-node outcome of a cluster-wide call, so that one unreachable or
+// not-yet-upgraded proxy does not hide the results of the others.
+message RunningRequestNodeResult {
+  int64 node_id = 1;
+  common.Status status = 2;
+  // True when the node does not implement the call, i.e. a rolling upgrade is
+  // in progress and its requests could neither be listed nor canceled.
+  bool unimplemented = 3;
+}
+
+message ListRunningRequestsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeListRunningRequests
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  // Filters, combined with AND. An empty string or 0 means no constraint;
+  // db_name and collection_name match exactly.
+  string db_name = 2;
+  string collection_name = 3;
+  // For a caller without PrivilegeListRunningRequests, empty means the
+  // caller's own name, and any other name is denied.
+  string user = 4;
+  int64 min_elapsed_ms = 5;
+}
+
+message ListRunningRequestsResponse {
+  // Success as long as at least one proxy answered; a proxy that did not is
+  // reported in node_results, and its requests are missing from requests.
+  // An error only when the call itself was rejected or no proxy answered.
+  common.Status status = 1;
+  repeated RunningRequestInfo requests = 2;
+  repeated RunningRequestNodeResult node_results = 3;
+}
+
+message CancelRequestsRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Global
+    object_privilege: PrivilegeCancelRequests
+    object_name_index: -1
+  };
+
+  common.MsgBase base = 1;
+  // Ids to cancel, as reported by ListRunningRequests. Empty is an error.
+  repeated int64 request_ids = 2;
+  // Free-text reason, recorded in the audit log and returned to the client
+  // whose request was canceled.
+  string reason = 3;
+  // When set, only requests issued by this user are canceled; the ids of
+  // other users' requests are reported as not found, so their existence is
+  // not revealed. For a caller without PrivilegeCancelRequests, empty means
+  // the caller's own name, and any other name is denied.
+  string user = 4;
+}
+
+message CancelRequestsResponse {
+  // Success as long as at least one proxy answered; a proxy that did not is
+  // reported in node_results. An error only when the call itself was rejected
+  // or no proxy answered.
+  common.Status status = 1;
+  // One entry per canceled request, describing it as it was at the moment of
+  // cancellation: elapsed_ms is how long it had been running when it was
+  // stopped, and state is the state it was in before it was canceled (queued
+  // or running), not a canceled state.
+  repeated RunningRequestInfo canceled = 2;
+  // Ids that no proxy holds, known because every proxy answered: the request
+  // already finished, never existed, or (when user is set) was issued by
+  // another user. A proxy too old to serve this call
+  // counts as having answered, since it registers no requests. Empty whenever
+  // some proxy did not answer; those ids are reported in undetermined instead.
+  repeated int64 not_found = 3;
+  repeated RunningRequestNodeResult node_results = 4;
+  // Ids not canceled while some proxy did not answer (see node_results): a
+  // request id does not say which proxy holds it, so each of these may be
+  // running on a proxy that was not reached, or may have finished. Retry the
+  // cancel, or list again, once that proxy is back.
+  repeated int64 undetermined = 5;
 }

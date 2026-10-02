@@ -170,6 +170,8 @@ const (
 	MilvusService_RefreshExternalCollection_FullMethodName            = "/milvus.proto.milvus.MilvusService/RefreshExternalCollection"
 	MilvusService_GetRefreshExternalCollectionProgress_FullMethodName = "/milvus.proto.milvus.MilvusService/GetRefreshExternalCollectionProgress"
 	MilvusService_ListRefreshExternalCollectionJobs_FullMethodName    = "/milvus.proto.milvus.MilvusService/ListRefreshExternalCollectionJobs"
+	MilvusService_ListRunningRequests_FullMethodName                  = "/milvus.proto.milvus.MilvusService/ListRunningRequests"
+	MilvusService_CancelRequests_FullMethodName                       = "/milvus.proto.milvus.MilvusService/CancelRequests"
 )
 
 // MilvusServiceClient is the client API for MilvusService service.
@@ -369,6 +371,9 @@ type MilvusServiceClient interface {
 	RefreshExternalCollection(ctx context.Context, in *RefreshExternalCollectionRequest, opts ...grpc.CallOption) (*RefreshExternalCollectionResponse, error)
 	GetRefreshExternalCollectionProgress(ctx context.Context, in *GetRefreshExternalCollectionProgressRequest, opts ...grpc.CallOption) (*GetRefreshExternalCollectionProgressResponse, error)
 	ListRefreshExternalCollectionJobs(ctx context.Context, in *ListRefreshExternalCollectionJobsRequest, opts ...grpc.CallOption) (*ListRefreshExternalCollectionJobsResponse, error)
+	// Running request APIs
+	ListRunningRequests(ctx context.Context, in *ListRunningRequestsRequest, opts ...grpc.CallOption) (*ListRunningRequestsResponse, error)
+	CancelRequests(ctx context.Context, in *CancelRequestsRequest, opts ...grpc.CallOption) (*CancelRequestsResponse, error)
 }
 
 type milvusServiceClient struct {
@@ -1768,6 +1773,24 @@ func (c *milvusServiceClient) ListRefreshExternalCollectionJobs(ctx context.Cont
 	return out, nil
 }
 
+func (c *milvusServiceClient) ListRunningRequests(ctx context.Context, in *ListRunningRequestsRequest, opts ...grpc.CallOption) (*ListRunningRequestsResponse, error) {
+	out := new(ListRunningRequestsResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ListRunningRequests_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) CancelRequests(ctx context.Context, in *CancelRequestsRequest, opts ...grpc.CallOption) (*CancelRequestsResponse, error) {
+	out := new(CancelRequestsResponse)
+	err := c.cc.Invoke(ctx, MilvusService_CancelRequests_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MilvusServiceServer is the server API for MilvusService service.
 // All implementations should embed UnimplementedMilvusServiceServer
 // for forward compatibility
@@ -1965,6 +1988,9 @@ type MilvusServiceServer interface {
 	RefreshExternalCollection(context.Context, *RefreshExternalCollectionRequest) (*RefreshExternalCollectionResponse, error)
 	GetRefreshExternalCollectionProgress(context.Context, *GetRefreshExternalCollectionProgressRequest) (*GetRefreshExternalCollectionProgressResponse, error)
 	ListRefreshExternalCollectionJobs(context.Context, *ListRefreshExternalCollectionJobsRequest) (*ListRefreshExternalCollectionJobsResponse, error)
+	// Running request APIs
+	ListRunningRequests(context.Context, *ListRunningRequestsRequest) (*ListRunningRequestsResponse, error)
+	CancelRequests(context.Context, *CancelRequestsRequest) (*CancelRequestsResponse, error)
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -2417,6 +2443,12 @@ func (UnimplementedMilvusServiceServer) GetRefreshExternalCollectionProgress(con
 }
 func (UnimplementedMilvusServiceServer) ListRefreshExternalCollectionJobs(context.Context, *ListRefreshExternalCollectionJobsRequest) (*ListRefreshExternalCollectionJobsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRefreshExternalCollectionJobs not implemented")
+}
+func (UnimplementedMilvusServiceServer) ListRunningRequests(context.Context, *ListRunningRequestsRequest) (*ListRunningRequestsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRunningRequests not implemented")
+}
+func (UnimplementedMilvusServiceServer) CancelRequests(context.Context, *CancelRequestsRequest) (*CancelRequestsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelRequests not implemented")
 }
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -5123,6 +5155,42 @@ func _MilvusService_ListRefreshExternalCollectionJobs_Handler(srv interface{}, c
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MilvusService_ListRunningRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRunningRequestsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ListRunningRequests(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ListRunningRequests_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ListRunningRequests(ctx, req.(*ListRunningRequestsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_CancelRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelRequestsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).CancelRequests(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_CancelRequests_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).CancelRequests(ctx, req.(*CancelRequestsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MilvusService_ServiceDesc is the grpc.ServiceDesc for MilvusService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -5717,6 +5785,14 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListRefreshExternalCollectionJobs",
 			Handler:    _MilvusService_ListRefreshExternalCollectionJobs_Handler,
+		},
+		{
+			MethodName: "ListRunningRequests",
+			Handler:    _MilvusService_ListRunningRequests_Handler,
+		},
+		{
+			MethodName: "CancelRequests",
+			Handler:    _MilvusService_CancelRequests_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
