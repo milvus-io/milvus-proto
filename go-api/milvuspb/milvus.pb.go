@@ -22321,7 +22321,9 @@ type RunningRequestInfo struct {
 	QueuedMs int64 `protobuf:"varint,12,opt,name=queued_ms,json=queuedMs,proto3" json:"queued_ms,omitempty"`
 	// How long the request has been running, computed when the row is produced.
 	ElapsedMs int64 `protobuf:"varint,13,opt,name=elapsed_ms,json=elapsedMs,proto3" json:"elapsed_ms,omitempty"`
-	// Queued | Running
+	// Queued | Running | Canceling. Canceling: CancelRequests was called and
+	// the request is on its way out; it stops at its next cancellation check
+	// and then leaves the list.
 	State string `protobuf:"bytes,14,opt,name=state,proto3" json:"state,omitempty"`
 	// Scheduler task ids the request has spawned, for correlating with logs.
 	TaskIds []int64 `protobuf:"varint,15,rep,packed,name=task_ids,json=taskIds,proto3" json:"task_ids,omitempty"`
@@ -22775,6 +22777,13 @@ func (x *CancelRequestsRequest) GetUser() string {
 	return ""
 }
 
+// Cancellation is asynchronous: a request in canceled has been told to stop
+// and does so at its next cancellation check, usually within milliseconds,
+// then leaves the list. Until then ListRunningRequests shows it in state
+// Canceling. Canceling the same id again before it has left is harmless: it
+// is returned in canceled once more, in state Canceling, and is not audited
+// or counted a second time. Every requested id is in exactly one of
+// canceled, not_found and undetermined.
 type CancelRequestsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -22787,7 +22796,7 @@ type CancelRequestsResponse struct {
 	// One entry per canceled request, describing it as it was at the moment of
 	// cancellation: elapsed_ms is how long it had been running when it was
 	// stopped, and state is the state it was in before it was canceled (queued
-	// or running), not a canceled state.
+	// or running), or Canceling when this call repeated an earlier cancel.
 	Canceled []*RunningRequestInfo `protobuf:"bytes,2,rep,name=canceled,proto3" json:"canceled,omitempty"`
 	// Ids that no proxy holds, known because every proxy answered: the request
 	// already finished, never existed, or (when user is set) was issued by

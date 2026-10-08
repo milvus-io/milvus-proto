@@ -3734,7 +3734,9 @@ message RunningRequestInfo {
   int64 queued_ms = 12;
   // How long the request has been running, computed when the row is produced.
   int64 elapsed_ms = 13;
-  // Queued | Running
+  // Queued | Running | Canceling. Canceling: CancelRequests was called and
+  // the request is on its way out; it stops at its next cancellation check
+  // and then leaves the list.
   string state = 14;
   // Scheduler task ids the request has spawned, for correlating with logs.
   repeated int64 task_ids = 15;
@@ -3800,6 +3802,13 @@ message CancelRequestsRequest {
   string user = 4;
 }
 
+// Cancellation is asynchronous: a request in canceled has been told to stop
+// and does so at its next cancellation check, usually within milliseconds,
+// then leaves the list. Until then ListRunningRequests shows it in state
+// Canceling. Canceling the same id again before it has left is harmless: it
+// is returned in canceled once more, in state Canceling, and is not audited
+// or counted a second time. Every requested id is in exactly one of
+// canceled, not_found and undetermined.
 message CancelRequestsResponse {
   // Success as long as at least one proxy answered; a proxy that did not is
   // reported in node_results. An error only when the call itself was rejected
@@ -3808,7 +3817,7 @@ message CancelRequestsResponse {
   // One entry per canceled request, describing it as it was at the moment of
   // cancellation: elapsed_ms is how long it had been running when it was
   // stopped, and state is the state it was in before it was canceled (queued
-  // or running), not a canceled state.
+  // or running), or Canceling when this call repeated an earlier cancel.
   repeated RunningRequestInfo canceled = 2;
   // Ids that no proxy holds, known because every proxy answered: the request
   // already finished, never existed, or (when user is set) was issued by
