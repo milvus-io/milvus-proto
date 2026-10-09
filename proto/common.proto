@@ -364,6 +364,10 @@ enum MsgType {
 
     /* Async Snapshot Export */
     GetExportSnapshotState = 2111;
+
+    /* Running requests */
+    ListRunningRequests = 2500;
+    CancelRequests = 2501;
 }
 
 message MsgBase {
@@ -563,6 +567,8 @@ enum ObjectPrivilege {
     PrivilegeViewRLS = 92;
     PrivilegeManageRLS = 93;
     PrivilegeImportBinlog = 94;
+    PrivilegeListRunningRequests = 95;
+    PrivilegeCancelRequests = 96;
 }
 
 message PrivilegeExt {
