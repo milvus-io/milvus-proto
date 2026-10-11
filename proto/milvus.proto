@@ -1457,6 +1457,10 @@ message MutationResult {
   int64 delete_cnt = 7;
   int64 upsert_cnt = 8;
   uint64 timestamp = 9;
+  // For ingestion-enabled INSERT, IDs/mapping refer to inserted output rows;
+  // input_rows and request-level success/error indexes refer to input records.
+  // insert_cnt reports inserted output rows. No-chain behavior is unchanged.
+  IngestionFunctionChainResult ingestion_result = 10;
 }
 
 message DeleteRequest {
@@ -3831,4 +3835,29 @@ message CancelRequestsResponse {
   // running on a proxy that was not reached, or may have finished. Retry the
   // cancel, or list again, once that proxy is back.
   repeated int64 undetermined = 5;
+}
+
+// Maps each returned output row to its original INSERT request rows.
+// The mapping uses CSR offsets: output row i maps to source_row_indexes in
+// [source_offsets[i], source_offsets[i + 1]). Offsets start at zero, are
+// monotonic, and have output_rows + 1 entries. Source indexes are zero-based.
+message FunctionChainRowMapping {
+  repeated uint64 source_offsets = 1;
+  repeated uint32 source_row_indexes = 2;
+}
+
+// Present only for INSERT executed with a collection ingestion FunctionChain.
+// Execution and response construction must be implemented before populating it.
+message IngestionFunctionChainResult {
+  uint32 input_rows = 1;
+  // Confirmed inserted rows returned in this response, not total chain output.
+  // Equals the number of returned IDs and MutationResult.insert_cnt, including
+  // partial append outcomes. CSR source_offsets has output_rows + 1 entries.
+  uint32 output_rows = 2;
+  // One mapping entry per returned ID; includes only confirmed inserted rows.
+  FunctionChainRowMapping output_sources = 3;
+  // Some generated rows may have been persisted without a confirmed response.
+  // Returned IDs/CSR still describe only confirmed rows. Never blindly replay
+  // an INSERT when this is true.
+  bool outcome_unknown = 4;
 }
