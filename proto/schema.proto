@@ -140,6 +140,33 @@ message FunctionChain {
 
   // Ordered operations. The server executes ops in this order.
   repeated FunctionChainOp ops = 3;
+
+  // POST-only result and input selection. Absent preserves hit enrichment.
+  PostProcessOptions post_process_options = 4;
+}
+
+enum FunctionChainResultMode {
+  FunctionChainResultModeHits = 0;
+  FunctionChainResultModeTable = 1;
+}
+
+enum PostProcessInput {
+  // Candidates after the normal search/fusion/rerank pipeline.
+  PostProcessInputFused = 0;
+  // Each HybridSearch ANN branch, after distributed reduction and before fusion.
+  PostProcessInputAnnInputs = 1;
+}
+
+message PostProcessOptions {
+  FunctionChainResultMode result_mode = 1;
+  PostProcessInput input = 2;
+}
+
+// A POST table is independent of collection fields, hit IDs/scores and NQ.
+// The IPC stream includes the complete Arrow schema even when row_count is zero.
+message FunctionChainTableResult {
+  bytes arrow_ipc = 1;
+  int64 row_count = 2;
 }
 
 message FunctionChainOp {

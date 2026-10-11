@@ -1551,6 +1551,8 @@ message SearchResults {
   schema.SearchResultData results = 2;
   string collection_name = 3;
   uint64 session_ts = 4; // for session-like operation like iterator
+  // Present for an explicitly requested POST TABLE result, instead of results.
+  schema.FunctionChainTableResult post_process_result = 5;
 }
 
 message HybridSearchRequest {
@@ -1628,6 +1630,8 @@ message QueryRequest {
   optional string namespace = 14;
   string rls_principal = 15;
   bool skip_rls = 16;
+  // Query accepts a POST TABLE chain over the selected, reduced query rows.
+  repeated schema.FunctionChain function_chains = 17;
 }
 
 message ElementIndices {
@@ -1642,6 +1646,8 @@ message QueryResults {
   uint64 session_ts = 5; // for session-like operation like iterator
   string primary_field_name = 6;
   repeated ElementIndices element_indices = 7;
+  // Present for an explicitly requested POST TABLE result, instead of fields_data.
+  schema.FunctionChainTableResult post_process_result = 8;
 }
 
 message QueryCursor {
