@@ -119,11 +119,14 @@ message FunctionScore {
 // are experimental and may change in future releases.
 enum FunctionChainStage {
   FunctionChainStageUnspecified = 0;
+  // Collection-bound write transformation. PRE_INSERT is an SDK alias.
   FunctionChainStageIngestion = 1;
+  // Request-scoped query-input transformation before query embedding/search.
   FunctionChainStagePreProcess = 2;
   FunctionChainStageL0Rerank = 3;
   FunctionChainStageL1Rerank = 4;
   FunctionChainStageL2Rerank = 5;
+  // Request-scoped payload transformation after complete search results.
   FunctionChainStagePostProcess = 6;
 }
 
@@ -137,15 +140,44 @@ message FunctionChain {
 
   // Ordered operations. The server executes ops in this order.
   repeated FunctionChainOp ops = 3;
+
+  // POST-only result and input selection. Absent preserves hit enrichment.
+  PostProcessOptions post_process_options = 4;
+}
+
+enum FunctionChainResultMode {
+  FunctionChainResultModeHits = 0;
+  FunctionChainResultModeTable = 1;
+}
+
+enum PostProcessInput {
+  // Candidates after the normal search/fusion/rerank pipeline.
+  PostProcessInputFused = 0;
+  // Each HybridSearch ANN branch, after distributed reduction and before fusion.
+  PostProcessInputAnnInputs = 1;
+}
+
+message PostProcessOptions {
+  FunctionChainResultMode result_mode = 1;
+  PostProcessInput input = 2;
+}
+
+// A POST table is independent of collection fields, hit IDs/scores and NQ.
+// The IPC stream includes the complete Arrow schema even when row_count is zero.
+message FunctionChainTableResult {
+  bytes arrow_ipc = 1;
+  int64 row_count = 2;
 }
 
 message FunctionChainOp {
-  // Operation name, e.g. "map", "filter", "sort", "limit", "merge".
+  // Operation name, e.g. "map", "filter", "sort", "limit", "merge",
+  // "select", "explode", "flat_map". Stage/operator execution requires
+  // server capability; declaring an operation does not enable execution.
   string op = 1;
 
   // Optional function expression configured for this operation.
-  // Expr-based ops such as map/filter use this field.
-  // Non-expr ops such as sort/limit may leave it empty.
+  // Expr-based ops such as map/filter/flat_map use this field.
+  // Non-expr ops such as sort/limit/select/explode may leave it empty.
   FunctionChainExpr expr = 2;
 
   // Optional op-level input names.
@@ -156,7 +188,9 @@ message FunctionChainOp {
 
   // Optional operation output names.
   // Outputs may be temporary variables or system names such as "$score".
-  // Writing collection fields is not supported.
+  // Ingestion outputs are bound to the destination collection schema.
+  // Other stages write stage-local values, never persisted collection data.
+  // Read-only identity/provenance is retained independently of payload selection.
   repeated string outputs = 4;
 
   // Optional operation-level typed parameters.
@@ -233,6 +267,10 @@ message CollectionSchema {
   bool do_physical_backfill = 13;
   repeated int64 file_resource_ids = 14;
   bool enable_namespace = 15;
+  // Optional persistent ingestion plan. Only Ingestion stage is valid here.
+  // The server must validate and persist the binding before advertising support;
+  // unsupported servers must reject it rather than silently skip execution.
+  repeated FunctionChain function_chains = 17;
 }
 
 message StructArrayFieldSchema {
