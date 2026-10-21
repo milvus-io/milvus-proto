@@ -3346,6 +3346,11 @@ message AlterCollectionSchemaRequest {
     string index_name = 2;
     // Support keys: index_type,metric_type, params. Different index_type may has different params.
     repeated common.KeyValuePair extra_params = 3;
+    // Path of the struct array field that field_schema is appended to as a sub-field.
+    // Empty means field_schema is a top-level field. Each segment is a struct field
+    // name; segments are joined as "a[b]" (the stored sub-field name grammar).
+    // Only a single segment is accepted until nested structs are supported.
+    string struct_path = 4;
   }
   
   // Add fields and functions request
