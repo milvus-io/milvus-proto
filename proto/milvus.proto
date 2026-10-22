@@ -1624,6 +1624,9 @@ message QueryRequest {
   optional string namespace = 14;
   string rls_principal = 15;
   bool skip_rls = 16;
+  // QueryScan-stage processing. Initially at most one QueryScan-stage chain is allowed.
+  // Requires server capability support; older servers may ignore this field.
+  repeated schema.FunctionChain function_chains = 17;
 }
 
 message ElementIndices {
@@ -1638,6 +1641,8 @@ message QueryResults {
   uint64 session_ts = 5; // for session-like operation like iterator
   string primary_field_name = 6;
   repeated ElementIndices element_indices = 7;
+  // Typed computed columns, aligned with the final document order.
+  repeated schema.FieldData computed_results = 9;
 }
 
 message QueryCursor {
