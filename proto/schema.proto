@@ -125,11 +125,13 @@ enum FunctionChainStage {
   FunctionChainStageL1Rerank = 4;
   FunctionChainStageL2Rerank = 5;
   FunctionChainStagePostProcess = 6;
+  // Per-segment Query candidate processing after visibility/predicates, before final result truncation and output-field materialization.
+  FunctionChainStageQueryScan = 7;
 }
 
 // FunctionChain is an ordered public plan for function-based processing.
 message FunctionChain {
-  // Optional SDK/debug name.
+  // SDK/debug name; required and request-unique when output_columns is nonempty.
   string name = 1;
 
   // Function chain execution stage.
@@ -137,6 +139,13 @@ message FunctionChain {
 
   // Ordered operations. The server executes ops in this order.
   repeated FunctionChainOp ops = 3;
+
+  // QueryScan-stage result projection, not a runtime column-dropping operator.
+  // Names must be unique and available at the end of the chain. Empty means
+  // no exported values; filtering and other supported effects still apply.
+  // Exported columns are carried in computed_results by their output names.
+  // Each column is aligned with the returned document order.
+  repeated string output_columns = 4;
 }
 
 message FunctionChainOp {
