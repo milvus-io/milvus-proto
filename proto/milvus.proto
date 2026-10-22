@@ -1627,6 +1627,9 @@ message QueryRequest {
   optional string namespace = 14;
   string rls_principal = 15;
   bool skip_rls = 16;
+  // QueryScan-stage processing. Initially at most one QueryScan-stage chain is allowed.
+  // Requires server capability support; older servers may ignore this field.
+  repeated schema.FunctionChain function_chains = 17;
 }
 
 message ElementIndices {
