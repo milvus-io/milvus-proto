@@ -3870,16 +3870,16 @@ message WriteCondition {
   }
   enum MissingRowPolicy {
     // Default when on_missing is omitted; use existing insertion rules.
-    MISSING_INSERT = 0;
-    MISSING_SKIP = 1;
+    INSERT_IF_MISSING = 0;
+    SKIP_IF_MISSING = 1;
     // Reject missing rows during preparation. A retry can follow earlier commits.
-    MISSING_ERROR = 2;
+    ERROR_IF_MISSING = 2;
   }
   // Ordinary Int8/Int16/Int32/Int64 scalar column supplied in the request.
   // Must not be a primary key, partition key, clustering key, dynamic field,
   // or struct subfield.
   string field = 1;
   Op op = 2;
-  // Defaults to MISSING_INSERT; omission and explicit zero are equivalent.
+  // Defaults to INSERT_IF_MISSING; omission and explicit zero are equivalent.
   MissingRowPolicy on_missing = 3;
 }
