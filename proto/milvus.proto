@@ -1452,9 +1452,7 @@ message UpsertRequest {
 message MutationResult {
   common.Status status = 1;
   schema.IDs IDs = 2; // required for insert, delete, upsert
-  // Indexes of successful entities, when populated. For conditional upsert these
-  // are original request indexes of written rows, aligned with IDs; skipped rows
-  // are absent.
+  // Indexes of successful entities.
   repeated uint32 succ_index = 3;
   repeated uint32 err_index = 4; // error indexes indicate
   bool acknowledged = 5;

@@ -6854,9 +6854,7 @@ type MutationResult struct {
 
 	Status *commonpb.Status `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
 	IDs    *schemapb.IDs    `protobuf:"bytes,2,opt,name=IDs,proto3" json:"IDs,omitempty"` // required for insert, delete, upsert
-	// Indexes of successful entities, when populated. For conditional upsert these
-	// are original request indexes of written rows, aligned with IDs; skipped rows
-	// are absent.
+	// Indexes of successful entities.
 	SuccIndex    []uint32 `protobuf:"varint,3,rep,packed,name=succ_index,json=succIndex,proto3" json:"succ_index,omitempty"`
 	ErrIndex     []uint32 `protobuf:"varint,4,rep,packed,name=err_index,json=errIndex,proto3" json:"err_index,omitempty"` // error indexes indicate
 	Acknowledged bool     `protobuf:"varint,5,opt,name=acknowledged,proto3" json:"acknowledged,omitempty"`
