@@ -2679,6 +2679,9 @@ message ListRLSPrincipalsRequest {
   common.MsgBase base = 1;
   string db_name = 2;
   string collection_name = 3;
+  // If true, return only principal_cnt and leave principal_names empty.
+  // If false (default), return both principal_names and principal_cnt.
+  bool count = 4;
 }
 
 message ListRLSPrincipalsResponse {
@@ -2686,6 +2689,9 @@ message ListRLSPrincipalsResponse {
   repeated string principal_names = 2;
   string db_name = 3;
   string collection_name = 4;
+  // Number of principals with at least one stored tag in this collection,
+  // returned in both list and count-only modes on success.
+  int64 principal_cnt = 5;
 }
 
 message DeleteRLSPrincipalTagsRequest {
