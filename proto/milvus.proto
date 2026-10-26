@@ -1445,12 +1445,15 @@ message UpsertRequest {
   repeated schema.FieldPartialUpdateOp field_ops = 11;
   string rls_principal = 12;
   bool skip_rls = 13;
+  // Optional row-level version comparison. Implies partial_update=true.
+  WriteCondition write_condition = 14;
 }
 
 message MutationResult {
   common.Status status = 1;
   schema.IDs IDs = 2; // required for insert, delete, upsert
-  repeated uint32 succ_index = 3; // error indexes indicate
+  // Conditional upsert: original request indexes of written rows, aligned with IDs.
+  repeated uint32 succ_index = 3;
   repeated uint32 err_index = 4; // error indexes indicate
   bool acknowledged = 5;
   int64 insert_cnt = 6;
@@ -3852,4 +3855,23 @@ message SnapshotSummary {
   // Same Milvus timestamp and semantics as DescribeSnapshot.create_ts.
   int64 create_ts = 2;
   string description = 3;
+}
+
+// Selects rows using their incoming integer business version. Existing CAS
+// protects the comparison when enabled; channels commit independently.
+message WriteCondition {
+  enum Op {
+    OP_UNSPECIFIED = 0;
+    GT = 1;  // incoming > stored; a NULL stored value is writable.
+    GTE = 2; // incoming >= stored; REPLACE operations only.
+  }
+  enum MissingRowPolicy {
+    INSERT = 0;
+    SKIP = 1;
+    // Reject missing rows during preparation. A retry can follow earlier commits.
+    ERROR = 2;
+  }
+  string field = 1;
+  Op op = 2;
+  MissingRowPolicy on_missing = 3;
 }
