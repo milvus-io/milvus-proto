@@ -1452,7 +1452,9 @@ message UpsertRequest {
 message MutationResult {
   common.Status status = 1;
   schema.IDs IDs = 2; // required for insert, delete, upsert
-  // Conditional upsert: original request indexes of written rows, aligned with IDs.
+  // Indexes of successful entities, when populated. For conditional upsert these
+  // are original request indexes of written rows, aligned with IDs; skipped rows
+  // are absent.
   repeated uint32 succ_index = 3;
   repeated uint32 err_index = 4; // error indexes indicate
   bool acknowledged = 5;
@@ -3859,19 +3861,27 @@ message SnapshotSummary {
 
 // Selects rows using their incoming integer business version. Existing CAS
 // protects the comparison when enabled; channels commit independently.
+// A NULL stored version is writable for either comparison. The version field
+// permits only REPLACE. GT permits other operations on other fields; GTE permits
+// only REPLACE on all fields.
 message WriteCondition {
   enum Op {
     OP_UNSPECIFIED = 0;
-    GT = 1;  // incoming > stored; a NULL stored value is writable.
-    GTE = 2; // incoming >= stored; REPLACE operations only.
+    GT = 1;  // incoming > stored.
+    GTE = 2; // incoming >= stored.
   }
   enum MissingRowPolicy {
-    INSERT = 0;
-    SKIP = 1;
+    // Default when on_missing is omitted; use existing insertion rules.
+    MISSING_INSERT = 0;
+    MISSING_SKIP = 1;
     // Reject missing rows during preparation. A retry can follow earlier commits.
-    ERROR = 2;
+    MISSING_ERROR = 2;
   }
+  // Ordinary Int8/Int16/Int32/Int64 scalar column supplied in the request.
+  // Must not be a primary key, partition key, clustering key, dynamic field,
+  // or struct subfield.
   string field = 1;
   Op op = 2;
+  // Defaults to MISSING_INSERT; omission and explicit zero are equivalent.
   MissingRowPolicy on_missing = 3;
 }
