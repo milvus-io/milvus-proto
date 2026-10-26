@@ -1445,12 +1445,15 @@ message UpsertRequest {
   repeated schema.FieldPartialUpdateOp field_ops = 11;
   string rls_principal = 12;
   bool skip_rls = 13;
+  // Optional row-level version comparison. Implies partial_update=true.
+  WriteCondition write_condition = 14;
 }
 
 message MutationResult {
   common.Status status = 1;
   schema.IDs IDs = 2; // required for insert, delete, upsert
-  repeated uint32 succ_index = 3; // error indexes indicate
+  // Indexes of successful entities.
+  repeated uint32 succ_index = 3;
   repeated uint32 err_index = 4; // error indexes indicate
   bool acknowledged = 5;
   int64 insert_cnt = 6;
@@ -3852,4 +3855,31 @@ message SnapshotSummary {
   // Same Milvus timestamp and semantics as DescribeSnapshot.create_ts.
   int64 create_ts = 2;
   string description = 3;
+}
+
+// Selects rows using their incoming integer business version. Existing CAS
+// protects the comparison when enabled; channels commit independently.
+// A NULL stored version is writable for either comparison. The version field
+// permits only REPLACE. GT permits other operations on other fields; GTE permits
+// only REPLACE on all fields.
+message WriteCondition {
+  enum Op {
+    OP_UNSPECIFIED = 0;
+    GT = 1;  // incoming > stored.
+    GTE = 2; // incoming >= stored.
+  }
+  enum MissingRowPolicy {
+    // Default when on_missing is omitted; use existing insertion rules.
+    INSERT_IF_MISSING = 0;
+    SKIP_IF_MISSING = 1;
+    // Reject missing rows during preparation. A retry can follow earlier commits.
+    ERROR_IF_MISSING = 2;
+  }
+  // Ordinary Int8/Int16/Int32/Int64 scalar column supplied in the request.
+  // Must not be a primary key, partition key, clustering key, dynamic field,
+  // or struct subfield.
+  string field = 1;
+  Op op = 2;
+  // Defaults to INSERT_IF_MISSING; omission and explicit zero are equivalent.
+  MissingRowPolicy on_missing = 3;
 }
