@@ -89,6 +89,10 @@ message FieldSchema {
   bool nullable = 15; // enable set null as field value
   bool is_function_output =16;
   string external_field = 17; // external field name 
+  // Recursive type definition. When data_type/element_type fields are also populated,
+  // they must describe the same type.
+  TypeSchema type_schema = 18;
+  bool element_nullable = 19; // enable null elements for Array and ArrayOfVector fields
 }
 
 message FunctionSchema {
@@ -315,6 +319,13 @@ message ScalarField {
     DateArray date_data = 15;
     TimeArray time_data = 16;
   }
+  // Per-value validity for the immediate logical values represented by data.
+  // valid_data[i] is true when logical value i is present and false when it is
+  // null. At the top level, it describes field rows and must follow the
+  // dual-write and read-precedence rules documented on FieldData.valid_data.
+  // In ArrayArray, it describes the immediate elements at the current level;
+  // the rule applies recursively at every nested level.
+  repeated bool valid_data = 17;
 }
 
 // beta, api may change
@@ -336,6 +347,12 @@ message VectorField {
     bytes int8_vector = 7;
     VectorArray vector_array = 8;
   }
+  // Per-value validity for the immediate logical values represented by data.
+  // At the top level, it describes field rows and must follow the dual-write
+  // and read-precedence rules documented on FieldData.valid_data. In VectorArray,
+  // it describes the immediate vector or nested-array elements at the current
+  // level. The rule applies recursively at every nested level.
+  repeated bool valid_data = 9;
 }
 
 message VectorArray {
@@ -398,6 +415,16 @@ message FieldData {
   }
   int64 field_id = 5;
   bool is_dynamic = 6;
+  // Row validity for scalar and vector fields, retained for compatibility with
+  // older servers and SDKs (including Milvus 2.6/3.0) that only read and update
+  // this location. While such components can share a cluster, WAL, or replication
+  // stream, writers must write the same row-validity mask to both this field
+  // and ScalarField.valid_data or VectorField.valid_data. Readers must prefer
+  // this field whenever it is nonempty and use the field-specific validity only
+  // when this field is empty: an older component may update this field while
+  // leaving a stale field-specific copy. User payloads with conflicting masks
+  // are rejected at proxy input; internal payloads are reconciled to this field.
+  // These rules apply to field-row validity, not nested element validity.
   repeated bool valid_data = 7;
 }
 
@@ -534,4 +561,17 @@ message TemplateArrayValue {
 
 message TemplateArrayValueArray {
   repeated TemplateArrayValue data = 1;
+}
+
+message TypeSchema {
+  oneof kind {
+    // Non-container types, such as Int64, VarChar, and FloatVector.
+    DataType leaf_type = 1;
+    // Selecting this member means the current node is an Array; its value
+    // describes the element type.
+    TypeSchema array_element = 2;
+  }
+
+  repeated common.KeyValuePair type_params = 3;
+  bool nullable = 4;
 }
