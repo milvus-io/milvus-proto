@@ -2587,7 +2587,10 @@ type ScalarField struct {
 	Data isScalarField_Data `protobuf_oneof:"data"`
 	// Per-value validity for the immediate logical values represented by data.
 	// valid_data[i] is true when logical value i is present and false when it is
-	// null.
+	// null. At the top level, it describes field rows and must follow the
+	// dual-write and read-precedence rules documented on FieldData.valid_data.
+	// In ArrayArray, it describes the immediate elements at the current level;
+	// the rule applies recursively at every nested level.
 	ValidData []bool `protobuf:"varint,17,rep,packed,name=valid_data,json=validData,proto3" json:"valid_data,omitempty"`
 }
 
@@ -2924,9 +2927,9 @@ type VectorField struct {
 	//	*VectorField_VectorArray
 	Data isVectorField_Data `protobuf_oneof:"data"`
 	// Per-value validity for the immediate logical values represented by data.
-	// It follows the same rules as ScalarField.valid_data: at the top level it
-	// describes field rows and replaces FieldData.valid_data; in VectorArray it
-	// describes the immediate vector or nested-array elements at the current
+	// At the top level, it describes field rows and must follow the dual-write
+	// and read-precedence rules documented on FieldData.valid_data. In VectorArray,
+	// it describes the immediate vector or nested-array elements at the current
 	// level. The rule applies recursively at every nested level.
 	ValidData []bool `protobuf:"varint,9,rep,packed,name=valid_data,json=validData,proto3" json:"valid_data,omitempty"`
 }
@@ -3284,10 +3287,16 @@ type FieldData struct {
 	Field     isFieldData_Field `protobuf_oneof:"field"`
 	FieldId   int64             `protobuf:"varint,5,opt,name=field_id,json=fieldId,proto3" json:"field_id,omitempty"`
 	IsDynamic bool              `protobuf:"varint,6,opt,name=is_dynamic,json=isDynamic,proto3" json:"is_dynamic,omitempty"`
-	// Legacy top-level validity for scalar and vector fields. New writers must
-	// use ScalarField.valid_data or VectorField.valid_data instead. Readers
-	// should prefer the field-specific validity and fall back to this field only
-	// for payloads produced by legacy writers.
+	// Row validity for scalar and vector fields, retained for compatibility with
+	// older servers and SDKs (including Milvus 2.6/3.0) that only read and update
+	// this location. While such components can share a cluster, WAL, or replication
+	// stream, writers must write the same row-validity mask to both this field
+	// and ScalarField.valid_data or VectorField.valid_data. Readers must prefer
+	// this field whenever it is nonempty and use the field-specific validity only
+	// when this field is empty: an older component may update this field while
+	// leaving a stale field-specific copy. User payloads with conflicting masks
+	// are rejected at proxy input; internal payloads are reconciled to this field.
+	// These rules apply to field-row validity, not nested element validity.
 	ValidData []bool `protobuf:"varint,7,rep,packed,name=valid_data,json=validData,proto3" json:"valid_data,omitempty"`
 }
 
