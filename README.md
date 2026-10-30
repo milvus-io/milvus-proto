@@ -51,16 +51,6 @@ When we implement a new feature with new API, the following steps are recommende
 4. in SDK project, sync the milvus-proto submodule to the commit and submit a commit
 5. develop SDK and main project parallelly
 
-## Snapshot summary timestamps
-
-`SnapshotSummary.create_ts` (field 2) retains its original Milvus hybrid
-value for the snapshot WAL boundary. The summary additionally exposes
-`create_utc_ts` (int64, field 4): Unix time in **milliseconds** extracted from
-that timestamp's physical part, not snapshot completion time. Zero means
-unknown, including responses from servers that do not provide the field.
-Ordering still uses the original hybrid timestamp, preserving logical
-ordering within a millisecond. DescribeSnapshot remains unchanged.
-
 ## License
 Milvus proto repo is part of LF AI & Data Milvus project under Apache License 2.0.
 

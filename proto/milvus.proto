@@ -3858,8 +3858,7 @@ message SnapshotSummary {
   // Same Milvus timestamp and semantics as DescribeSnapshot.create_ts.
   int64 create_ts = 2;
   string description = 3;
-  // Unix milliseconds extracted from create_ts, not snapshot completion time.
-  // Zero means unknown, including responses from older servers.
+  // Unix milliseconds extracted from create_ts.
   int64 create_utc_ts = 4;
 }
 

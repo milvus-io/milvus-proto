@@ -23038,8 +23038,7 @@ type SnapshotSummary struct {
 	// Same Milvus timestamp and semantics as DescribeSnapshot.create_ts.
 	CreateTs    int64  `protobuf:"varint,2,opt,name=create_ts,json=createTs,proto3" json:"create_ts,omitempty"`
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// Unix milliseconds extracted from create_ts, not snapshot completion time.
-	// Zero means unknown, including responses from older servers.
+	// Unix milliseconds extracted from create_ts.
 	CreateUtcTs int64 `protobuf:"varint,4,opt,name=create_utc_ts,json=createUtcTs,proto3" json:"create_utc_ts,omitempty"`
 }
 
