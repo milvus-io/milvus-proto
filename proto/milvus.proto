@@ -472,6 +472,8 @@ message DescribeCollectionRequest {
   int64 collectionID = 4;
   // If time_stamp is not zero, will describe collection success when time_stamp >= created collection timestamp, otherwise will throw error.
   uint64 time_stamp = 5;
+  // Omit the schema body while retaining its published version and collection metadata.
+  bool skip_schema = 6;
 }
 
 /**
@@ -617,6 +619,13 @@ message DescribeCollectionResponse {
   // the source they came from. Fifteen doublings on one shard would already
   // exceed it, so the modulus stays under 2^15.
   uint64 routing_modulus = 22;
+  // Presence distinguishes version zero from a server predating this field.
+  optional int32 schema_version = 23;
+  // Mutable metadata is available even when skip_schema is set.
+  string description = 24;
+  string external_source = 25;
+  string external_spec = 26;
+  bool is_partition_key_collection = 27;
 }
 
 
