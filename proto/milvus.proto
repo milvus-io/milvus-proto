@@ -3727,8 +3727,14 @@ message GetExportSnapshotStateResponse {
 // A type that is listed but cannot be stopped reports cancellable = false.
 
 message RunningRequestInfo {
-  // Cluster-unique id of the request, the handle CancelRequests takes.
-  int64 request_id = 1;
+  // Cluster-unique id of the request, the handle CancelRequests takes. It is
+  // an opaque string of the form "<proxy id>-<proxy start>-<sequence>", e.g.
+  // "25-to044v-rfnl": the id of the proxy holding the request, that proxy
+  // process's start time in Unix seconds and a per-process sequence number,
+  // the last two in base 36. Clients pass it back unchanged and must not parse
+  // it. A string keeps the id exact in JSON, where a 64-bit integer loses
+  // precision beyond 2^53.
+  string request_id = 1;
   // Proxy serving the request.
   int64 proxy_id = 2;
   // Search | HybridSearch | Query
@@ -3804,8 +3810,9 @@ message CancelRequestsRequest {
   };
 
   common.MsgBase base = 1;
-  // Ids to cancel, as reported by ListRunningRequests. Empty is an error.
-  repeated int64 request_ids = 2;
+  // Ids to cancel, as reported by ListRunningRequests. Empty is an error. An
+  // id that is not in that form is reported in not_found.
+  repeated string request_ids = 2;
   // Free-text reason, recorded in the audit log and returned to the client
   // whose request was canceled.
   string reason = 3;
@@ -3838,13 +3845,13 @@ message CancelRequestsResponse {
   // another user. A proxy too old to serve this call
   // counts as having answered, since it registers no requests. Empty whenever
   // some proxy did not answer; those ids are reported in undetermined instead.
-  repeated int64 not_found = 3;
+  repeated string not_found = 3;
   repeated RunningRequestNodeResult node_results = 4;
-  // Ids not canceled while some proxy did not answer (see node_results): a
-  // request id does not say which proxy holds it, so each of these may be
-  // running on a proxy that was not reached, or may have finished. Retry the
-  // cancel, or list again, once that proxy is back.
-  repeated int64 undetermined = 5;
+  // Ids not canceled while some proxy did not answer (see node_results): the
+  // cancel is sent to every proxy, so each of these may be running on a proxy
+  // that was not reached, or may have finished. Retry the cancel, or list
+  // again, once that proxy is back.
+  repeated string undetermined = 5;
 }
 
 // SnapshotSummary contains list metadata without loading snapshot files.
