@@ -107,6 +107,11 @@ service MilvusService {
   rpc ManualCompaction(ManualCompactionRequest) returns (ManualCompactionResponse) {}
   rpc GetCompactionStateWithPlans(GetCompactionPlansRequest) returns (GetCompactionPlansResponse) {}
 
+  rpc CreateCompactionTarget(CreateCompactionTargetRequest) returns (CreateCompactionTargetResponse) {}
+  rpc DescribeCompactionTarget(DescribeCompactionTargetRequest) returns (DescribeCompactionTargetResponse) {}
+  rpc ListCompactionTargets(ListCompactionTargetsRequest) returns (ListCompactionTargetsResponse) {}
+  rpc DropCompactionTarget(DropCompactionTargetRequest) returns (DropCompactionTargetResponse) {}
+
   // https://wiki.lfaidata.foundation/display/MIL/MEP+24+--+Support+bulk+load
   rpc Import(ImportRequest) returns (ImportResponse) {}
   rpc GetImportState(GetImportStateRequest) returns (GetImportStateResponse) {}
@@ -3889,4 +3894,111 @@ message WriteCondition {
   Op op = 2;
   // Defaults to INSERT_IF_MISSING; omission and explicit zero are equivalent.
   MissingRowPolicy on_missing = 3;
+}
+
+message CreateCompactionTargetRequest {
+  option (common.privilege_ext_obj) = {
+    object_type: Collection
+    object_privilege: PrivilegeCompaction
+    object_name_index: 3
+  };
+  common.MsgBase base = 1;
+  string db_name = 2;
+  string collection_name = 3;
+  oneof target {
+    RewriteTargetSpec rewrite = 4;
+    OptimizeTargetSpec optimize = 5;
+  }
+}
+
+message RewriteTargetSpec {
+  repeated int64 segment_ids = 1; // Empty means the collection applicability scope.
+}
+
+message OptimizeTargetSpec {
+  int64 input_target_size_bytes = 1; // Requested output segment size in bytes.
+}
+
+message CreateCompactionTargetResponse {
+  common.Status status = 1;
+  int64 target_id = 2;
+  int64 total_rows = 3;
+  OptimizeTargetCreateResult optimize = 5;
+}
+
+message OptimizeTargetCreateResult {
+  int64 input_target_size_bytes = 1;
+  int64 actual_target_size_bytes = 2;
+}
+
+message OptimizeTargetInfo {
+  int64 input_target_size_bytes = 1;
+  int64 actual_target_size_bytes = 2;
+}
+
+enum CompactionTargetState {
+  COMPACTION_TARGET_STATE_ACTIVE = 0;
+  COMPACTION_TARGET_STATE_INACTIVE = 1;
+}
+
+message CompactionTargetInfo {
+  int64 target_id = 1;
+  int64 db_id = 2;
+  int64 collection_id = 3;
+  string db_name = 4;
+  string collection_name = 5;
+  oneof target {
+    RewriteTargetSpec rewrite = 6;
+    OptimizeTargetInfo optimize = 7;
+    OtherTargetSpec other = 8;
+  }
+  CompactionTargetState state = 9;
+  uint64 created_at = 10; // The target activation timestamp.
+  uint64 stopped_at = 11; // The first transition to inactive.
+  string stop_reason = 12; // The persisted stop cause. Empty while active.
+  optional int64 total_rows = 13; // Fixed creation observation for manual targets; optional for system targets.
+  optional int64 remaining_rows = 14; // Present only after a complete Describe observation; absent does not mean zero.
+  uint64 checked_at = 15; // Valid when remaining_rows is present.
+  string message = 16; // Observation or wait reason; API errors use Status.
+}
+
+message OtherTargetSpec {
+  string condition = 1;
+  bool cluster_wide = 2;
+  repeated common.KeyValuePair parameters = 3;
+}
+
+message DescribeCompactionTargetRequest {
+  common.MsgBase base = 1;
+  int64 target_id = 2;
+}
+
+message DescribeCompactionTargetResponse {
+  common.Status status = 1;
+  CompactionTargetInfo target = 2;
+}
+
+message ListCompactionTargetsRequest {
+  common.MsgBase base = 1;
+  string db_name = 2; // Empty includes all databases.
+  oneof collection_filter {
+    string collection_name = 3;
+    int64 collection_id = 4;
+  }
+  repeated CompactionTargetState states = 5;
+  bool include_system = 6;
+}
+
+message ListCompactionTargetsResponse {
+  common.Status status = 1;
+  repeated CompactionTargetInfo targets = 2;
+}
+
+message DropCompactionTargetRequest {
+  common.MsgBase base = 1;
+  int64 target_id = 2;
+}
+
+message DropCompactionTargetResponse {
+  common.Status status = 1;
 }
