@@ -3896,8 +3896,8 @@ message WriteCondition {
 
 message MultiSearchRequest {
   common.MsgBase base = 1;
-  // Non-empty list of subrequests in input order.
-  repeated MultiSearchSubRequest requests = 2;
+  // Non-empty list of Search requests in input order.
+  repeated SearchRequest requests = 2;
   // Maximum concurrent subrequests. Zero uses the server default.
   uint32 max_concurrency = 3;
   // Non-negative shared execution budget in milliseconds, measured from batch receipt.
@@ -3905,21 +3905,9 @@ message MultiSearchRequest {
   optional int64 timeout_ms = 4;
 }
 
-message MultiSearchSubRequest {
-  oneof request {
-    SearchRequest search = 1;
-  }
-}
-
 message MultiSearchResponse {
-  // Status of the batch. Each subresult carries its own status.
+  // Status of the batch. Each Search result carries its own status.
   common.Status status = 1;
   // One result per request in input order on batch success. Empty on batch failure.
-  repeated MultiSearchSubResult results = 2;
-}
-
-message MultiSearchSubResult {
-  oneof result {
-    SearchResults search = 1;
-  }
+  repeated SearchResults results = 2;
 }
