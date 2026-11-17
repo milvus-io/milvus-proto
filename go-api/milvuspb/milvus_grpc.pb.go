@@ -89,6 +89,10 @@ const (
 	MilvusService_GetCompactionState_FullMethodName                   = "/milvus.proto.milvus.MilvusService/GetCompactionState"
 	MilvusService_ManualCompaction_FullMethodName                     = "/milvus.proto.milvus.MilvusService/ManualCompaction"
 	MilvusService_GetCompactionStateWithPlans_FullMethodName          = "/milvus.proto.milvus.MilvusService/GetCompactionStateWithPlans"
+	MilvusService_CreateCompactionTarget_FullMethodName               = "/milvus.proto.milvus.MilvusService/CreateCompactionTarget"
+	MilvusService_DescribeCompactionTarget_FullMethodName             = "/milvus.proto.milvus.MilvusService/DescribeCompactionTarget"
+	MilvusService_ListCompactionTargets_FullMethodName                = "/milvus.proto.milvus.MilvusService/ListCompactionTargets"
+	MilvusService_DropCompactionTarget_FullMethodName                 = "/milvus.proto.milvus.MilvusService/DropCompactionTarget"
 	MilvusService_Import_FullMethodName                               = "/milvus.proto.milvus.MilvusService/Import"
 	MilvusService_GetImportState_FullMethodName                       = "/milvus.proto.milvus.MilvusService/GetImportState"
 	MilvusService_ListImportTasks_FullMethodName                      = "/milvus.proto.milvus.MilvusService/ListImportTasks"
@@ -252,6 +256,10 @@ type MilvusServiceClient interface {
 	GetCompactionState(ctx context.Context, in *GetCompactionStateRequest, opts ...grpc.CallOption) (*GetCompactionStateResponse, error)
 	ManualCompaction(ctx context.Context, in *ManualCompactionRequest, opts ...grpc.CallOption) (*ManualCompactionResponse, error)
 	GetCompactionStateWithPlans(ctx context.Context, in *GetCompactionPlansRequest, opts ...grpc.CallOption) (*GetCompactionPlansResponse, error)
+	CreateCompactionTarget(ctx context.Context, in *CreateCompactionTargetRequest, opts ...grpc.CallOption) (*CreateCompactionTargetResponse, error)
+	DescribeCompactionTarget(ctx context.Context, in *DescribeCompactionTargetRequest, opts ...grpc.CallOption) (*DescribeCompactionTargetResponse, error)
+	ListCompactionTargets(ctx context.Context, in *ListCompactionTargetsRequest, opts ...grpc.CallOption) (*ListCompactionTargetsResponse, error)
+	DropCompactionTarget(ctx context.Context, in *DropCompactionTargetRequest, opts ...grpc.CallOption) (*DropCompactionTargetResponse, error)
 	// https://wiki.lfaidata.foundation/display/MIL/MEP+24+--+Support+bulk+load
 	Import(ctx context.Context, in *ImportRequest, opts ...grpc.CallOption) (*ImportResponse, error)
 	GetImportState(ctx context.Context, in *GetImportStateRequest, opts ...grpc.CallOption) (*GetImportStateResponse, error)
@@ -992,6 +1000,42 @@ func (c *milvusServiceClient) ManualCompaction(ctx context.Context, in *ManualCo
 func (c *milvusServiceClient) GetCompactionStateWithPlans(ctx context.Context, in *GetCompactionPlansRequest, opts ...grpc.CallOption) (*GetCompactionPlansResponse, error) {
 	out := new(GetCompactionPlansResponse)
 	err := c.cc.Invoke(ctx, MilvusService_GetCompactionStateWithPlans_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) CreateCompactionTarget(ctx context.Context, in *CreateCompactionTargetRequest, opts ...grpc.CallOption) (*CreateCompactionTargetResponse, error) {
+	out := new(CreateCompactionTargetResponse)
+	err := c.cc.Invoke(ctx, MilvusService_CreateCompactionTarget_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) DescribeCompactionTarget(ctx context.Context, in *DescribeCompactionTargetRequest, opts ...grpc.CallOption) (*DescribeCompactionTargetResponse, error) {
+	out := new(DescribeCompactionTargetResponse)
+	err := c.cc.Invoke(ctx, MilvusService_DescribeCompactionTarget_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) ListCompactionTargets(ctx context.Context, in *ListCompactionTargetsRequest, opts ...grpc.CallOption) (*ListCompactionTargetsResponse, error) {
+	out := new(ListCompactionTargetsResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ListCompactionTargets_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *milvusServiceClient) DropCompactionTarget(ctx context.Context, in *DropCompactionTargetRequest, opts ...grpc.CallOption) (*DropCompactionTargetResponse, error) {
+	out := new(DropCompactionTargetResponse)
+	err := c.cc.Invoke(ctx, MilvusService_DropCompactionTarget_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1869,6 +1913,10 @@ type MilvusServiceServer interface {
 	GetCompactionState(context.Context, *GetCompactionStateRequest) (*GetCompactionStateResponse, error)
 	ManualCompaction(context.Context, *ManualCompactionRequest) (*ManualCompactionResponse, error)
 	GetCompactionStateWithPlans(context.Context, *GetCompactionPlansRequest) (*GetCompactionPlansResponse, error)
+	CreateCompactionTarget(context.Context, *CreateCompactionTargetRequest) (*CreateCompactionTargetResponse, error)
+	DescribeCompactionTarget(context.Context, *DescribeCompactionTargetRequest) (*DescribeCompactionTargetResponse, error)
+	ListCompactionTargets(context.Context, *ListCompactionTargetsRequest) (*ListCompactionTargetsResponse, error)
+	DropCompactionTarget(context.Context, *DropCompactionTargetRequest) (*DropCompactionTargetResponse, error)
 	// https://wiki.lfaidata.foundation/display/MIL/MEP+24+--+Support+bulk+load
 	Import(context.Context, *ImportRequest) (*ImportResponse, error)
 	GetImportState(context.Context, *GetImportStateRequest) (*GetImportStateResponse, error)
@@ -2200,6 +2248,18 @@ func (UnimplementedMilvusServiceServer) ManualCompaction(context.Context, *Manua
 }
 func (UnimplementedMilvusServiceServer) GetCompactionStateWithPlans(context.Context, *GetCompactionPlansRequest) (*GetCompactionPlansResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompactionStateWithPlans not implemented")
+}
+func (UnimplementedMilvusServiceServer) CreateCompactionTarget(context.Context, *CreateCompactionTargetRequest) (*CreateCompactionTargetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCompactionTarget not implemented")
+}
+func (UnimplementedMilvusServiceServer) DescribeCompactionTarget(context.Context, *DescribeCompactionTargetRequest) (*DescribeCompactionTargetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DescribeCompactionTarget not implemented")
+}
+func (UnimplementedMilvusServiceServer) ListCompactionTargets(context.Context, *ListCompactionTargetsRequest) (*ListCompactionTargetsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCompactionTargets not implemented")
+}
+func (UnimplementedMilvusServiceServer) DropCompactionTarget(context.Context, *DropCompactionTargetRequest) (*DropCompactionTargetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DropCompactionTarget not implemented")
 }
 func (UnimplementedMilvusServiceServer) Import(context.Context, *ImportRequest) (*ImportResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Import not implemented")
@@ -3682,6 +3742,78 @@ func _MilvusService_GetCompactionStateWithPlans_Handler(srv interface{}, ctx con
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MilvusServiceServer).GetCompactionStateWithPlans(ctx, req.(*GetCompactionPlansRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_CreateCompactionTarget_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCompactionTargetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).CreateCompactionTarget(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_CreateCompactionTarget_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).CreateCompactionTarget(ctx, req.(*CreateCompactionTargetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_DescribeCompactionTarget_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DescribeCompactionTargetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).DescribeCompactionTarget(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_DescribeCompactionTarget_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).DescribeCompactionTarget(ctx, req.(*DescribeCompactionTargetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_ListCompactionTargets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCompactionTargetsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).ListCompactionTargets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_ListCompactionTargets_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).ListCompactionTargets(ctx, req.(*ListCompactionTargetsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MilvusService_DropCompactionTarget_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DropCompactionTargetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MilvusServiceServer).DropCompactionTarget(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MilvusService_DropCompactionTarget_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MilvusServiceServer).DropCompactionTarget(ctx, req.(*DropCompactionTargetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5469,6 +5601,22 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCompactionStateWithPlans",
 			Handler:    _MilvusService_GetCompactionStateWithPlans_Handler,
+		},
+		{
+			MethodName: "CreateCompactionTarget",
+			Handler:    _MilvusService_CreateCompactionTarget_Handler,
+		},
+		{
+			MethodName: "DescribeCompactionTarget",
+			Handler:    _MilvusService_DescribeCompactionTarget_Handler,
+		},
+		{
+			MethodName: "ListCompactionTargets",
+			Handler:    _MilvusService_ListCompactionTargets_Handler,
+		},
+		{
+			MethodName: "DropCompactionTarget",
+			Handler:    _MilvusService_DropCompactionTarget_Handler,
 		},
 		{
 			MethodName: "Import",
