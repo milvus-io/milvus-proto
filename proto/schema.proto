@@ -39,6 +39,7 @@ enum DataType {
   Time = 29;
   Decimal = 30;
   UUID = 31;
+  Blob = 32;
 
   BinaryVector = 100;
   FloatVector = 101;
