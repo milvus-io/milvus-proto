@@ -12,6 +12,7 @@ option csharp_namespace = "Milvus.Client.Grpc";
 
 import "common.proto";
 import "google/protobuf/descriptor.proto";
+import "google/protobuf/struct.proto";
 
 /**
  * @brief Field data type
@@ -665,4 +666,15 @@ message CollectionShardInfo {
 // split, when no shard carries one.
 message HashRouting {
   repeated uint64 buckets = 1;
+}
+
+// A literal shared by every PK in an UpdateRecords request. The schema fixes
+// its logical type; array_value replaces one whole scalar array. An absent
+// oneof is invalid, while null_value explicitly means SET NULL.
+message UpdateLiteral {
+  oneof value {
+    ValueField scalar_value = 1;
+    ScalarField array_value = 2;
+    google.protobuf.NullValue null_value = 3;
+  }
 }
