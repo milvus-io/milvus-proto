@@ -255,6 +255,9 @@ service MilvusService {
   // Running request APIs
   rpc ListRunningRequests(ListRunningRequestsRequest) returns (ListRunningRequestsResponse) {}
   rpc CancelRequests(CancelRequestsRequest) returns (CancelRequestsResponse) {}
+
+  // Execute a batch of independent Search requests.
+  rpc MultiSearch(MultiSearchRequest) returns (MultiSearchResponse) {}
 }
 
 // Client Telemetry Service
@@ -3892,6 +3895,24 @@ message WriteCondition {
   Op op = 2;
   // Defaults to INSERT_IF_MISSING; omission and explicit zero are equivalent.
   MissingRowPolicy on_missing = 3;
+}
+
+message MultiSearchRequest {
+  common.MsgBase base = 1;
+  // Non-empty list of Search requests in input order.
+  repeated SearchRequest requests = 2;
+  // Maximum concurrent subrequests. Zero uses the server default.
+  uint32 max_concurrency = 3;
+  // Non-negative shared execution budget in milliseconds, measured from batch receipt.
+  // Unset omits the budget. Zero exhausts the budget immediately.
+  optional int64 timeout_ms = 4;
+}
+
+message MultiSearchResponse {
+  // Status of the batch. Each Search result carries its own status.
+  common.Status status = 1;
+  // One result per request in input order on batch success. Empty on batch failure.
+  repeated SearchResults results = 2;
 }
 
 // Each assignment is applied to every requested PK; omitted fields are unchanged.

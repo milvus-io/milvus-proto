@@ -3,7 +3,9 @@ package milvuspb_test
 import (
 	"testing"
 
+	"google.golang.org/grpc"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/milvus-io/milvus-proto/go-api/v3/commonpb"
@@ -41,7 +43,41 @@ func TestUpdateRecordsSharedLiteralsRoundTrip(t *testing.T) {
 		t.Fatal("empty array lost its type")
 	}
 	privilege := proto.GetExtension(req.ProtoReflect().Descriptor().Options(), commonpb.E_PrivilegeExtObj).(*commonpb.PrivilegeExt)
-	if privilege.GetObjectPrivilege() != commonpb.ObjectPrivilege_PrivilegeUpsert {
-		t.Fatal("update must require write authorization")
+	if privilege.GetObjectType() != commonpb.ObjectType_Collection ||
+		privilege.GetObjectPrivilege() != commonpb.ObjectPrivilege_PrivilegeUpsert ||
+		privilege.GetObjectNameIndex() != 3 {
+		t.Fatalf("unexpected UpdateRecords privilege: %v", privilege)
+	}
+}
+
+func TestUpdateRecordsAndMultiSearchServiceContract(t *testing.T) {
+	service := milvuspb.File_milvus_proto.Services().ByName("MilvusService")
+	server := grpc.NewServer()
+	defer server.Stop()
+	milvuspb.RegisterMilvusServiceServer(server, &milvuspb.UnimplementedMilvusServiceServer{})
+	registered := server.GetServiceInfo()["milvus.proto.milvus.MilvusService"]
+
+	for _, tc := range []struct {
+		method         protoreflect.Name
+		request, reply protoreflect.Name
+	}{
+		{"UpdateRecords", "UpdateRecordsRequest", "MutationResult"},
+		{"MultiSearch", "MultiSearchRequest", "MultiSearchResponse"},
+	} {
+		t.Run(string(tc.method), func(t *testing.T) {
+			method := service.Methods().ByName(tc.method)
+			if method == nil {
+				t.Fatal("RPC missing from protobuf service descriptor")
+			}
+			if method.Input().Name() != tc.request || method.Output().Name() != tc.reply {
+				t.Fatalf("unexpected RPC types: %s -> %s", method.Input().FullName(), method.Output().FullName())
+			}
+			for _, candidate := range registered.Methods {
+				if candidate.Name == string(tc.method) && !candidate.IsClientStream && !candidate.IsServerStream {
+					return
+				}
+			}
+			t.Fatal("unary RPC missing from registered gRPC service")
+		})
 	}
 }
