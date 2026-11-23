@@ -255,8 +255,8 @@ service MilvusService {
   rpc ListRunningRequests(ListRunningRequestsRequest) returns (ListRunningRequestsResponse) {}
   rpc CancelRequests(CancelRequestsRequest) returns (CancelRequestsResponse) {}
 
-  // Execute a batch of independent Search requests.
-  rpc MultiSearch(MultiSearchRequest) returns (MultiSearchResponse) {}
+  // Execute one or more read-only DQL operations in a single RPC.
+  rpc ExecuteDQL(ExecuteDQLRequest) returns (ExecuteDQLResponse) {}
 }
 
 // Client Telemetry Service
@@ -3894,20 +3894,38 @@ message WriteCondition {
   MissingRowPolicy on_missing = 3;
 }
 
-message MultiSearchRequest {
+message ExecuteDQLRequest {
   common.MsgBase base = 1;
-  // Non-empty list of Search requests in input order.
-  repeated SearchRequest requests = 2;
-  // Maximum concurrent subrequests. Zero uses the server default.
+  // Non-empty ordered list of DQL operations to execute.
+  // Results are returned in the same positional order (len(results) == len(requests)).
+  repeated DQLRequest requests = 2;
+  // Maximum concurrent sub-requests executed on the server. Zero uses the server default.
   uint32 max_concurrency = 3;
   // Non-negative shared execution budget in milliseconds, measured from batch receipt.
   // Unset omits the budget. Zero exhausts the budget immediately.
   optional int64 timeout_ms = 4;
 }
 
-message MultiSearchResponse {
-  // Status of the batch. Each Search result carries its own status.
+message DQLRequest {
+  // Extensible for future read-only DQL operations (e.g., QueryRequest, HybridSearchRequest)
+  // and cross-request relationship metadata without breaking wire compatibility.
+  oneof request {
+    SearchRequest search = 1;
+  }
+}
+
+message ExecuteDQLResponse {
+  // Status of the outer ExecuteDQL call.
   common.Status status = 1;
-  // One result per request in input order on batch success. Empty on batch failure.
-  repeated SearchResults results = 2;
+  // One result per request in input order on outer success. Empty on outer failure.
+  repeated DQLResult results = 2;
+}
+
+message DQLResult {
+  // Authoritative per-item execution status.
+  // On per-item failure, `result` may be unset; on success, inner result status is OK.
+  common.Status status = 1;
+  oneof result {
+    SearchResults search = 2;
+  }
 }

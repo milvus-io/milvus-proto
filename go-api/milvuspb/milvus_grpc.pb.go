@@ -172,7 +172,7 @@ const (
 	MilvusService_ListRefreshExternalCollectionJobs_FullMethodName    = "/milvus.proto.milvus.MilvusService/ListRefreshExternalCollectionJobs"
 	MilvusService_ListRunningRequests_FullMethodName                  = "/milvus.proto.milvus.MilvusService/ListRunningRequests"
 	MilvusService_CancelRequests_FullMethodName                       = "/milvus.proto.milvus.MilvusService/CancelRequests"
-	MilvusService_MultiSearch_FullMethodName                          = "/milvus.proto.milvus.MilvusService/MultiSearch"
+	MilvusService_ExecuteDQL_FullMethodName                           = "/milvus.proto.milvus.MilvusService/ExecuteDQL"
 )
 
 // MilvusServiceClient is the client API for MilvusService service.
@@ -375,8 +375,8 @@ type MilvusServiceClient interface {
 	// Running request APIs
 	ListRunningRequests(ctx context.Context, in *ListRunningRequestsRequest, opts ...grpc.CallOption) (*ListRunningRequestsResponse, error)
 	CancelRequests(ctx context.Context, in *CancelRequestsRequest, opts ...grpc.CallOption) (*CancelRequestsResponse, error)
-	// Execute a batch of independent Search requests.
-	MultiSearch(ctx context.Context, in *MultiSearchRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
+	// Execute one or more read-only DQL operations in a single RPC.
+	ExecuteDQL(ctx context.Context, in *ExecuteDQLRequest, opts ...grpc.CallOption) (*ExecuteDQLResponse, error)
 }
 
 type milvusServiceClient struct {
@@ -1794,9 +1794,9 @@ func (c *milvusServiceClient) CancelRequests(ctx context.Context, in *CancelRequ
 	return out, nil
 }
 
-func (c *milvusServiceClient) MultiSearch(ctx context.Context, in *MultiSearchRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error) {
-	out := new(MultiSearchResponse)
-	err := c.cc.Invoke(ctx, MilvusService_MultiSearch_FullMethodName, in, out, opts...)
+func (c *milvusServiceClient) ExecuteDQL(ctx context.Context, in *ExecuteDQLRequest, opts ...grpc.CallOption) (*ExecuteDQLResponse, error) {
+	out := new(ExecuteDQLResponse)
+	err := c.cc.Invoke(ctx, MilvusService_ExecuteDQL_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2003,8 +2003,8 @@ type MilvusServiceServer interface {
 	// Running request APIs
 	ListRunningRequests(context.Context, *ListRunningRequestsRequest) (*ListRunningRequestsResponse, error)
 	CancelRequests(context.Context, *CancelRequestsRequest) (*CancelRequestsResponse, error)
-	// Execute a batch of independent Search requests.
-	MultiSearch(context.Context, *MultiSearchRequest) (*MultiSearchResponse, error)
+	// Execute one or more read-only DQL operations in a single RPC.
+	ExecuteDQL(context.Context, *ExecuteDQLRequest) (*ExecuteDQLResponse, error)
 }
 
 // UnimplementedMilvusServiceServer should be embedded to have forward compatible implementations.
@@ -2464,8 +2464,8 @@ func (UnimplementedMilvusServiceServer) ListRunningRequests(context.Context, *Li
 func (UnimplementedMilvusServiceServer) CancelRequests(context.Context, *CancelRequestsRequest) (*CancelRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancelRequests not implemented")
 }
-func (UnimplementedMilvusServiceServer) MultiSearch(context.Context, *MultiSearchRequest) (*MultiSearchResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MultiSearch not implemented")
+func (UnimplementedMilvusServiceServer) ExecuteDQL(context.Context, *ExecuteDQLRequest) (*ExecuteDQLResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ExecuteDQL not implemented")
 }
 
 // UnsafeMilvusServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -5208,20 +5208,20 @@ func _MilvusService_CancelRequests_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MilvusService_MultiSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MultiSearchRequest)
+func _MilvusService_ExecuteDQL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExecuteDQLRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MilvusServiceServer).MultiSearch(ctx, in)
+		return srv.(MilvusServiceServer).ExecuteDQL(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MilvusService_MultiSearch_FullMethodName,
+		FullMethod: MilvusService_ExecuteDQL_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MilvusServiceServer).MultiSearch(ctx, req.(*MultiSearchRequest))
+		return srv.(MilvusServiceServer).ExecuteDQL(ctx, req.(*ExecuteDQLRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5830,8 +5830,8 @@ var MilvusService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MilvusService_CancelRequests_Handler,
 		},
 		{
-			MethodName: "MultiSearch",
-			Handler:    _MilvusService_MultiSearch_Handler,
+			MethodName: "ExecuteDQL",
+			Handler:    _MilvusService_ExecuteDQL_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
