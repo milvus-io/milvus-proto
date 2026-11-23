@@ -251,6 +251,7 @@ message StructArrayFieldSchema {
   repeated FieldSchema fields = 4;
   repeated common.KeyValuePair type_params = 5;
   bool nullable = 6;
+  string external_field = 7;
 
   // TODO: STRUCT type may also need to support Function in the future
 }
