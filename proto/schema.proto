@@ -667,3 +667,14 @@ message CollectionShardInfo {
 message HashRouting {
   repeated uint64 buckets = 1;
 }
+
+// A literal shared by every PK in an Update request. The schema fixes
+// its logical type; array_value replaces one whole scalar array. An absent
+// oneof is invalid. set_null must be true to mean SET NULL; false is invalid.
+message UpdateLiteral {
+  oneof value {
+    ValueField scalar_value = 1;
+    ScalarField array_value = 2;
+    bool set_null = 3;
+  }
+}
