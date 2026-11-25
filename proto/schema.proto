@@ -455,6 +455,7 @@ message IDs {
 message SearchIteratorV2Results {
   string token = 1;
   float last_bound = 2;
+  string cursor = 3;
 }
 
 message SearchResultData {
