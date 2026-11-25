@@ -7,6 +7,7 @@ filters:
       - czs007
       - nameczz
       - xiaofan-luan
+      - foxspy
 
     approvers:
       - yhmo
@@ -18,3 +19,4 @@ filters:
       - tedxu
       - liliu-z
       - zhengbuqian
+      - foxspy
