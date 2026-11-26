@@ -241,6 +241,7 @@ enum MsgType {
     CreateSegment = 407; // streaming service new msg type for internal usage compatible
     Import = 408;
     FlushAll = 409; // streaming service new msg type for internal usage compatible
+    Update = 410;
 
     /* QUERY */
     Search = 500;
