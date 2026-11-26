@@ -1636,6 +1636,12 @@ message QueryRequest {
   // QueryScan-stage processing. Initially at most one QueryScan-stage chain is allowed.
   // Requires server capability support; older servers may ignore this field.
   repeated schema.FunctionChain function_chains = 17;
+  // Ranker of a ranked Query. Only Boost functions are accepted. The score of
+  // a row is the sum of the weights of the Boost functions whose filter the
+  // row satisfies; it is available as the virtual column $score.
+  // Mutually exclusive with function_chains. A server that predates this
+  // field ignores it.
+  schema.FunctionScore function_score = 18;
 }
 
 message ElementIndices {
